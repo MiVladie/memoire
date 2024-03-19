@@ -16,4 +16,4 @@ const NotFound = () => (
 
 export default NotFound;
 
-export const Head: HeadFC = () => <Seo title='404' />;
+export const Head: HeadFC = () => <Seo>404</Seo>;
