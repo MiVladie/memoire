@@ -1,0 +1,31 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+
+.Wrapper {
+	display: flex;
+
+	justify-content: center;
+	align-items: center;
+
+	flex-direction: column;
+
+	width: 100vw;
+	height: 100vh;
+
+	.Title {
+		font-family: $third-font;
+		font-size: 10em;
+
+		color: $secondary-color;
+	}
+
+	.Description {
+		font-family: $secondary-font;
+		font-size: $md; // 2.25em;
+
+		color: $third-color;
+
+		margin-top: 12px;
+	}
+}
