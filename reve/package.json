@@ -11,7 +11,7 @@
 		"develop": "gatsby develop -o",
 		"start": "gatsby develop -o",
 		"build": "gatsby build",
-		"predeploy": "gatsby build",
+		"predeploy": "gatsby build --prefix-paths",
 		"deploy": "gh-pages -d public",
 		"serve": "gatsby serve -o",
 		"clean": "gatsby clean",
