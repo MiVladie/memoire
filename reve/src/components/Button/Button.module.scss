@@ -1,0 +1,54 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+
+.Button {
+	height: 56px;
+	padding: 0 42px;
+
+	font-family: $secondary-font;
+	font-size: $sm;
+	color: $secondary-color;
+
+	text-transform: lowercase;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	position: relative;
+
+	transition: all 0.2s;
+
+	background: transparent;
+	border: 2px solid $secondary-color;
+
+	user-select: none;
+
+	&:hover:not([disabled]) {
+		background-color: $secondary-color;
+
+		color: $primary-color;
+	}
+
+	&:disabled {
+		border-color: $third-color;
+	}
+
+	.Spinner {
+		position: absolute;
+
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.Loading {
+	color: transparent;
+}

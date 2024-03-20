@@ -1,0 +1,40 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+
+.Input {
+	margin: 4px 0;
+
+	.Text {
+		font-family: $primary-font;
+		font-size: $sm;
+
+		color: $secondary-color;
+	}
+
+	.Wrapper {
+		width: calc(100% - 32px);
+
+		border-color: transparent;
+		background-color: transparent;
+		padding: 2px 16px;
+		border-width: 1px;
+	}
+
+	.DisabledWrapper {
+		color: $third-color;
+		opacity: 0.8;
+	}
+
+	.ErrorWrapper {
+		border-bottom-color: $danger-color;
+	}
+
+	.Error {
+		font-family: $primary-font;
+		font-size: $xs;
+		color: $danger-color;
+
+		margin: 4px 16px 0;
+	}
+}
