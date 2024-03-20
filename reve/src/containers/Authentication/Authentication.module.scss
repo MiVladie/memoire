@@ -1,0 +1,89 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+
+.Authentication {
+	height: 100vh;
+
+	display: flex;
+	justify-content: space-between;
+
+	flex-direction: column;
+
+	overflow: hidden;
+
+	.Heading {
+		padding-top: 96px;
+
+		.Name {
+			font-family: $third-font;
+			font-size: 4em;
+			text-align: center;
+			text-transform: lowercase;
+
+			color: $secondary-color;
+		}
+
+		.Description {
+			font-family: $secondary-font;
+			font-size: $sm;
+			text-align: center;
+			text-transform: lowercase;
+
+			color: $third-color;
+
+			margin-top: 8px;
+		}
+
+		* {
+			user-select: none;
+		}
+	}
+
+	* {
+		transition: all 0.35s;
+	}
+}
+
+@media (min-width: 720px) {
+	.Authentication {
+		.Heading {
+			padding-top: 120px;
+
+			.Name {
+				font-size: 5em;
+			}
+
+			.Description {
+				font-size: $md;
+
+				margin-top: 16px;
+			}
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Authentication {
+		width: 100%;
+
+		align-items: flex-start;
+
+		.Heading {
+			margin-left: 7rem;
+			padding-top: 20vh;
+
+			.Name {
+				font-size: 10rem;
+				text-align: left;
+			}
+
+			.Description {
+				font-size: $lg;
+				text-align: left;
+
+				margin-top: 8px;
+			}
+		}
+	}
+}
