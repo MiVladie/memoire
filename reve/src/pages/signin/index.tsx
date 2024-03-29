@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 import { PROJECT_NAME } from 'config/constants';
-import { HeadFC, Link } from 'gatsby';
+import { HeadFC, Link, navigate } from 'gatsby';
+import { delay } from 'utils/date';
 
 import Authentication from 'containers/Authentication/Authentication';
 import Form from 'containers/Form/Form';
@@ -40,6 +41,10 @@ const SignIn = () => {
 
 	async function submitHandler() {
 		setLoading(true);
+
+		await delay(2);
+
+		navigate('/home');
 	}
 
 	return (

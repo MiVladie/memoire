@@ -7,7 +7,7 @@ import Seo from 'hoc/Seo/Seo';
 import Spinner from 'components/Spinner/Spinner';
 
 const Index: React.FC = () => {
-	const isLoggedIn = true;
+	const isLoggedIn = false;
 
 	useEffect(() => {
 		if (!isLoggedIn) {
