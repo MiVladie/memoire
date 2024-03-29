@@ -24,20 +24,6 @@ const Home = () => {
 	return (
 		<Layout className={classes.Layout}>
 			<Platforms data={PLATFORMS_DATA}>hello</Platforms>
-
-			{/* <SnapScroll
-				active={chosen}
-				onSelect={setChosen}
-				className={classes.List}
-				offset={OFFSET}
-				vertical={VERTICAL}
-				rtl={RTL}>
-				{list.map((item, index) => (
-					<li className={[classes.Item, chosen === index && classes.ItemActive].join(' ')} key={item}>
-						{item}
-					</li>
-				))}
-			</SnapScroll> */}
 		</Layout>
 	);
 };
