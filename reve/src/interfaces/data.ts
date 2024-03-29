@@ -15,7 +15,7 @@ export interface ISong {
 	image: string | null;
 	name: string;
 	author: string;
-	url: string | null;
+	url: string;
 	duration: number;
 	is_present: boolean;
 }
