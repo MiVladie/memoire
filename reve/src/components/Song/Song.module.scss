@@ -1,0 +1,128 @@
+@import 'styles/fonts';
+@import 'styles/colors';
+@import 'styles/sizing';
+@import 'styles/spacing';
+
+.Song {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.Wrapper {
+		display: flex;
+		align-items: center;
+
+		.Image {
+			width: 60px;
+			height: 40px;
+
+			object-fit: cover;
+		}
+
+		.Info {
+			width: 48vw;
+			margin-left: 18px;
+
+			.Name,
+			.Author {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+
+			.Name {
+				height: $sm;
+
+				font-family: $primary-font;
+				font-size: calc(#{$sm} - 3px);
+
+				color: $secondary-color;
+			}
+
+			.NameAbsent {
+				color: $danger-color;
+			}
+
+			.Author {
+				font-family: $primary-font;
+				font-size: $xs;
+
+				color: $third-color;
+
+				white-space: nowrap;
+
+				height: calc(#{$xs} + 2px);
+				margin-top: 2px;
+			}
+		}
+	}
+
+	.Link {
+		display: none;
+	}
+
+	.Duration {
+		width: 20vw;
+
+		font-family: $primary-font;
+		font-size: $sm;
+		text-align: end;
+
+		color: $third-color;
+	}
+}
+
+@media (min-width: 720px) {
+	.Song {
+		.Wrapper {
+			.Info {
+				width: 45vw;
+			}
+		}
+
+		.Link {
+			display: block;
+
+			fill: $secondary-color;
+
+			cursor: pointer;
+		}
+
+		.Duration {
+			width: 10vw;
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Song {
+		.Wrapper {
+			.Info {
+				display: flex;
+				align-items: center;
+
+				.Name {
+					width: 50%;
+					height: calc(#{$sm} + 2px);
+
+					font-size: $sm;
+				}
+
+				.Author {
+					width: 50%;
+					height: calc(#{$sm} + 2px);
+
+					font-size: $sm;
+				}
+			}
+		}
+
+		.Link {
+			display: block;
+
+			fill: $secondary-color;
+
+			cursor: pointer;
+		}
+	}
+}
