@@ -1,0 +1,22 @@
+@import 'styles/spacing.scss';
+
+@function container_width($spacing) {
+	@return calc(100% - #{$spacing} * 2);
+}
+
+.Container {
+	width: container_width($container_spacing_mobile);
+	margin: 0 auto;
+}
+
+@media (min-width: 720px) {
+	.Container {
+		width: container_width($container_spacing_tablet);
+	}
+}
+
+@media (min-width: 1025px) {
+	.Container {
+		width: container_width($container_spacing_desktop);
+	}
+}

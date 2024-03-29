@@ -1,0 +1,214 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+@import 'styles/spacing.scss';
+
+$item_padding: 8px;
+
+.Container {
+	width: 100vw;
+	height: 100vh;
+
+	overflow: hidden;
+
+	.Platforms,
+	.Playlists {
+		width: 100vw;
+		position: absolute;
+
+		display: flex;
+		align-items: center;
+
+		.Platform,
+		.Playlist {
+			margin-right: 2em;
+			padding: $item_padding $container_spacing_mobile;
+
+			flex-shrink: 0;
+
+			&:last-of-type {
+				width: calc(100% - #{$container_spacing_mobile} * 2);
+
+				margin: 0;
+			}
+
+			.Title,
+			.Name {
+				text-transform: lowercase;
+
+				white-space: nowrap;
+				user-select: none;
+
+				cursor: pointer;
+			}
+		}
+	}
+
+	.Platforms {
+		top: 2rem;
+
+		.Platform {
+			.Title {
+				font-family: $third-font;
+				font-size: $md;
+
+				color: $third-color;
+			}
+		}
+
+		.PlatformSelected {
+			.Title {
+				color: $secondary-color;
+			}
+		}
+	}
+
+	.HorizontalShade,
+	.VerticalShade {
+		position: absolute;
+		left: 0;
+
+		width: $container_spacing_mobile;
+		background: linear-gradient(90deg, rgba($primary-color, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.HorizontalShade {
+		top: 2rem;
+		height: calc(#{$md} + #{$item_padding} * 2);
+	}
+
+	.Playlists {
+		top: 5rem;
+
+		.Playlist {
+			.Name {
+				font-family: $third-font;
+				font-size: $sm;
+
+				color: $third-color;
+			}
+		}
+
+		.PlaylistSelected {
+			.Name {
+				color: $secondary-color;
+			}
+		}
+	}
+
+	.VerticalShade {
+		top: 5rem;
+		height: calc(#{$sm} + #{$item_padding} * 2);
+	}
+
+	.List {
+		position: absolute;
+
+		top: 10rem;
+		left: $container_spacing_mobile;
+		bottom: 0;
+
+		width: calc(100% - #{$container_spacing_mobile} * 2);
+	}
+}
+
+@media (min-width: 720px) {
+	.Container {
+		.Platforms,
+		.Playlists {
+			.Platform,
+			.Playlist {
+				padding: 8px $container_spacing_tablet;
+				margin-right: 6em;
+
+				&:last-of-type {
+					width: calc(100vw - #{$container_spacing_tablet} * 2);
+
+					margin-right: 0;
+				}
+			}
+		}
+
+		.Platforms {
+			top: 4rem;
+		}
+
+		.HorizontalShade {
+			top: 4rem;
+		}
+
+		.Playlists {
+			top: 7.5rem;
+		}
+
+		.VerticalShade {
+			top: 7.5rem;
+		}
+
+		.List {
+			top: 14rem;
+			left: $container_spacing_tablet;
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Container {
+		.Platforms {
+			top: 6rem;
+
+			.Platform {
+				padding: $item_padding $container_spacing_desktop;
+				margin-right: 8em;
+
+				&:last-of-type {
+					width: calc(100vw - #{$container_spacing_desktop} * 2);
+
+					margin-right: 0;
+				}
+			}
+		}
+
+		.HorizontalShade {
+			top: 6rem;
+			width: $container_spacing_desktop;
+
+			background: linear-gradient(90deg, $primary-color 35%, rgba(255, 255, 255, 0) 100%);
+		}
+
+		.Playlists {
+			$width: 82vh;
+			$height: $container_spacing_desktop;
+
+			top: calc((#{$width} - #{$height}) / 2 + (100vh - #{$width}));
+			left: calc((#{$width} - #{$height}) / -2);
+
+			width: $width;
+			height: $height;
+
+			transform: rotateZ(90deg);
+
+			.Playlist {
+				transform: rotateZ(180deg);
+
+				&:last-of-type {
+					width: auto;
+				}
+			}
+		}
+
+		.VerticalShade {
+			top: 18vh;
+
+			width: $container_spacing_desktop;
+			height: 50px;
+
+			background: linear-gradient(180deg, $primary-color 0%, rgba(255, 255, 255, 0) 100%);
+		}
+
+		.List {
+			top: 13rem;
+			left: $container_spacing_desktop;
+		}
+	}
+}

@@ -1,0 +1,69 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+
+$OFFSET: 0px;
+
+.Layout {
+	width: 100vw;
+	height: 100vh;
+
+	.List {
+		width: 800px;
+		height: 400px;
+
+		transform: rotateZ(90deg);
+
+		.Item {
+			width: 300px;
+
+			transform: rotateZ(180deg);
+
+			padding: 1rem 0;
+
+			margin-right: 2em; // ltr: spacing
+			// margin-left: 2em; // rtl: spacing
+
+			&:first-of-type {
+				// width: calc(100% - #{$OFFSET}); // rtl: make last element full width
+
+				margin-left: $OFFSET; // ltr: offset spacing
+				// margin: 0; // rtl: remove spacing
+			}
+
+			&:last-of-type {
+				// width: calc(100% - #{$OFFSET}); // lrt: make last element full width
+
+				// margin-right: $OFFSET; // rtl: offset spacing
+				margin: 0; // lrt: remove spacing
+			}
+		}
+	}
+}
+
+.Layout {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.List {
+		display: flex;
+		align-items: center;
+
+		background-color: lightblue;
+
+		.Item {
+			font-family: $primary-font;
+			font-size: 1.5em;
+
+			flex-shrink: 0;
+
+			background-color: lightcoral;
+
+			user-select: none;
+		}
+
+		.ItemActive {
+			background-color: lightslategray;
+		}
+	}
+}

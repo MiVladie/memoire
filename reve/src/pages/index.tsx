@@ -7,10 +7,16 @@ import Seo from 'hoc/Seo/Seo';
 import Spinner from 'components/Spinner/Spinner';
 
 const Index: React.FC = () => {
-	const isLoggedIn = false;
+	const isLoggedIn = true;
 
 	useEffect(() => {
-		if (!isLoggedIn) navigate('/signin');
+		if (!isLoggedIn) {
+			navigate('/signin');
+
+			return;
+		}
+
+		navigate('/home');
 	}, []);
 
 	return (
