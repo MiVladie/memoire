@@ -8,6 +8,13 @@ html {
 		background: $danger-color;
 		color: $primary-color;
 	}
+
+	::-webkit-scrollbar {
+		width: 0px;
+		height: 0px;
+
+		background: transparent;
+	}
 }
 
 .Layout {
@@ -17,9 +24,8 @@ html {
 	position: relative;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
 	.Layout {
-		width: 92%;
 		max-width: 2048px;
 	}
 }
