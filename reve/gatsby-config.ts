@@ -11,6 +11,7 @@ const config: GatsbyConfig = {
 		DEV_SSR: true
 	},
 	plugins: [
+		'gatsby-plugin-react-svg',
 		'gatsby-plugin-sass',
 		'gatsby-plugin-sitemap',
 		'gatsby-plugin-breakpoints',
