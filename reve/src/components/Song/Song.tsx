@@ -35,7 +35,7 @@ const Song = ({ className, image, name, author, url, duration, is_present }: Pro
 			</div>
 
 			<div className={classes.Link}>
-				<Url className={classes.Icon} onClick={openLink} />
+				<Url onClick={openLink} />
 			</div>
 
 			<p className={classes.Duration}>{convertSecondsToFormat(duration)}</p>
