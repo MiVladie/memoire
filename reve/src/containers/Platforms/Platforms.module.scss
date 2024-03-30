@@ -77,6 +77,18 @@ $item_padding: 8px;
 		height: calc(#{$md} + #{$item_padding} * 2);
 	}
 
+	.Actions {
+		position: absolute;
+		top: 2rem;
+		right: $container_spacing_mobile;
+		height: calc(#{$md} + #{$item_padding} * 2);
+
+		display: flex;
+		align-items: center;
+
+		z-index: 1000;
+	}
+
 	.Playlists {
 		top: 5rem;
 
@@ -101,12 +113,38 @@ $item_padding: 8px;
 		height: calc(#{$sm} + #{$item_padding} * 2);
 	}
 
+	.ActionsShade {
+		position: absolute;
+		top: 2rem;
+		right: 0;
+
+		width: 100px;
+		height: 2.75rem;
+
+		background: linear-gradient(-90deg, rgba($primary-color, 1) 75%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.ListShade {
+		position: absolute;
+		top: calc(7.5rem - 1px);
+		left: $container_spacing_mobile;
+		width: calc(100% - #{$container_spacing_mobile} * 2);
+
+		height: 70px;
+
+		z-index: 1000;
+
+		background: linear-gradient(180deg, rgba($primary-color, 1) 25%, rgba(255, 255, 255, 0) 100%);
+	}
+
 	.List {
 		position: absolute;
 
-		top: 10rem;
+		top: 7.5rem;
 		left: $container_spacing_mobile;
 		bottom: 0;
+
+		padding-top: 20px;
 
 		width: calc(100% - #{$container_spacing_mobile} * 2);
 
@@ -139,6 +177,11 @@ $item_padding: 8px;
 			top: 4rem;
 		}
 
+		.Actions {
+			top: 4rem;
+			right: $container_spacing_tablet;
+		}
+
 		.Playlists {
 			top: 7.5rem;
 		}
@@ -147,8 +190,23 @@ $item_padding: 8px;
 			top: 7.5rem;
 		}
 
+		.ActionsShade {
+			top: 4rem;
+
+			width: 175px;
+			height: 2.75rem;
+		}
+
+		.ListShade {
+			top: calc(12rem - 1px);
+			left: $container_spacing_tablet;
+			width: calc(100% - #{$container_spacing_tablet} * 2);
+
+			height: 50px;
+		}
+
 		.List {
-			top: 14rem;
+			top: 12rem;
 			left: $container_spacing_tablet;
 
 			width: calc(100% - #{$container_spacing_tablet} * 2);
@@ -178,6 +236,11 @@ $item_padding: 8px;
 			width: $container_spacing_desktop;
 
 			background: linear-gradient(90deg, $primary-color 35%, rgba(255, 255, 255, 0) 100%);
+		}
+
+		.Actions {
+			top: 6rem;
+			right: $container_spacing_desktop;
 		}
 
 		.Playlists {
@@ -210,8 +273,23 @@ $item_padding: 8px;
 			background: linear-gradient(180deg, $primary-color 0%, rgba(255, 255, 255, 0) 100%);
 		}
 
+		.ActionsShade {
+			top: 6rem;
+
+			width: 375px;
+			height: 2.75rem;
+		}
+
+		.ListShade {
+			top: calc(11rem - 1px);
+			left: $container_spacing_desktop;
+
+			width: 70vw;
+			height: 70px;
+		}
+
 		.List {
-			top: 13rem;
+			top: 11rem;
 			left: $container_spacing_desktop;
 
 			width: 70vw;

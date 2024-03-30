@@ -1,0 +1,15 @@
+.Songs {
+	margin-top: 35px;
+}
+
+@media (min-width: 720px) {
+	.Songs {
+		margin-top: 25px;
+	}
+}
+
+@media (min-width: 1025px) {
+	.Songs {
+		margin-top: 50px;
+	}
+}

@@ -10,11 +10,12 @@ import * as classes from './Songs.module.scss';
 
 interface Props {
 	data: ISong[];
+	className?: string;
 }
 
-const Songs = ({ data }: Props) => {
+const Songs = ({ data, className }: Props) => {
 	return (
-		<ul className={classes.Songs}>
+		<ul className={[classes.Songs, className].join(' ')}>
 			{[...data, ...data].map((song) => (
 				<Song
 					className={classes.Song}

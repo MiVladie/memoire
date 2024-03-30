@@ -13,10 +13,11 @@ interface Props {
 	onPlatform?: (id: number) => void;
 	onPlaylist?: (id: number) => void;
 	className?: string;
+	actions?: React.ReactNode;
 	children: React.ReactNode;
 }
 
-const Platforms = ({ data, onPlatform, onPlaylist, className, children }: Props) => {
+const Platforms = ({ data, onPlatform, onPlaylist, className, actions, children }: Props) => {
 	const [platform, setPlatform] = useState<number>(0);
 	const [playlist, setPlaylist] = useState<number>(0);
 
@@ -55,6 +56,8 @@ const Platforms = ({ data, onPlatform, onPlaylist, className, children }: Props)
 				})}
 			</SnapScroll>
 
+			{actions && <div className={classes.Actions}>{actions}</div>}
+
 			<div className={classes.HorizontalShade} />
 
 			<SnapScroll active={playlist} onSelect={playlistHandler} className={classes.Playlists} vertical={isDesktop}>
@@ -70,6 +73,9 @@ const Platforms = ({ data, onPlatform, onPlaylist, className, children }: Props)
 			</SnapScroll>
 
 			<div className={classes.VerticalShade} />
+			{actions && <div className={classes.ActionsShade} />}
+
+			<div className={classes.ListShade} />
 
 			<Container className={classes.List}>{children}</Container>
 		</div>
