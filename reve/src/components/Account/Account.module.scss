@@ -1,0 +1,12 @@
+@import 'styles/colors.scss';
+
+$SIZE: 35px;
+
+.Account {
+	width: $SIZE;
+	height: $SIZE;
+
+	fill: $secondary-color;
+
+	cursor: pointer;
+}
