@@ -5,9 +5,10 @@ import { PLATFORMS_DATA, PLAYLIST_DATA } from 'config/data';
 
 import Layout from 'hoc/Layout/Layout';
 import Platforms from 'containers/Platforms/Platforms';
-import Account from 'components/Account/Account';
 import Songs from 'containers/Songs/Songs';
 import Seo from 'hoc/Seo/Seo';
+
+import Avatar from 'assets/icons/account.svg';
 
 import * as classes from './Home.module.scss';
 
@@ -18,7 +19,7 @@ const Home = () => {
 
 	return (
 		<Layout>
-			<Platforms data={PLATFORMS_DATA} actions={<Account onClick={accountHandler} />}>
+			<Platforms data={PLATFORMS_DATA} actions={<Avatar className={classes.Avatar} onClick={accountHandler} />}>
 				<Songs data={PLAYLIST_DATA.songs} className={classes.Songs} />
 			</Platforms>
 		</Layout>
