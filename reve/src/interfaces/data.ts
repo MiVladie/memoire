@@ -19,3 +19,8 @@ export interface ISong {
 	duration: number;
 	is_present: boolean;
 }
+
+export interface ISetting {
+	id: number;
+	name: string;
+}

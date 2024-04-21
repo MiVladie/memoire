@@ -1,4 +1,4 @@
-import { IPlatform } from 'interfaces/data';
+import { IPlatform, ISetting } from 'interfaces/data';
 
 export const PLATFORMS_DATA: IPlatform[] = [
 	{
@@ -153,3 +153,29 @@ export const PLAYLIST_DATA = {
 	pages: 4,
 	total: 40
 };
+
+export const SETTINGS_DATA: ISetting[] = [
+	{
+		id: 1,
+		name: 'Account'
+	},
+	{
+		id: 2,
+		name: 'SoundCloud'
+	},
+	{
+		id: 3,
+		name: 'YouTube'
+	},
+	{
+		id: 4,
+		name: 'Spotify'
+	},
+	{
+		id: 5,
+		name: 'Apple Music'
+	}
+];
+
+export const PROFILE_PICTURE =
+	'https://images.pexels.com/photos/11089801/pexels-photo-11089801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';

@@ -1,0 +1,142 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+@import 'styles/spacing.scss';
+
+$SIZE: 35px;
+
+.Account {
+	display: flex;
+	justify-content: space-between;
+
+	flex-direction: column;
+
+	overflow: hidden;
+
+	.Visual {
+		display: flex;
+		align-items: flex-end;
+
+		.Picture {
+			width: calc(50vw - #{$container_spacing_mobile});
+			height: calc(50vw - #{$container_spacing_mobile});
+
+			object-fit: cover;
+
+			border-radius: 10px;
+		}
+
+		.Actions {
+			margin-left: calc(#{$container_spacing_mobile} / 2);
+
+			.Action {
+				height: 48px;
+				padding: 12px;
+
+				justify-content: flex-start;
+
+				border: none;
+
+				&:hover {
+					background-color: lighten($primary-color, 3);
+					color: inherit;
+				}
+
+				&:last-of-type {
+					margin-top: 2px;
+					color: $danger-color;
+
+					.Icon {
+						fill: $danger-color;
+					}
+				}
+
+				.Icon {
+					margin-right: 8px;
+					fill: $secondary-color;
+				}
+			}
+		}
+	}
+
+	.Data {
+		.Meta,
+		.Credentials {
+			margin-top: 56px;
+
+			input {
+				padding-left: 0;
+			}
+
+			.Button {
+				margin-top: 28px;
+			}
+		}
+	}
+
+	.Logout {
+		height: 48px;
+
+		margin-top: 56px;
+		padding: 12px;
+
+		align-self: flex-start;
+		justify-content: flex-start;
+
+		border: none;
+
+		margin-bottom: $container_spacing_mobile;
+
+		&:hover {
+			background-color: lighten($primary-color, 3);
+			color: inherit;
+		}
+
+		.Icon {
+			margin-right: 8px;
+			fill: $secondary-color;
+		}
+	}
+}
+
+.X {
+	width: $SIZE;
+	height: $SIZE;
+
+	fill: $secondary-color;
+
+	cursor: pointer;
+}
+
+@media (min-width: 720px) {
+	.Account {
+		.Visual {
+			.Picture {
+				width: 200px;
+				height: 200px;
+			}
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Account {
+		.Data {
+			display: flex;
+
+			.Meta,
+			.Credentials {
+				width: 15vw;
+				margin-top: 108px;
+
+				.Button {
+					margin-top: 46px;
+				}
+			}
+
+			.Credentials {
+				margin-left: 20vw;
+			}
+		}
+	}
+}

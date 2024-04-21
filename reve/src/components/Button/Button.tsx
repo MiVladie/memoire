@@ -5,7 +5,7 @@ import Spinner from '../Spinner/Spinner';
 import * as classes from './Button.module.scss';
 
 interface Props {
-	children: string;
+	children: React.ReactNode;
 	className?: string;
 	onClick?: () => void;
 	loading?: boolean;

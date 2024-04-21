@@ -1,0 +1,229 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+@import 'styles/spacing.scss';
+
+$item_padding: 8px;
+
+.Container {
+	width: 100vw;
+	height: 100vh;
+
+	overflow: hidden;
+
+	.Settings {
+		width: 100vw;
+		position: absolute;
+
+		display: flex;
+		align-items: center;
+
+		.Setting {
+			margin-right: 2em;
+			padding: $item_padding $container_spacing_mobile;
+
+			flex-shrink: 0;
+
+			&:last-of-type {
+				width: calc(100% - #{$container_spacing_mobile} * 2);
+
+				margin: 0;
+			}
+
+			.Title,
+			.Name {
+				text-transform: lowercase;
+
+				white-space: nowrap;
+				user-select: none;
+
+				cursor: pointer;
+			}
+		}
+	}
+
+	.Settings {
+		top: 2rem;
+
+		.Setting {
+			.Title {
+				font-family: $third-font;
+				font-size: $md;
+
+				color: $third-color;
+			}
+		}
+
+		.SettingSelected {
+			.Title {
+				color: $secondary-color;
+			}
+		}
+	}
+
+	.HorizontalShade {
+		position: absolute;
+		left: 0;
+
+		width: $container_spacing_mobile;
+		background: linear-gradient(90deg, rgba($primary-color, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.HorizontalShade {
+		top: 2rem;
+		height: calc(#{$md} + #{$item_padding} * 2);
+	}
+
+	.Actions {
+		position: absolute;
+		top: 2rem;
+		right: $container_spacing_mobile;
+		height: calc(#{$md} + #{$item_padding} * 2);
+
+		display: flex;
+		align-items: center;
+
+		z-index: 1000;
+	}
+
+	.ActionsShade {
+		position: absolute;
+		top: 2rem;
+		right: 0;
+
+		width: 100px;
+		height: 2.75rem;
+
+		background: linear-gradient(-90deg, rgba($primary-color, 1) 75%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.ListShade {
+		position: absolute;
+		top: calc(7.5rem - 1px);
+		left: $container_spacing_mobile;
+		width: calc(100% - #{$container_spacing_mobile} * 2);
+
+		height: 70px;
+
+		z-index: 1000;
+
+		background: linear-gradient(180deg, rgba($primary-color, 1) 25%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.List {
+		position: absolute;
+
+		top: 7.5rem;
+		left: $container_spacing_mobile;
+		bottom: 0;
+
+		width: calc(100% - #{$container_spacing_mobile} * 2);
+
+		overflow: scroll;
+	}
+}
+
+@media (min-width: 720px) {
+	.Container {
+		.Settings {
+			.Setting {
+				padding: 8px $container_spacing_tablet;
+				margin-right: 6em;
+
+				&:last-of-type {
+					width: calc(100vw - #{$container_spacing_tablet} * 2);
+
+					margin-right: 0;
+				}
+			}
+		}
+
+		.Settings {
+			top: 4rem;
+		}
+
+		.HorizontalShade {
+			top: 4rem;
+		}
+
+		.Actions {
+			top: 4rem;
+			right: $container_spacing_tablet;
+		}
+
+		.ActionsShade {
+			top: 4rem;
+
+			width: 175px;
+			height: 2.75rem;
+		}
+
+		.ListShade {
+			top: calc(12rem - 1px);
+			left: $container_spacing_tablet;
+			width: calc(100% - #{$container_spacing_tablet} * 2);
+
+			height: 50px;
+		}
+
+		.List {
+			top: 12rem;
+			left: $container_spacing_tablet;
+
+			width: calc(100% - #{$container_spacing_tablet} * 2);
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Container {
+		.Settings {
+			top: 6rem;
+
+			.Setting {
+				padding: $item_padding $container_spacing_desktop;
+				margin-right: 8em;
+
+				&:last-of-type {
+					width: calc(100vw - #{$container_spacing_desktop} * 2);
+
+					margin-right: 0;
+				}
+			}
+		}
+
+		.HorizontalShade {
+			top: 6rem;
+			width: $container_spacing_desktop;
+
+			background: linear-gradient(90deg, $primary-color 35%, rgba(255, 255, 255, 0) 100%);
+		}
+
+		.Actions {
+			top: 6rem;
+			right: $container_spacing_desktop;
+		}
+
+		.ActionsShade {
+			top: 6rem;
+
+			width: 375px;
+			height: 2.75rem;
+		}
+
+		.ListShade {
+			top: calc(11rem - 1px);
+			left: $container_spacing_desktop;
+
+			width: 70vw;
+			height: 70px;
+		}
+
+		.List {
+			top: 11rem;
+			left: $container_spacing_desktop;
+
+			width: 70vw;
+		}
+	}
+}

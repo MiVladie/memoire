@@ -54,16 +54,6 @@
 		}
 	}
 
-	.Separation {
-		display: none;
-
-		user-select: none;
-
-		&:hover {
-			color: $third-color;
-		}
-	}
-
 	* {
 		user-select: none;
 	}

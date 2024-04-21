@@ -8,7 +8,7 @@ interface Props {
 	name?: string;
 	placeholder?: string;
 	value: string;
-	onChange: (value: string, name: any) => void;
+	onChange?: (value: string, name: any) => void;
 	onBlur?: (name: any) => void;
 	onFocus?: (name: any) => void;
 	secure?: boolean;
@@ -44,7 +44,7 @@ const Input = ({
 			].join(' ')}
 			placeholder={placeholder || 'Type something..'}
 			value={value}
-			onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value, name)}
+			onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value, name)}
 			onBlur={() => onBlur?.(name)}
 			onFocus={() => onFocus?.(name)}
 			disabled={disabled}

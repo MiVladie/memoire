@@ -1,5 +1,18 @@
+@import 'styles/colors.scss';
+
+$SIZE: 35px;
+
 .Songs {
 	margin-top: 35px;
+}
+
+.Avatar {
+	width: $SIZE;
+	height: $SIZE;
+
+	fill: $secondary-color;
+
+	cursor: pointer;
 }
 
 @media (min-width: 720px) {
