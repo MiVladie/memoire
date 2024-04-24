@@ -87,11 +87,15 @@ const Account = () => {
 		navigate('/home');
 	}
 
+	function logoutHandler() {
+		navigate('/');
+	}
+
 	return (
 		<Layout>
 			<Settings
-				containerClassName={classes.Account}
 				data={SETTINGS_DATA}
+				containerClassName={classes.Account}
 				actions={<X className={classes.X} onClick={backHandler} />}>
 				<div>
 					<div className={classes.Visual}>
@@ -175,7 +179,7 @@ const Account = () => {
 					</div>
 				</div>
 
-				<Button className={classes.Logout} ghost>
+				<Button className={classes.Logout} onClick={logoutHandler} ghost>
 					log out
 				</Button>
 			</Settings>
