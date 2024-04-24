@@ -103,7 +103,6 @@ const Account = () => {
 				<div className={classes.Data}>
 					<Form className={classes.Meta}>
 						<Input
-							inputClassName={classes.Input}
 							name='name'
 							placeholder='John Doe'
 							value={mForm.values.name}
@@ -114,12 +113,7 @@ const Account = () => {
 							error={mForm.errors.name}
 						/>
 
-						<Input
-							inputClassName={classes.Input}
-							placeholder='johndoe@example.com'
-							value='justvladon@outlook.com'
-							disabled={true}
-						/>
+						<Input placeholder='johndoe@example.com' value='justvladon@outlook.com' disabled={true} />
 
 						{errorMeta && <p className={classes.Error}>{errorMeta}</p>}
 
@@ -130,7 +124,6 @@ const Account = () => {
 
 					<Form className={classes.Credentials}>
 						<Input
-							inputClassName={classes.Input}
 							name='password'
 							placeholder='current password'
 							value={cForm.values.password}
@@ -143,7 +136,6 @@ const Account = () => {
 						/>
 
 						<Input
-							inputClassName={classes.Input}
 							name='newPassword'
 							placeholder='new password'
 							value={cForm.values.newPassword}

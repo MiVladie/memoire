@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { HeadFC, navigate } from 'gatsby';
 import { SETTINGS_DATA } from 'config/data';
 
 import Layout from 'hoc/Layout/Layout';
 import Account from 'containers/Account/Account';
+import SoundCloud from 'containers/SoundCloud/SoundCloud';
 import Settings from 'containers/Settings/Settings';
 import Seo from 'hoc/Seo/Seo';
 
@@ -13,8 +14,10 @@ import X from 'assets/icons/close.svg';
 import * as classes from './Profile.module.scss';
 
 const Profile = () => {
+	const [setting, setSetting] = useState<number>(1);
+
 	function settingHandler(id: number) {
-		console.log({ id });
+		setSetting(id);
 	}
 
 	function backHandler() {
@@ -27,7 +30,7 @@ const Profile = () => {
 				data={SETTINGS_DATA}
 				onUpdate={settingHandler}
 				actions={<X className={classes.X} onClick={backHandler} />}>
-				<Account />
+				{setting === 1 ? <Account /> : <SoundCloud />}
 			</Settings>
 		</Layout>
 	);

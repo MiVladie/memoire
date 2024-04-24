@@ -1,0 +1,64 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+@import 'styles/spacing.scss';
+
+.SoundCloud {
+	.Form {
+		input {
+			font-family: $secondary-font !important;
+		}
+
+		.Error {
+			font-family: $primary-font;
+			font-size: $sm;
+
+			color: $danger-color;
+		}
+
+		.Button {
+			margin-top: 28px;
+		}
+	}
+
+	.Instructions {
+		margin-top: 4em;
+
+		width: 100%;
+		height: 500px;
+
+		border-radius: 8px;
+
+		background-color: rgba(255, 255, 255, 0.03);
+	}
+}
+
+@media (min-width: 720px) {
+	.SoundCloud {
+		.Instructions {
+			width: 400px;
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.SoundCloud {
+		display: flex;
+		align-items: flex-start;
+
+		.Form,
+		.Instructions {
+			margin-top: 6em;
+		}
+
+		.Form {
+			width: 15vw;
+		}
+
+		.Instructions {
+			width: 400px;
+
+			margin-left: 20vw;
+		}
+	}
+}

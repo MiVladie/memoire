@@ -72,6 +72,13 @@
 				padding-left: 0;
 			}
 
+			.Error {
+				font-family: $primary-font;
+				font-size: $sm;
+
+				color: $danger-color;
+			}
+
 			.Button {
 				margin-top: 28px;
 			}
