@@ -149,6 +149,10 @@ $item_padding: 8px;
 		width: calc(100% - #{$container_spacing_mobile} * 2);
 
 		overflow: scroll;
+
+		.Contents {
+			margin-top: 35px;
+		}
 	}
 }
 
@@ -210,6 +214,10 @@ $item_padding: 8px;
 			left: $container_spacing_tablet;
 
 			width: calc(100% - #{$container_spacing_tablet} * 2);
+
+			.Contents {
+				margin-top: 25px;
+			}
 		}
 	}
 }
@@ -293,6 +301,10 @@ $item_padding: 8px;
 			left: $container_spacing_desktop;
 
 			width: 70vw;
+
+			.Contents {
+				margin-top: 50px;
+			}
 		}
 	}
 }

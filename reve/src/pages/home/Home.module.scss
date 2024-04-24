@@ -2,10 +2,6 @@
 
 $SIZE: 35px;
 
-.Songs {
-	margin-top: 35px;
-}
-
 .Avatar {
 	width: $SIZE;
 	height: $SIZE;
@@ -13,16 +9,4 @@ $SIZE: 35px;
 	fill: $secondary-color;
 
 	cursor: pointer;
-}
-
-@media (min-width: 720px) {
-	.Songs {
-		margin-top: 25px;
-	}
-}
-
-@media (min-width: 1025px) {
-	.Songs {
-		margin-top: 50px;
-	}
 }

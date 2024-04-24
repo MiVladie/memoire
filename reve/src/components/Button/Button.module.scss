@@ -29,10 +29,27 @@
 		background-color: $secondary-color;
 
 		color: $primary-color;
+
+		.Icon {
+			fill: $primary-color;
+		}
 	}
 
 	&:disabled {
 		border-color: $third-color;
+
+		.Icon {
+			fill: transparent;
+		}
+	}
+
+	.Icon {
+		height: 25px;
+		margin-right: 8px;
+
+		fill: $secondary-color;
+
+		transition: all 0.2s;
 	}
 
 	.Spinner {
@@ -49,6 +66,20 @@
 	}
 }
 
+.Ghost {
+	height: inherit;
+	padding: 0;
+
+	border: none;
+
+	&:hover:not([disabled]),
+	&:disabled {
+		background-color: inherit;
+
+		color: $third-color;
+	}
+}
+
 .Loading {
-	color: transparent;
+	color: transparent !important;
 }

@@ -28,51 +28,6 @@
 	}
 }
 
-.Actions {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	flex-direction: column;
-
-	margin-bottom: 8px;
-
-	.Text {
-		font-family: $primary-font;
-		font-size: $sm;
-		text-align: center;
-		text-decoration: none;
-
-		color: $third-color;
-
-		transition: all 0.1s;
-
-		margin: 4px 0;
-
-		&:hover {
-			color: $secondary-color;
-		}
-	}
-
-	.Separation {
-		display: none;
-
-		user-select: none;
-
-		&:hover {
-			color: $third-color;
-		}
-	}
-
-	* {
-		user-select: none;
-	}
-}
-
-* {
-	transition: all 0.35s;
-}
-
 @media (min-width: 720px) {
 	.Heading {
 		padding-top: 120px;
@@ -87,21 +42,10 @@
 			margin-top: 16px;
 		}
 	}
-
-	.Actions {
-		flex-direction: row;
-
-		.Separation {
-			display: block;
-
-			margin: 0 32px;
-		}
-	}
 }
 
 @media (min-width: 1025px) {
-	.Form,
-	.Actions {
+	.Form {
 		margin-left: 7rem;
 	}
 

@@ -10,14 +10,13 @@ import * as classes from './Platforms.module.scss';
 
 interface Props {
 	data: IPlatform[];
-	onPlatform?: (id: number) => void;
-	onPlaylist?: (id: number) => void;
+	onUpdate?: (platformId: number, playlistId: number) => void;
 	className?: string;
 	actions?: React.ReactNode;
 	children: React.ReactNode;
 }
 
-const Platforms = ({ data, onPlatform, onPlaylist, className, actions, children }: Props) => {
+const Platforms = ({ data, onUpdate, className, actions, children }: Props) => {
 	const [platform, setPlatform] = useState<number>(0);
 	const [playlist, setPlaylist] = useState<number>(0);
 
@@ -29,7 +28,7 @@ const Platforms = ({ data, onPlatform, onPlaylist, className, actions, children 
 		setPlatform(index);
 		setPlaylist(0);
 
-		onPlatform?.(data[index].id);
+		onUpdate?.(data[index].id, data[index].playlists[0].id);
 	}
 
 	function playlistHandler(index: number) {
@@ -37,7 +36,7 @@ const Platforms = ({ data, onPlatform, onPlaylist, className, actions, children 
 
 		setPlaylist(index);
 
-		onPlaylist?.(data[platform].playlists[index].id);
+		onUpdate?.(data[platform].id, data[platform].playlists[index].id);
 	}
 
 	return (
@@ -73,11 +72,14 @@ const Platforms = ({ data, onPlatform, onPlaylist, className, actions, children 
 			</SnapScroll>
 
 			<div className={classes.VerticalShade} />
+
 			{actions && <div className={classes.ActionsShade} />}
 
 			<div className={classes.ListShade} />
 
-			<Container className={classes.List}>{children}</Container>
+			<Container className={classes.List}>
+				<div className={classes.Contents}>{children}</div>
+			</Container>
 		</div>
 	);
 };

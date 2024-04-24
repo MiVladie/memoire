@@ -6,17 +6,21 @@ import * as classes from './Button.module.scss';
 
 interface Props {
 	children: React.ReactNode;
+	icon?: React.ReactNode;
 	className?: string;
+	iconClassName?: string;
 	onClick?: () => void;
 	loading?: boolean;
 	disabled?: boolean;
+	ghost?: boolean;
 }
 
-const Button = ({ children, className, onClick, loading, disabled }: Props) => (
+const Button = ({ children, icon, className, iconClassName, onClick, loading, disabled, ghost }: Props) => (
 	<button
-		className={[classes.Button, loading && classes.Loading, className].join(' ')}
+		className={[classes.Button, ghost && classes.Ghost, loading && classes.Loading, className].join(' ')}
 		onClick={onClick}
 		disabled={disabled || loading}>
+		{icon && <i className={[classes.Icon, iconClassName].join(' ')}>{icon}</i>}
 		{children}
 		{loading && (
 			<div className={classes.Spinner}>

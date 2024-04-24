@@ -59,6 +59,10 @@ const SignUp = () => {
 		navigate('/home');
 	}
 
+	function signInHandler() {
+		navigate('/signin');
+	}
+
 	return (
 		<Authentication name={PROJECT_NAME} description='Never let go of your gems'>
 			<Form className={classes.Form}>
@@ -120,9 +124,9 @@ const SignUp = () => {
 			</Form>
 
 			<div className={classes.Actions}>
-				<Link to='/signin' className={classes.Text}>
+				<Button onClick={signInHandler} className={classes.Action} ghost>
 					i already have an account
-				</Link>
+				</Button>
 			</div>
 		</Authentication>
 	);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { PROJECT_NAME } from 'config/constants';
-import { HeadFC, Link, navigate } from 'gatsby';
+import { HeadFC, navigate } from 'gatsby';
 import { delay } from 'utils/date';
 
 import Authentication from 'containers/Authentication/Authentication';
@@ -47,6 +47,14 @@ const SignIn = () => {
 		navigate('/home');
 	}
 
+	function signUpHandler() {
+		navigate('/signup');
+	}
+
+	function recoverHandler() {
+		navigate('/recover');
+	}
+
 	return (
 		<Authentication name={PROJECT_NAME} description='Never let go of your gems'>
 			<Form className={classes.Form}>
@@ -83,15 +91,15 @@ const SignIn = () => {
 			</Form>
 
 			<div className={classes.Actions}>
-				<Link to='/signup' className={classes.Text}>
+				<Button onClick={signUpHandler} className={classes.Action} ghost>
 					i don't have an account
-				</Link>
+				</Button>
 
-				<small className={[classes.Text, classes.Separation].join(' ')}>|</small>
+				<div className={classes.Separation} />
 
-				<Link to='/recover' className={classes.Text}>
+				<Button onClick={recoverHandler} className={classes.Action} ghost>
 					help me recover account
-				</Link>
+				</Button>
 			</div>
 		</Authentication>
 	);

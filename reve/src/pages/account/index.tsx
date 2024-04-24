@@ -84,7 +84,7 @@ const Account = () => {
 	}
 
 	function backHandler() {
-		navigate(-1);
+		navigate('/home');
 	}
 
 	return (
@@ -98,13 +98,11 @@ const Account = () => {
 						<img src={PROFILE_PICTURE} alt='username' className={classes.Picture} />
 
 						<div className={classes.Actions}>
-							<Button className={classes.Action}>
-								<Upload className={classes.Icon} />
+							<Button className={classes.Action} iconClassName={classes.Icon} icon={<Upload />} ghost>
 								Upload
 							</Button>
 
-							<Button className={classes.Action}>
-								<Trash className={classes.Icon} />
+							<Button className={classes.Action} iconClassName={classes.Icon} icon={<Trash />} ghost>
 								Remove
 							</Button>
 						</div>
@@ -142,13 +140,14 @@ const Account = () => {
 							<Input
 								inputClassName={classes.Input}
 								name='password'
-								placeholder='current passsword'
+								placeholder='current password'
 								value={cForm.values.password}
 								disabled={loadingCredentials}
 								onChange={cForm.handleChange}
 								onFocus={cForm.handleFocus}
 								autoComplete={false}
 								error={cForm.errors.password}
+								secure
 							/>
 
 							<Input
@@ -176,7 +175,9 @@ const Account = () => {
 					</div>
 				</div>
 
-				<Button className={classes.Logout}>log out</Button>
+				<Button className={classes.Logout} ghost>
+					log out
+				</Button>
 			</Settings>
 		</Layout>
 	);

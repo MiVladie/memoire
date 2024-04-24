@@ -37,17 +37,11 @@
 
 	margin-bottom: 8px;
 
-	.Text {
+	.Action {
 		font-family: $primary-font;
-		font-size: $sm;
-		text-align: center;
-		text-decoration: none;
-
 		color: $third-color;
 
-		transition: all 0.1s;
-
-		margin: 4px 0;
+		margin: 2px 0;
 
 		&:hover {
 			color: $secondary-color;
@@ -57,20 +51,11 @@
 	.Separation {
 		display: none;
 
-		user-select: none;
+		width: 1px;
+		height: 18px;
 
-		&:hover {
-			color: $third-color;
-		}
+		background-color: $third-color;
 	}
-
-	* {
-		user-select: none;
-	}
-}
-
-* {
-	transition: all 0.35s;
 }
 
 @media (min-width: 720px) {

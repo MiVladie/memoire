@@ -13,14 +13,21 @@ import Avatar from 'assets/icons/account.svg';
 import * as classes from './Home.module.scss';
 
 const Home = () => {
+	function updateHandler(platformId: number, playlistId: number) {
+		console.log({ platformId, playlistId });
+	}
+
 	function accountHandler() {
 		navigate('/account');
 	}
 
 	return (
 		<Layout>
-			<Platforms data={PLATFORMS_DATA} actions={<Avatar className={classes.Avatar} onClick={accountHandler} />}>
-				<Songs data={PLAYLIST_DATA.songs} className={classes.Songs} />
+			<Platforms
+				data={PLATFORMS_DATA}
+				onUpdate={updateHandler}
+				actions={<Avatar className={classes.Avatar} onClick={accountHandler} />}>
+				<Songs data={PLAYLIST_DATA.songs} />
 			</Platforms>
 		</Layout>
 	);
