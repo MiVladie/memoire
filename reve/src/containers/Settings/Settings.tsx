@@ -9,14 +9,14 @@ import * as classes from './Settings.module.scss';
 
 interface Props {
 	data: ISetting[];
-	onSetting?: (id: number) => void;
+	onUpdate?: (id: number) => void;
 	className?: string;
 	containerClassName?: string;
 	actions?: React.ReactNode;
 	children: React.ReactNode;
 }
 
-const Settings = ({ data, onSetting, className, containerClassName, actions, children }: Props) => {
+const Settings = ({ data, onUpdate, className, containerClassName, actions, children }: Props) => {
 	const [setting, setSetting] = useState<number>(0);
 
 	function settingHandler(index: number) {
@@ -24,7 +24,7 @@ const Settings = ({ data, onSetting, className, containerClassName, actions, chi
 
 		setSetting(index);
 
-		onSetting?.(data[index].id);
+		onUpdate?.(data[index].id);
 	}
 
 	return (

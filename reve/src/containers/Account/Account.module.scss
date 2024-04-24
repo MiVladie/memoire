@@ -3,9 +3,10 @@
 @import 'styles/sizing.scss';
 @import 'styles/spacing.scss';
 
-$SIZE: 35px;
-
 .Account {
+	width: 100%;
+	height: 100%;
+
 	display: flex;
 	justify-content: space-between;
 
@@ -78,19 +79,12 @@ $SIZE: 35px;
 	}
 
 	.Logout {
+		height: 56px;
+
 		margin-bottom: $container_spacing_mobile;
 
 		align-self: flex-start;
 	}
-}
-
-.X {
-	width: $SIZE;
-	height: $SIZE;
-
-	fill: $secondary-color;
-
-	cursor: pointer;
 }
 
 @media (min-width: 720px) {

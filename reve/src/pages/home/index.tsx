@@ -17,8 +17,8 @@ const Home = () => {
 		console.log({ platformId, playlistId });
 	}
 
-	function accountHandler() {
-		navigate('/account');
+	function profileHandler() {
+		navigate('/profile');
 	}
 
 	return (
@@ -26,7 +26,7 @@ const Home = () => {
 			<Platforms
 				data={PLATFORMS_DATA}
 				onUpdate={updateHandler}
-				actions={<Avatar className={classes.Avatar} onClick={accountHandler} />}>
+				actions={<Avatar className={classes.Avatar} onClick={profileHandler} />}>
 				<Songs data={PLAYLIST_DATA.songs} />
 			</Platforms>
 		</Layout>
