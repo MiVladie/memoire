@@ -2,32 +2,57 @@
 @import 'styles/colors.scss';
 @import 'styles/sizing.scss';
 
+$SIZE: 33px;
+
 .Input {
 	margin: 4px 0;
 
-	.Text {
-		font-family: $primary-font;
-		font-size: $sm;
+	.Holder {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
-		color: $secondary-color;
-	}
+		.Icon {
+			width: $SIZE;
+			height: $SIZE;
 
-	.Wrapper {
-		width: calc(100% - 32px);
+			display: flex;
+			justify-content: center;
+			align-items: center;
 
-		border-color: transparent;
-		background-color: transparent;
-		padding: 2px 16px;
-		border-width: 1px;
-	}
+			margin-right: 4px;
 
-	.DisabledWrapper {
-		color: $third-color;
-		opacity: 0.8;
-	}
+			fill: $secondary-color;
+		}
 
-	.ErrorWrapper {
-		border-bottom-color: $danger-color;
+		.Text {
+			font-family: $primary-font;
+			font-size: $sm;
+
+			color: $secondary-color;
+		}
+
+		.Wrapper {
+			width: calc(100% - 32px);
+
+			border-color: transparent;
+			background-color: transparent;
+			padding: 2px 16px;
+			border-width: 1px;
+		}
+
+		.IconWrapper {
+			padding-left: 0;
+		}
+
+		.DisabledWrapper {
+			color: $third-color;
+			opacity: 0.8;
+		}
+
+		.ErrorWrapper {
+			border-bottom-color: $danger-color;
+		}
 	}
 
 	.Error {
@@ -36,5 +61,9 @@
 		color: $danger-color;
 
 		margin: 4px 16px 0;
+	}
+
+	.IconError {
+		margin-left: $SIZE;
 	}
 }

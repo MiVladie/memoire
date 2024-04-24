@@ -3,6 +3,7 @@ import React from 'react';
 import * as classes from './Input.module.scss';
 
 interface Props {
+	icon?: React.ReactNode;
 	className?: string;
 	inputClassName?: string;
 	name?: string;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const Input = ({
+	icon,
 	className,
 	inputClassName,
 	name,
@@ -32,25 +34,30 @@ const Input = ({
 	error
 }: Props) => (
 	<div className={[classes.Input, className].join(' ')}>
-		<input
-			autoComplete={autoComplete === false ? 'new-password' : autoComplete}
-			type={!secure ? 'text' : 'password'}
-			className={[
-				classes.Text,
-				classes.Wrapper,
-				disabled && classes.DisabledWrapper,
-				!!error && classes.ErrorWrapper,
-				inputClassName
-			].join(' ')}
-			placeholder={placeholder || 'Type something..'}
-			value={value}
-			onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value, name)}
-			onBlur={() => onBlur?.(name)}
-			onFocus={() => onFocus?.(name)}
-			disabled={disabled}
-		/>
+		<div className={classes.Holder}>
+			{icon && <i className={classes.Icon}>{icon}</i>}
 
-		{error ? <p className={classes.Error}>{error}</p> : null}
+			<input
+				autoComplete={autoComplete === false ? 'new-password' : autoComplete}
+				type={!secure ? 'text' : 'password'}
+				className={[
+					classes.Text,
+					classes.Wrapper,
+					icon && classes.IconWrapper,
+					disabled && classes.DisabledWrapper,
+					!!error && classes.ErrorWrapper,
+					inputClassName
+				].join(' ')}
+				placeholder={placeholder || 'Type something..'}
+				value={value}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value, name)}
+				onBlur={() => onBlur?.(name)}
+				onFocus={() => onFocus?.(name)}
+				disabled={disabled}
+			/>
+		</div>
+
+		{error ? <p className={[classes.Error, classes.IconError].join(' ')}>{error}</p> : null}
 	</div>
 );
 
