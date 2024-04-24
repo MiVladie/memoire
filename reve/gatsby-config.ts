@@ -2,8 +2,11 @@ import type { GatsbyConfig } from 'gatsby';
 
 const config: GatsbyConfig = {
 	siteMetadata: {
-		title: `Mémoire`,
-		siteUrl: `https://mivladie.github.io/memoire/`
+		title: 'Mémoire',
+		description:
+			'Mémoire is a project designed to keep track of listed & unlisted songs on music platforms of your choice',
+		image: 'src/assets/icons/favicon.ico',
+		siteUrl: 'https://mivladie.github.io/memoire/'
 	},
 	pathPrefix: '/memoire',
 	graphqlTypegen: true,
@@ -19,7 +22,7 @@ const config: GatsbyConfig = {
 		{
 			resolve: 'gatsby-plugin-manifest',
 			options: {
-				icon: 'src/images/icon.png'
+				icon: 'src/assets/icons/favicon.ico'
 			}
 		}
 	]
