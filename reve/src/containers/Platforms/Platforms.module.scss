@@ -11,6 +11,8 @@ $item_padding: 8px;
 
 	overflow: hidden;
 
+	position: relative;
+
 	.Platforms,
 	.Playlists {
 		width: 100vw;
@@ -78,13 +80,13 @@ $item_padding: 8px;
 	}
 
 	.Actions {
+		display: flex;
+		align-items: center;
+		height: calc(#{$md} + #{$item_padding} * 2);
+
 		position: absolute;
 		top: 2rem;
 		right: $container_spacing_mobile;
-		height: calc(#{$md} + #{$item_padding} * 2);
-
-		display: flex;
-		align-items: center;
 
 		z-index: 1000;
 	}
@@ -132,7 +134,7 @@ $item_padding: 8px;
 
 		height: 70px;
 
-		z-index: 1000;
+		z-index: 500;
 
 		background: linear-gradient(180deg, rgba($primary-color, 1) 25%, rgba(255, 255, 255, 0) 100%);
 	}
@@ -284,7 +286,7 @@ $item_padding: 8px;
 		.ActionsShade {
 			top: 6rem;
 
-			width: 375px;
+			width: 425px;
 			height: 2.75rem;
 		}
 

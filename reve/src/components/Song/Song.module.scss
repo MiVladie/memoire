@@ -61,12 +61,21 @@
 	.Link {
 		display: none;
 
+		position: relative;
+
+		mix-blend-mode: difference;
 		fill: $secondary-color;
 
 		cursor: pointer;
+
+		svg {
+			position: absolute;
+			z-index: 1500;
+		}
 	}
 
 	.LinkDisabled {
+		mix-blend-mode: inherit;
 		fill: lighten($primary-color, 8);
 
 		cursor: inherit;

@@ -10,9 +10,9 @@ import Circle from './src/components/Circle/Circle';
 export function wrapPageElement({ element, props }) {
 	return (
 		<Layout {...props}>
-			{element}
-
 			<Circle pathname={props.location.pathname} />
+
+			{element}
 		</Layout>
 	);
 }
