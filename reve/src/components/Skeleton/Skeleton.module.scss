@@ -1,0 +1,33 @@
+@import 'styles/colors.scss';
+
+.Skeleton {
+	$background: lighten($primary-color, 4);
+	$highlight: lighten($primary-color, 8);
+
+	.Indicator {
+		width: 100%;
+
+		display: inline-block;
+
+		line-height: 1;
+
+		border-radius: 4px;
+
+		background-color: $background;
+		background-image: linear-gradient(90deg, $background, $highlight, $background);
+		background-size: 200px 100%;
+		background-repeat: no-repeat;
+
+		animation: translate 1.2s ease-in-out infinite;
+	}
+
+	@keyframes translate {
+		0% {
+			background-position: -200px 0;
+		}
+
+		100% {
+			background-position: calc(200px + 100%) 0;
+		}
+	}
+}
