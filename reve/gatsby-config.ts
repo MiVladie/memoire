@@ -10,9 +10,6 @@ const config: GatsbyConfig = {
 	},
 	pathPrefix: '/memoire',
 	graphqlTypegen: true,
-	flags: {
-		DEV_SSR: true
-	},
 	plugins: [
 		'gatsby-plugin-react-svg',
 		'gatsby-plugin-sass',

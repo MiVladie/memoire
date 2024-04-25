@@ -1,14 +1,20 @@
 import React, { useMemo } from 'react';
 
-import { useLocation } from '@reach/router';
-
 import * as classes from './Circle.module.scss';
 
-const Circle = () => {
-	const { pathname } = useLocation();
+interface Props {
+	pathname: string;
+}
+
+const Circle = ({ pathname }: Props) => {
+	function includes(routes: string | string[], path: string) {
+		return (typeof routes === 'string' ? [routes] : routes).some((p) => path.includes(p));
+	}
 
 	function getClasses(path: string) {
-		if (['signin', 'signup', 'recover'].some((p) => path.includes(p))) return classes.Auth;
+		if (includes(['signin', 'signup'], path)) return classes.Auth;
+		if (includes('recover', path)) return classes.Recover;
+		if (includes(['home', 'profile'], path)) return classes.Home;
 
 		return '';
 	}

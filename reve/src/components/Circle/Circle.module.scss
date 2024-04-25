@@ -1,40 +1,92 @@
 @import 'styles/colors.scss';
 
+$size: 85vw;
+
 .Circle {
+	width: $size;
+	height: $size;
+
 	position: absolute;
 
 	background-color: $secondary-color;
 	border-radius: 50%;
 
 	mix-blend-mode: difference;
+
+	animation: bubble forwards 8s infinite;
+	transition: all 1s;
+
+	@keyframes bubble {
+		0% {
+			transform: scale(1);
+		}
+
+		50% {
+			transform: scale(1.05);
+		}
+
+		100% {
+			transform: scale(1);
+		}
+	}
 }
 
-.Auth {
+.Auth,
+.Recover {
 	top: -20vw;
 	right: -25vw;
+}
 
-	width: 85vw;
-	height: 85vw;
+.Home {
+	top: calc(100vh - #{$size} * 2 / 3);
+	right: -25vw;
 }
 
 @media (min-width: 720px) {
-	.Auth {
-		width: 65vw;
-		height: 65vw;
+	$size: 65vw;
 
+	.Circle {
+		width: $size;
+		height: $size;
+	}
+
+	.Auth,
+	.Recover {
 		top: -20vw;
 		right: -15vw;
+	}
+
+	.Home {
+		top: calc(100vh - #{$size} / 2);
+		right: calc(#{$size} / -4);
 	}
 }
 
 @media (min-width: 1025px) {
+	$size: 80vh;
+
+	.Circle {
+		width: $size;
+		height: $size;
+	}
+
 	.Auth {
-		$size: 80vh;
+		top: calc(#{$size} / 2);
+		right: calc(-#{$size} / 2);
+	}
+
+	.Recover {
+		top: calc(100vh - #{$size} / 2);
+		right: calc(-#{$size} / 6);
+	}
+
+	.Home {
+		$size: 70vh;
 
 		width: $size;
 		height: $size;
 
-		top: calc(#{$size} / 2);
-		right: calc(-#{$size} / 2);
+		top: calc(#{$size} / -3);
+		right: calc(#{$size} / -2);
 	}
 }

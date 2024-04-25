@@ -1,7 +1,5 @@
 import React, { CSSProperties } from 'react';
 
-import Circle from 'components/Circle/Circle';
-
 import * as classes from './Layout.module.scss';
 
 import './reset.css';
@@ -16,8 +14,6 @@ const Layout = ({ children, className, style }: Props) => {
 	return (
 		<main className={[classes.Layout, className].join(' ')} style={style}>
 			{children}
-
-			<Circle />
 		</main>
 	);
 };
