@@ -10,3 +10,9 @@ $SIZE: 35px;
 
 	cursor: pointer;
 }
+
+@media (min-width: 1025px) {
+	.Avatar {
+		fill: $primary-color;
+	}
+}

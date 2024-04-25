@@ -20,9 +20,9 @@ const Index: React.FC = () => {
 	}, []);
 
 	return (
-		<Layout style={style}>
+		<div style={style}>
 			<Spinner />
-		</Layout>
+		</div>
 	);
 };
 

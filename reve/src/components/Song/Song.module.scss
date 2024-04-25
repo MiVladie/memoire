@@ -21,6 +21,7 @@
 
 		.Info {
 			width: 48vw;
+
 			margin-left: 18px;
 
 			.Name,
@@ -59,6 +60,16 @@
 
 	.Link {
 		display: none;
+
+		fill: $secondary-color;
+
+		cursor: pointer;
+	}
+
+	.LinkDisabled {
+		fill: lighten($primary-color, 8);
+
+		cursor: inherit;
 	}
 
 	.Duration {
@@ -82,10 +93,6 @@
 
 		.Link {
 			display: block;
-
-			fill: $secondary-color;
-
-			cursor: pointer;
 		}
 
 		.Duration {
@@ -119,10 +126,6 @@
 
 		.Link {
 			display: block;
-
-			fill: $secondary-color;
-
-			cursor: pointer;
 		}
 	}
 }

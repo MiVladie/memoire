@@ -80,7 +80,7 @@ const Account = () => {
 	}
 
 	function logoutHandler() {
-		navigate('/');
+		navigate('/signin');
 	}
 
 	return (

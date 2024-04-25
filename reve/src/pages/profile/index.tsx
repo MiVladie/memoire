@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { HeadFC, navigate } from 'gatsby';
 import { SETTINGS_DATA } from 'config/data';
 
-import Layout from 'hoc/Layout/Layout';
 import Account from 'containers/Account/Account';
 import SoundCloud from 'containers/SoundCloud/SoundCloud';
 import Settings from 'containers/Settings/Settings';
@@ -25,14 +24,14 @@ const Profile = () => {
 	}
 
 	return (
-		<Layout>
+		<div>
 			<Settings
 				data={SETTINGS_DATA}
 				onUpdate={settingHandler}
 				actions={<X className={classes.X} onClick={backHandler} />}>
 				{setting === 1 ? <Account /> : <SoundCloud />}
 			</Settings>
-		</Layout>
+		</div>
 	);
 };
 

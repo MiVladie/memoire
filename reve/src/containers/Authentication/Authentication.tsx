@@ -11,7 +11,7 @@ interface Props {
 }
 
 const Authentication = ({ name, description, children }: Props) => (
-	<Layout className={classes.Authentication}>
+	<div className={classes.Authentication}>
 		<div className={classes.Heading}>
 			<h1 className={classes.Name}>{name}</h1>
 			<h2 className={classes.Description}>{description}</h2>
@@ -20,7 +20,7 @@ const Authentication = ({ name, description, children }: Props) => (
 		{children}
 
 		{React.Children.toArray(children).length === 1 && <div />}
-	</Layout>
+	</div>
 );
 
 export default Authentication;
