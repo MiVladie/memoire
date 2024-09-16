@@ -7,6 +7,10 @@ export function comparePasswords(original: string, encrypted: string): Promise<b
 	return bcrypt.compare(original, encrypted);
 }
 
+export function encryptPassword(password: string): Promise<string> {
+	return bcrypt.hash(password, Constants.Security.SALT_ROUNDS);
+}
+
 export function generateToken(userId: number): string {
 	return jwt.sign({ user: { id: userId } }, Constants.Security.JWT_SECRET);
 }

@@ -3,7 +3,13 @@ export interface SignInParams {
 	password: string;
 }
 
-export interface SignInType {
+export interface SignUpParams {
+	name: string;
+	email: string;
+	password: string;
+}
+
+export interface AuthType {
 	user: {
 		id: number;
 		name: string;
