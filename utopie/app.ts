@@ -1,9 +1,11 @@
-import handleError from '@/middleware/handleError';
-import setHeaders from '@/middleware/setHeaders';
-
 require('dotenv').config();
 
-const express = require('express');
+import express from 'express';
+
+import setHeaders from '@/middleware/setHeaders';
+import handleError from '@/middleware/handleError';
+
+import router from '@/routes';
 
 const app = express();
 
@@ -12,6 +14,9 @@ app.use(setHeaders);
 
 // Parsing JSON middleware
 app.use(express.json());
+
+// Routes handing
+app.use('/api', router);
 
 // Error handing
 app.use(handleError);
