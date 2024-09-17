@@ -1,3 +1,5 @@
+import { UserDTO } from '@/dtos/user/types';
+
 export interface SignInParams {
 	name: string;
 	password: string;
@@ -10,11 +12,6 @@ export interface SignUpParams {
 }
 
 export interface AuthType {
-	user: {
-		id: number;
-		name: string;
-		email: string;
-		image: string | null;
-	};
+	user: UserDTO;
 	token: string;
 }

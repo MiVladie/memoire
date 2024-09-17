@@ -1,10 +1,11 @@
 import { AuthType, SignInParams, SignUpParams } from '@/services/auth/types';
 import { comparePasswords, encryptPassword, generateToken } from '@/util/auth';
+import { toUserDTO } from '@/dtos/user';
 
 import * as userRepository from '@/repositories/user';
 
 export async function signIn({ name, password }: SignInParams): Promise<AuthType> {
-	const user = await userRepository.findOne({ name }, true);
+	const user = await userRepository.findOne({ name });
 
 	if (!user) {
 		throw new Error('Incorrect email or password!');
@@ -18,7 +19,10 @@ export async function signIn({ name, password }: SignInParams): Promise<AuthType
 
 	const token = generateToken(user.id);
 
-	return { user, token };
+	return {
+		user: toUserDTO(user),
+		token
+	};
 }
 
 export async function signUp({ name, email, password }: SignUpParams): Promise<AuthType> {
@@ -40,5 +44,8 @@ export async function signUp({ name, email, password }: SignUpParams): Promise<A
 
 	const token = generateToken(user.id);
 
-	return { user, token };
+	return {
+		user: toUserDTO(user),
+		token
+	};
 }

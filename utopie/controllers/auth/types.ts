@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import { ResponseBody } from '@/interfaces/api';
+import { UserDTO } from '@/dtos/user/types';
 
 export interface PostSignInRequestBody {
 	name: string;
@@ -7,12 +8,7 @@ export interface PostSignInRequestBody {
 }
 
 interface PostSignInResponseBody extends ResponseBody {
-	user: {
-		id: number;
-		name: string;
-		email: string;
-		image: string | null;
-	};
+	user: UserDTO;
 	token: string;
 }
 
@@ -25,12 +21,7 @@ export interface PostSignUpRequestBody {
 }
 
 interface PostSignUpResponseBody extends ResponseBody {
-	user: {
-		id: number;
-		name: string;
-		email: string;
-		image: string | null;
-	};
+	user: UserDTO;
 	token: string;
 }
 
