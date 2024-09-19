@@ -10,7 +10,7 @@ export const postSignIn: PostSignInHandler = async (req, res, next) => {
 	res.status(200).json({
 		user,
 		token,
-		message: 'User signed up successfully!'
+		message: 'User signed in successfully!'
 	});
 };
 

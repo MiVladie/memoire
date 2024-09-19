@@ -1,7 +1,28 @@
-import { Request, Response, NextFunction } from 'express';
+import { ErrorResponseBody } from '@/interfaces/api';
+import { ErrorHandler } from '@/interfaces/error';
 
-export default (error: Error, req: Request, res: Response, next: NextFunction) => {
-	console.log(error);
+import APIError, { Errors } from '@/shared/APIError';
 
-	return res.status(500).json({ message: error?.message || 'Internal Server Error!' });
+import * as Constants from '@/constants';
+
+export const handleError: ErrorHandler = (error, _, res, next) => {
+	let payload: ErrorResponseBody;
+
+	if (error instanceof APIError) {
+		payload = error;
+	} else {
+		payload = Errors.UNKNOWN;
+	}
+
+	// Log development errors
+	if (Constants.Server.ENV === 'development') {
+		Object.assign(payload, {
+			message: error.message,
+			stack: error.stack
+		});
+	}
+
+	return res.status(payload.status).json(payload);
 };
+
+export default handleError;

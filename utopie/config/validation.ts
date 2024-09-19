@@ -1,4 +1,5 @@
 export const JOI_CUSTOM_MESSAGES = {
+	'any.required': 'This field must not be empty',
 	'string.alphanum': 'This field must only contain alpha-numeric characters',
 	'string.email': 'This field must be a valid email',
 	'string.empty': 'This field must not be empty',
