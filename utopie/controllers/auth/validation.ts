@@ -1,7 +1,25 @@
-import { PostSignInHandler, PostSignInRequestBody, PostSignUpHandler, PostSignUpRequestBody } from './types';
+import {
+	GetAuthenticateInHandler,
+	GetAuthenticateQueryParams,
+	PostSignInHandler,
+	PostSignInRequestBody,
+	PostSignUpHandler,
+	PostSignUpRequestBody
+} from './types';
 import { validate } from '@/util/validation';
 
 import joi from 'joi';
+
+export const authenticate: GetAuthenticateInHandler = (req, res, next) => {
+	validate<GetAuthenticateQueryParams>(
+		{
+			token: joi.string()
+		},
+		req.query
+	);
+
+	next();
+};
 
 export const signIn: PostSignInHandler = (req, res, next) => {
 	validate<PostSignInRequestBody>(

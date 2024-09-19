@@ -2,6 +2,17 @@ import { RequestHandler } from 'express';
 import { ResponseBody } from '@/interfaces/api';
 import { UserDTO } from '@/dtos/user/types';
 
+interface GetAuthenticateResponseBody extends ResponseBody {
+	user: UserDTO;
+	token: string;
+}
+
+export interface GetAuthenticateQueryParams {
+	token?: string;
+}
+
+export type GetAuthenticateInHandler = RequestHandler<{}, GetAuthenticateResponseBody, {}, GetAuthenticateQueryParams>;
+
 export interface PostSignInRequestBody {
 	name: string;
 	password: string;

@@ -4,3 +4,7 @@ export interface UserDTO {
 	email: string;
 	image: string | null;
 }
+
+export interface UserTokenDTO {
+	id: number;
+}
