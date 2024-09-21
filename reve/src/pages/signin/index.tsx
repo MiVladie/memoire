@@ -44,7 +44,9 @@ const SignIn = () => {
 
 		await delay(2);
 
-		navigate('/home');
+		setError('here');
+
+		// navigate('/home');
 	}
 
 	function signUpHandler() {
