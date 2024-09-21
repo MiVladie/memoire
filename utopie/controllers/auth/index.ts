@@ -1,4 +1,11 @@
-import { GetAuthenticateInHandler, PostSignInHandler, PostSignUpHandler } from './types';
+import {
+	GetAuthenticateInHandler,
+	PostSignInHandler,
+	PostSignUpHandler,
+	PostRecoverHandler,
+	PostVerifyHandler,
+	PostResetHandler
+} from './types';
 import { extractToken } from '@/util/auth';
 
 import APIError, { Errors } from '@/shared/APIError';
@@ -42,5 +49,40 @@ export const postSignUp: PostSignUpHandler = async (req, res, next) => {
 		user,
 		token,
 		message: 'User signed up successfully!'
+	});
+};
+
+export const postRecover: PostRecoverHandler = async (req, res, next) => {
+	const { email } = req.body;
+
+	const { code, expiresAt } = await authService.recover({ email });
+
+	// TODO: send email
+	console.log({ code, expiresAt });
+
+	res.status(200).json({
+		message: 'Recovery email was sent successfully!'
+	});
+};
+
+export const postVerify: PostVerifyHandler = async (req, res, next) => {
+	const { email, code } = req.body;
+
+	const { token } = await authService.verify({ email, code });
+
+	res.status(200).json({
+		token,
+		message: 'Recovery code was verified successfully!'
+	});
+};
+
+export const postReset: PostResetHandler = async (req, res, next) => {
+	const { token } = req.query;
+	const { password } = req.body;
+
+	await authService.reset({ token, password });
+
+	res.status(200).json({
+		message: 'Password was reset successfully!'
 	});
 };

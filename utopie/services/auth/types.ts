@@ -19,3 +19,26 @@ export interface AuthType {
 	user: UserDTO;
 	token: string;
 }
+
+export interface RecoverParams {
+	email: string;
+}
+
+export interface RecoveryType {
+	code: string;
+	expiresAt: Date;
+}
+
+export interface VerifyParams {
+	email: string;
+	code: string;
+}
+
+export interface VerifyType {
+	token: string;
+}
+
+export interface ResetParams {
+	token: string;
+	password: string;
+}

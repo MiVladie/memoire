@@ -11,8 +11,8 @@ export function encryptPassword(password: string): Promise<string> {
 	return bcrypt.hash(password, Constants.Security.SALT_ROUNDS);
 }
 
-export function generateToken<T extends object>(payload: T): string {
-	return jwt.sign(payload, Constants.Security.JWT_SECRET);
+export function generateToken<T extends object>(payload: T, expiresIn?: number): string {
+	return jwt.sign(payload, Constants.Security.JWT_SECRET, expiresIn ? { expiresIn: expiresIn * 60 } : undefined);
 }
 
 export function verifyToken<T extends object>(token: string): T | null {

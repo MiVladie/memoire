@@ -37,3 +37,34 @@ interface PostSignUpResponseBody extends ResponseBody {
 }
 
 export type PostSignUpHandler = RequestHandler<{}, PostSignUpResponseBody, PostSignUpRequestBody>;
+
+export interface PostRecoverRequestBody {
+	email: string;
+}
+
+interface PostRecoverResponseBody extends ResponseBody {}
+
+export type PostRecoverHandler = RequestHandler<{}, PostRecoverResponseBody, PostRecoverRequestBody>;
+
+export interface PostVerifyRequestBody {
+	email: string;
+	code: string;
+}
+
+interface PostVerifyResponseBody extends ResponseBody {
+	token: string;
+}
+
+export type PostVerifyHandler = RequestHandler<{}, PostVerifyResponseBody, PostVerifyRequestBody>;
+
+export interface PostResetQueryParams {
+	token: string;
+}
+
+export interface PostResetRequestBody {
+	password: string;
+}
+
+interface PostResetResponseBody extends ResponseBody {}
+
+export type PostResetHandler = RequestHandler<{}, PostResetResponseBody, PostResetRequestBody, PostResetQueryParams>;

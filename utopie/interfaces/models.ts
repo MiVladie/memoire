@@ -6,3 +6,10 @@ export interface User {
 	image: string | null;
 	createdAt: Date;
 }
+
+export interface Recovery {
+	id: number;
+	code: string;
+	expiresAt: Date;
+	userId: number;
+}

@@ -6,5 +6,7 @@ model User {
     image       String?
     createdAt   DateTime    @default(now())
 
+    recovery    Recovery[]
+
     @@map("users")
 }

@@ -5,8 +5,11 @@ export type ErrorHandler = ErrorRequestHandler<null, ErrorResponseBody>;
 
 export type ErrorKey =
 	| 'VALIDATION'
+	| 'NOT_FOUND'
 	| 'NAME_ALREADY_IN_USE'
 	| 'EMAIL_ALREADY_TAKEN'
+	| 'RECOVERY_INVALID'
+	| 'RECOVERY_EXPIRED'
 	| 'UNAUTHORIZED'
 	| 'FORBIDDEN'
 	| 'INTERNAL_SERVER_ERROR'

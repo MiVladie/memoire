@@ -7,3 +7,9 @@ export interface CreateParams {
 	email: string;
 	password: string;
 }
+
+export interface UpdateParams {
+	name?: string;
+	password?: string;
+	image?: string | null;
+}

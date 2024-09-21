@@ -37,6 +37,11 @@ export const Errors: ErrorOptions = {
 		status: 422,
 		message: 'Validation Errors.'
 	},
+	NOT_FOUND: {
+		type: Types.MEMOIRE,
+		status: 404,
+		message: 'Requested resource was not found.'
+	},
 	NAME_ALREADY_IN_USE: {
 		type: Types.MEMOIRE,
 		status: 409,
@@ -52,6 +57,16 @@ export const Errors: ErrorOptions = {
 		meta: {
 			email: 'The given email address is already taken.'
 		}
+	},
+	RECOVERY_INVALID: {
+		type: Types.MEMOIRE,
+		status: 400,
+		message: 'Recovery code is not valid.'
+	},
+	RECOVERY_EXPIRED: {
+		type: Types.MEMOIRE,
+		status: 410,
+		message: 'Recovery code has expired.'
 	},
 	UNAUTHORIZED: {
 		type: Types.NETWORK,
