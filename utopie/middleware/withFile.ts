@@ -3,16 +3,16 @@ import { convertMegaBytesToBytes, extractFileExtension } from '@/util/file';
 import { generateUniqueString } from '@/util/optimization';
 import { WithFileRequestHandler } from '@/interfaces/api';
 import { FILE_TYPES } from '@/interfaces/file';
+import { File } from '@/constants';
 
 import APIError, { Errors } from '@/shared/APIError';
 import multer from 'multer';
-
-import * as Constants from '@/constants';
+import path from 'path';
 
 function getStorage(destination: string): multer.StorageEngine {
 	return multer.diskStorage({
 		destination: (req, file, cb) => {
-			cb(null, Constants.File.PUBLIC_PATH + destination);
+			cb(null, path.join(File.PUBLIC_PATH, destination));
 		},
 		filename: (req, file, cb) => {
 			cb(null, `${generateUniqueString()}.${extractFileExtension(file.originalname)}`);
@@ -43,9 +43,9 @@ function withFile(type: FILE_TYPES, req: Request, res: Response, next: NextFunct
 
 	switch (type) {
 		case FILE_TYPES.IMAGE:
-			destination = Constants.File.IMAGES_PATH;
-			size = Constants.File.IMAGE_MAX_SIZE;
-			extensions = Constants.File.IMAGE_EXTENSIONS;
+			destination = File.IMAGES_PATH;
+			size = File.IMAGE_MAX_SIZE;
+			extensions = File.IMAGE_EXTENSIONS;
 			break;
 
 		default:

@@ -1,4 +1,4 @@
-import { PatchUpdateHandler, PatchPasswordHandler, PostImageHandler } from './types';
+import { PatchUpdateHandler, PatchPasswordHandler, PostImageHandler, DeleteImageHandler } from './types';
 
 import * as userService from '@/services/user';
 
@@ -34,5 +34,18 @@ export const postImage: PostImageHandler = async (req, res, next) => {
 	res.status(200).json({
 		user,
 		message: 'User image uploaded successfully!'
+	});
+};
+
+export const deleteImage: DeleteImageHandler = async (req, res, next) => {
+	const {
+		user: { id }
+	} = res.locals;
+
+	const { user } = await userService.deleteImage(id);
+
+	res.status(200).json({
+		user,
+		message: 'User image deleted successfully!'
 	});
 };

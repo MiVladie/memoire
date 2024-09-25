@@ -28,3 +28,9 @@ export interface PostImageResponseBody extends ResponseBody {
 export type PostImageLocals = WithFileLocals & WithUserLocals;
 
 export type PostImageHandler = RequestHandler<unknown, PostImageResponseBody, unknown, unknown, PostImageLocals>;
+
+export interface DeleteImageResponseBody extends ResponseBody {
+	user: UserDTO;
+}
+
+export type DeleteImageHandler = RequestHandler<unknown, DeleteImageResponseBody, unknown, unknown, WithUserLocals>;
