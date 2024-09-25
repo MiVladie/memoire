@@ -11,7 +11,12 @@ export interface GetAuthenticateQueryParams {
 	token?: string;
 }
 
-export type GetAuthenticateInHandler = RequestHandler<{}, GetAuthenticateResponseBody, {}, GetAuthenticateQueryParams>;
+export type GetAuthenticateInHandler = RequestHandler<
+	unknown,
+	GetAuthenticateResponseBody,
+	unknown,
+	GetAuthenticateQueryParams
+>;
 
 export interface PostSignInRequestBody {
 	name: string;
@@ -23,7 +28,7 @@ interface PostSignInResponseBody extends ResponseBody {
 	token: string;
 }
 
-export type PostSignInHandler = RequestHandler<{}, PostSignInResponseBody, PostSignInRequestBody>;
+export type PostSignInHandler = RequestHandler<unknown, PostSignInResponseBody, PostSignInRequestBody>;
 
 export interface PostSignUpRequestBody {
 	name: string;
@@ -36,15 +41,13 @@ interface PostSignUpResponseBody extends ResponseBody {
 	token: string;
 }
 
-export type PostSignUpHandler = RequestHandler<{}, PostSignUpResponseBody, PostSignUpRequestBody>;
+export type PostSignUpHandler = RequestHandler<unknown, PostSignUpResponseBody, PostSignUpRequestBody>;
 
 export interface PostRecoverRequestBody {
 	email: string;
 }
 
-interface PostRecoverResponseBody extends ResponseBody {}
-
-export type PostRecoverHandler = RequestHandler<{}, PostRecoverResponseBody, PostRecoverRequestBody>;
+export type PostRecoverHandler = RequestHandler<unknown, ResponseBody, PostRecoverRequestBody>;
 
 export interface PostVerifyRequestBody {
 	email: string;
@@ -55,7 +58,7 @@ interface PostVerifyResponseBody extends ResponseBody {
 	token: string;
 }
 
-export type PostVerifyHandler = RequestHandler<{}, PostVerifyResponseBody, PostVerifyRequestBody>;
+export type PostVerifyHandler = RequestHandler<unknown, PostVerifyResponseBody, PostVerifyRequestBody>;
 
 export interface PostResetQueryParams {
 	token: string;
@@ -65,6 +68,4 @@ export interface PostResetRequestBody {
 	password: string;
 }
 
-interface PostResetResponseBody extends ResponseBody {}
-
-export type PostResetHandler = RequestHandler<{}, PostResetResponseBody, PostResetRequestBody, PostResetQueryParams>;
+export type PostResetHandler = RequestHandler<unknown, ResponseBody, PostResetRequestBody, PostResetQueryParams>;

@@ -1,4 +1,6 @@
+import { UserDTO } from '@/dtos/user/types';
 import { ErrorType, ErrorMeta } from './error';
+import { RequestHandler } from 'express';
 
 export interface ResponseBody {
 	message: string;
@@ -11,3 +13,9 @@ export interface ErrorResponseBody {
 	meta?: ErrorMeta;
 	stack?: string;
 }
+
+export interface WithUserLocals {
+	user: UserDTO;
+}
+
+export type WithUserRequestHandler = RequestHandler<unknown, unknown, unknown, unknown, WithUserLocals>;
