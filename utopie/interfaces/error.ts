@@ -12,6 +12,7 @@ export type ErrorKey =
 	| 'RECOVERY_EXPIRED'
 	| 'UNAUTHORIZED'
 	| 'FORBIDDEN'
+	| 'FILE_TYPE_NOT_ALLOWED'
 	| 'INTERNAL_SERVER_ERROR'
 	| 'UNKNOWN';
 export type ErrorType = 'MEMOIRE' | 'INTERNAL' | 'NETWORK' | 'UNKNOWN';

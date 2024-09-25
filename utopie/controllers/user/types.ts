@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
-import { ResponseBody, WithUserLocals } from '@/interfaces/api';
+import { ResponseBody, WithFileLocals, WithUserLocals } from '@/interfaces/api';
+import { UserDTO } from '@/dtos/user/types';
 
 export interface PatchUpdateRequestBody {
 	name?: string;
@@ -19,3 +20,11 @@ export type PatchPasswordHandler = RequestHandler<
 	unknown,
 	WithUserLocals
 >;
+
+export interface PostImageResponseBody extends ResponseBody {
+	user: UserDTO;
+}
+
+export type PostImageLocals = WithFileLocals & WithUserLocals;
+
+export type PostImageHandler = RequestHandler<unknown, PostImageResponseBody, unknown, unknown, PostImageLocals>;

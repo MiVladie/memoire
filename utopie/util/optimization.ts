@@ -1,3 +1,5 @@
+import { v7 as uuidv7 } from 'uuid';
+
 export function excludeKeys<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
 	let newObj = { ...obj };
 
@@ -10,4 +12,8 @@ export function excludeKeys<T extends object, K extends keyof T>(obj: T, keys: K
 
 export function generateNumber(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function generateUniqueString(): string {
+	return uuidv7();
 }

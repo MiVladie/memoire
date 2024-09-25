@@ -6,8 +6,8 @@ import APIError, { Errors } from '@/shared/APIError';
 
 import * as userRepository from '@/repositories/user';
 
-export async function update(userId: number, { name }: UpdateParams): Promise<UpdateType> {
-	const user = await userRepository.update(userId, { name });
+export async function update(userId: number, params: UpdateParams): Promise<UpdateType> {
+	const user = await userRepository.update(userId, params);
 
 	return {
 		user: toUserDTO(user)

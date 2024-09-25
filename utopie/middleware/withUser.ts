@@ -5,7 +5,7 @@ import APIError, { Errors } from '@/shared/APIError';
 
 import * as authService from '@/services/auth';
 
-export const withUser: WithUserRequestHandler = async (req, res, next) => {
+const withUser: WithUserRequestHandler = async (req, res, next) => {
 	const token = extractToken(req.get('Authorization'));
 
 	if (!token) {
@@ -18,3 +18,5 @@ export const withUser: WithUserRequestHandler = async (req, res, next) => {
 
 	next();
 };
+
+export default withUser;

@@ -6,6 +6,7 @@ import setHeaders from '@/middleware/setHeaders';
 import handleError from '@/middleware/handleError';
 
 import router from '@/routes';
+import uploads from '@/routes/uploads';
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.use(express.json());
 
 // Routes handing
 app.use('/api', router);
+
+// Static files
+app.use('/public', uploads);
 
 // Error handing
 app.use(handleError);

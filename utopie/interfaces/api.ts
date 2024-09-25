@@ -19,3 +19,9 @@ export interface WithUserLocals {
 }
 
 export type WithUserRequestHandler = RequestHandler<unknown, unknown, unknown, unknown, WithUserLocals>;
+
+export interface WithFileLocals {
+	file: Express.Multer.File;
+}
+
+export type WithFileRequestHandler = RequestHandler<any, any, any, any, WithFileLocals>;

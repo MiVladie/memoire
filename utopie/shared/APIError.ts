@@ -78,6 +78,11 @@ export const Errors: ErrorOptions = {
 		status: 403,
 		message: 'Forbidden'
 	},
+	FILE_TYPE_NOT_ALLOWED: {
+		type: Types.MEMOIRE,
+		status: 415,
+		message: 'File type is not allowed!'
+	},
 
 	// Server Errors
 	INTERNAL_SERVER_ERROR: {
