@@ -9,6 +9,8 @@ import Button from 'components/Button/Button';
 import Seo from 'hoc/Seo/Seo';
 import useForm from 'hooks/useForm';
 
+import * as API from 'api';
+
 import * as classes from './Recover.module.scss';
 
 type StepOneFields = {
@@ -25,6 +27,8 @@ type StepThreeFields = {
 };
 
 const Recover = () => {
+	const [token, setToken] = useState<string>();
+
 	const [step, setStep] = useState<number>(0);
 
 	const [loading, setLoading] = useState<boolean>(false);
@@ -36,6 +40,7 @@ const Recover = () => {
 		},
 		rules: {
 			email: {
+				isEmail: true,
 				required: true
 			}
 		},
@@ -75,22 +80,67 @@ const Recover = () => {
 		onRefill: () => setError(undefined)
 	});
 
-	async function sendHandler() {
-		// setLoading(true);
+	async function sendHandler({ email }: StepOneFields) {
+		setLoading(true);
 
-		setStep(1);
+		try {
+			await API.Auth.recover({ email });
+
+			setStep(1);
+		} catch (error: any) {
+			stepOneForm.handleChange('', 'email');
+
+			if (error.meta) {
+				stepOneForm.handleErrors(error.meta);
+			} else {
+				setError(error.message);
+			}
+		} finally {
+			setLoading(false);
+		}
 	}
 
-	async function verifyHandler() {
-		// setLoading(true);
+	async function verifyHandler({ code }: StepTwoFields) {
+		setLoading(true);
 
-		setStep(2);
+		try {
+			const { token } = await API.Auth.verify({ code, email: stepOneForm.values.email });
+
+			setToken(token);
+
+			setStep(2);
+		} catch (error: any) {
+			stepTwoForm.handleChange('', 'code');
+
+			if (error.meta) {
+				stepTwoForm.handleErrors(error.meta);
+			} else {
+				setError(error.message);
+			}
+		} finally {
+			setLoading(false);
+		}
 	}
 
-	async function saveHandler() {
-		// setLoading(true);
+	async function saveHandler({ password }: StepThreeFields) {
+		setLoading(true);
 
-		navigate('/signin');
+		try {
+			await API.Auth.reset({ password, token: token! });
+
+			navigate('/signin');
+		} catch (error: any) {
+			stepThreeForm.handleChange('', 'password');
+			stepThreeForm.handleChange('', 'repeatPassword');
+
+			if (error.meta) {
+				stepThreeForm.handleErrors(error.meta);
+			} else {
+				setError(error.message);
+			}
+		} finally {
+			setLoading(false);
+		}
 	}
 
 	return (

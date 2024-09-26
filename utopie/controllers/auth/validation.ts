@@ -10,7 +10,6 @@ import {
 	PostSignUpHandler,
 	PostSignUpRequestBody,
 	PostResetHandler,
-	PostResetQueryParams,
 	PostResetRequestBody
 } from './types';
 import { validate } from '@/util/validation';
@@ -77,16 +76,10 @@ export const verify: PostVerifyHandler = (req, res, next) => {
 };
 
 export const reset: PostResetHandler = (req, res, next) => {
-	validate<PostResetQueryParams>(
-		{
-			token: joi.string().required()
-		},
-		req.query
-	);
-
 	validate<PostResetRequestBody>(
 		{
-			password: joi.string().min(8).max(15).required()
+			password: joi.string().min(8).max(15).required(),
+			token: joi.string().required()
 		},
 		req.body
 	);

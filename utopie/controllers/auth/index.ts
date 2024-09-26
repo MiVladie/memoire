@@ -77,8 +77,7 @@ export const postVerify: PostVerifyHandler = async (req, res, next) => {
 };
 
 export const postReset: PostResetHandler = async (req, res, next) => {
-	const { token } = req.query;
-	const { password } = req.body;
+	const { password, token } = req.body;
 
 	await authService.reset({ token, password });
 

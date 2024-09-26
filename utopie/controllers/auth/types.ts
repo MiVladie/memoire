@@ -60,12 +60,9 @@ interface PostVerifyResponseBody extends ResponseBody {
 
 export type PostVerifyHandler = RequestHandler<unknown, PostVerifyResponseBody, PostVerifyRequestBody>;
 
-export interface PostResetQueryParams {
-	token: string;
-}
-
 export interface PostResetRequestBody {
+	token: string;
 	password: string;
 }
 
-export type PostResetHandler = RequestHandler<unknown, ResponseBody, PostResetRequestBody, PostResetQueryParams>;
+export type PostResetHandler = RequestHandler<unknown, ResponseBody, PostResetRequestBody>;

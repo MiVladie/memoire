@@ -30,3 +30,25 @@ export interface SignUpResponse extends ResponseBody {
 	user: User;
 	token: string;
 }
+
+export interface RecoverPayload {
+	email: string;
+}
+
+export interface RecoverResponse extends ResponseBody {}
+
+export interface VerifyPayload {
+	email: string;
+	code: string;
+}
+
+export interface VerifyResponse extends ResponseBody {
+	token: string;
+}
+
+export interface ResetPayload {
+	token: string;
+	password: string;
+}
+
+export interface ResetResponse extends ResponseBody {}

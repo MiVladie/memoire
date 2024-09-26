@@ -1,10 +1,16 @@
 import {
 	AuthenticatePayload,
 	AuthenticateResponse,
+	RecoverPayload,
+	RecoverResponse,
+	ResetPayload,
+	ResetResponse,
 	SignInPayload,
 	SignInResponse,
 	SignUpPayload,
-	SignUpResponse
+	SignUpResponse,
+	VerifyPayload,
+	VerifyResponse
 } from 'api/auth/types';
 import { API } from 'constants/api';
 import { paramify } from 'utils/api';
@@ -21,4 +27,16 @@ export function signIn(payload: SignInPayload): Promise<SignInResponse> {
 
 export function signUp(payload: SignUpPayload): Promise<SignUpResponse> {
 	return Request.post<SignUpResponse, SignUpPayload>(API + '/auth/signup', payload);
+}
+
+export function recover(payload: RecoverPayload): Promise<RecoverResponse> {
+	return Request.post<RecoverResponse, RecoverPayload>(API + '/auth/recover', payload);
+}
+
+export function verify(payload: VerifyPayload): Promise<VerifyResponse> {
+	return Request.post<VerifyResponse, VerifyPayload>(API + '/auth/verify', payload);
+}
+
+export function reset(payload: ResetPayload): Promise<ResetResponse> {
+	return Request.post<ResetResponse, ResetPayload>(API + '/auth/reset', payload);
 }
