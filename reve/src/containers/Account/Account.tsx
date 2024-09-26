@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 
 import { PROFILE_PICTURE } from 'config/data';
+import { AuthStorage } from 'interfaces/storage';
+import { AUTH_STORAGE_KEYS } from 'config/storage';
 import { navigate } from 'gatsby';
 import { delay } from 'utils/date';
 
 import Form from 'containers/Form/Form';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
+
 import useForm from 'hooks/useForm';
 
 import Upload from 'assets/icons/upload.svg';
 import Trash from 'assets/icons/trash.svg';
+
+import Storage from 'shared/Storage';
 
 import * as classes from './Account.module.scss';
 
@@ -80,6 +85,8 @@ const Account = () => {
 	}
 
 	function logoutHandler() {
+		Storage.remove<AuthStorage>(AUTH_STORAGE_KEYS);
+
 		navigate('/signin');
 	}
 

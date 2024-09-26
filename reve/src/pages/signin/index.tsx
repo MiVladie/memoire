@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 
-import { PROJECT_NAME } from 'config/constants';
+import { PROJECT_NAME } from 'config/project';
+import { AuthStorage } from 'interfaces/storage';
 import { HeadFC, navigate } from 'gatsby';
-import { delay } from 'utils/date';
 
 import Authentication from 'containers/Authentication/Authentication';
 import Form from 'containers/Form/Form';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
+import Storage from 'shared/Storage';
 import Seo from 'hoc/Seo/Seo';
+
 import useForm from 'hooks/useForm';
+
+import * as API from 'api';
 
 import * as classes from './SignIn.module.scss';
 
 type SignInFields = {
-	email: string;
+	name: string;
 	password: string;
 };
 
@@ -22,13 +26,13 @@ const SignIn = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
 
-	const { values, errors, handleChange, handleFocus, handleSubmit } = useForm<SignInFields>({
+	const { values, errors, handleChange, handleFocus, handleSubmit, handleErrors } = useForm<SignInFields>({
 		initialValues: {
-			email: '',
+			name: '',
 			password: ''
 		},
 		rules: {
-			email: {
+			name: {
 				required: true
 			},
 			password: {
@@ -39,14 +43,26 @@ const SignIn = () => {
 		onRefill: () => setError(undefined)
 	});
 
-	async function submitHandler() {
+	async function submitHandler({ name, password }: SignInFields) {
 		setLoading(true);
 
-		await delay(2);
+		try {
+			const { user, token } = await API.Auth.signIn({ name, password });
 
-		setError('here');
+			Storage.set<AuthStorage>({ user, token });
 
-		// navigate('/home');
+			navigate('/home');
+		} catch (error: any) {
+			handleChange('', 'password');
+
+			if (error.meta) {
+				handleErrors(error.meta);
+			} else {
+				setError(error.message);
+			}
+
+			setLoading(false);
+		}
 	}
 
 	function signUpHandler() {
@@ -62,14 +78,14 @@ const SignIn = () => {
 			<Form className={classes.Form}>
 				<Input
 					inputClassName={classes.Input}
-					name='email'
+					name='name'
 					placeholder='johndoe@example.com'
-					value={values.email}
+					value={values.name}
 					disabled={loading}
 					onChange={handleChange}
 					onFocus={handleFocus}
 					autoComplete={false}
-					error={errors.email}
+					error={errors.name}
 				/>
 
 				<Input

@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 
-import { PROJECT_NAME } from 'config/constants';
-import { HeadFC, Link, navigate } from 'gatsby';
-import { delay } from 'utils/date';
+import { PROJECT_NAME } from 'config/project';
+import { AuthStorage } from 'interfaces/storage';
+import { HeadFC, navigate } from 'gatsby';
 
 import Authentication from 'containers/Authentication/Authentication';
 import Form from 'containers/Form/Form';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
+import Storage from 'shared/Storage';
 import Seo from 'hoc/Seo/Seo';
+
 import useForm from 'hooks/useForm';
+
+import * as API from 'api';
 
 import * as classes from './SignUp.module.scss';
 
@@ -24,7 +28,7 @@ const SignUp = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
 
-	const { values, errors, handleChange, handleFocus, handleSubmit } = useForm<SignUpFields>({
+	const { values, errors, handleChange, handleFocus, handleSubmit, handleErrors } = useForm<SignUpFields>({
 		initialValues: {
 			name: '',
 			email: '',
@@ -51,12 +55,27 @@ const SignUp = () => {
 		onRefill: () => setError(undefined)
 	});
 
-	async function submitHandler() {
+	async function submitHandler({ name, email, password }: SignUpFields) {
 		setLoading(true);
 
-		await delay(2);
+		try {
+			const { user, token } = await API.Auth.signUp({ name, email, password });
 
-		navigate('/home');
+			Storage.set<AuthStorage>({ user, token });
+
+			navigate('/home');
+		} catch (error: any) {
+			handleChange('', 'password');
+			handleChange('', 'repeatPassword');
+
+			if (error.meta) {
+				handleErrors(error.meta);
+			} else {
+				setError(error.message);
+			}
+
+			setLoading(false);
+		}
 	}
 
 	function signInHandler() {

@@ -13,23 +13,23 @@ interface Props<T extends IValues> {
 }
 
 const useForm = <T extends IValues>({ initialValues, rules, onSubmit, onRefill }: Props<T>) => {
-	const getInitialErrors = () => {
+	function getInitialErrors() {
 		return Object.keys(initialValues).reduce((acc: any, curr) => ((acc[curr] = ''), acc), {}) as Error<T>;
-	};
+	}
 
 	const [submitted, setSubmitted] = useState<boolean>(false);
 	const [values, setValues] = useState<T>(initialValues);
 	const [errors, setErrors] = useState<Error<T>>(getInitialErrors);
 
-	const handleChange = (value: (typeof values)[keyof T], key: keyof T) => {
+	function handleChange(value: (typeof values)[keyof T], key: keyof T) {
 		if (errors[key]) {
 			setErrors((prevState) => ({ ...prevState, [key]: '' }));
 		}
 
 		setValues((prevState: T) => ({ ...prevState, [key]: value }));
-	};
+	}
 
-	const handleFocus = (key: keyof T) => {
+	function handleFocus(key: keyof T) {
 		if (submitted && !!onRefill) {
 			setSubmitted(false);
 			onRefill();
@@ -52,17 +52,17 @@ const useForm = <T extends IValues>({ initialValues, rules, onSubmit, onRefill }
 		}
 
 		setErrors((prevState) => ({ ...prevState, ...newErrors }));
-	};
+	}
 
-	const handleBlur = async (key: keyof T) => {
+	async function handleBlur(key: keyof T) {
 		if (!rules) return;
 
 		const error = await validateField(values[key], rules[key]!, values);
 
 		if (error) setErrors((prevState) => ({ ...prevState, [key]: error }));
-	};
+	}
 
-	const handleSubmit = async () => {
+	async function handleSubmit() {
 		if (!rules || !onSubmit) return;
 
 		onRefill?.();
@@ -90,13 +90,17 @@ const useForm = <T extends IValues>({ initialValues, rules, onSubmit, onRefill }
 
 		setSubmitted(true);
 		onSubmit(values);
-	};
+	}
 
-	const handleReset = () => {
+	function handleErrors(values?: Partial<Error<T>>) {
+		setErrors((values || {}) as Error<T>);
+	}
+
+	function handleReset() {
 		setValues(initialValues);
-	};
+	}
 
-	return { values, errors, handleChange, handleFocus, handleBlur, handleSubmit, handleReset };
+	return { values, errors, handleChange, handleFocus, handleBlur, handleSubmit, handleErrors, handleReset };
 };
 
 export default useForm;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { PROJECT_DESCRIPTION, PROJECT_NAME } from 'config/constants';
+import { PROJECT_DESCRIPTION, PROJECT_NAME } from 'config/project';
 
 interface Props {
 	title?: string;
