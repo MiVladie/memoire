@@ -57,7 +57,7 @@ const Input = ({
 			/>
 		</div>
 
-		{error ? <p className={[classes.Error, classes.IconError].join(' ')}>{error}</p> : null}
+		{error ? <p className={classes.Error}>{error}</p> : null}
 	</div>
 );
 
