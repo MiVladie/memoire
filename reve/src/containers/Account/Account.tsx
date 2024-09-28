@@ -96,16 +96,14 @@ const Account = () => {
 	async function uploadImageHandler(image: File) {
 		setUploading(true);
 
-		return;
-
 		try {
 			const { user } = await API.User.uploadImage({ image });
 
 			Storage.set<AuthStorage>({ user });
 
 			setUser(user);
-		} catch (error: any) {
-			//
+		} catch (error) {
+			console.error(error);
 		} finally {
 			setUploading(false);
 		}
@@ -114,16 +112,14 @@ const Account = () => {
 	async function removeImageHandler() {
 		setRemoving(true);
 
-		return;
-
 		try {
 			const { user } = await API.User.removeImage();
 
 			Storage.set<AuthStorage>({ user });
 
 			setUser(user);
-		} catch (error: any) {
-			//
+		} catch (error) {
+			console.error(error);
 		} finally {
 			setRemoving(false);
 		}
