@@ -22,6 +22,7 @@ import * as API from 'api';
 import * as File from 'constants/file';
 
 import * as classes from './Account.module.scss';
+import { delay } from 'utils/date';
 
 type MetaFields = {
 	name: string;
@@ -93,7 +94,9 @@ const Account = () => {
 	});
 
 	async function uploadImageHandler(image: File) {
-		setRemoving(true);
+		setUploading(true);
+
+		return;
 
 		try {
 			const { user } = await API.User.uploadImage({ image });
@@ -104,12 +107,14 @@ const Account = () => {
 		} catch (error: any) {
 			//
 		} finally {
-			setRemoving(false);
+			setUploading(false);
 		}
 	}
 
 	async function removeImageHandler() {
-		setUploading(true);
+		setRemoving(true);
+
+		return;
 
 		try {
 			const { user } = await API.User.removeImage();
@@ -120,7 +125,7 @@ const Account = () => {
 		} catch (error: any) {
 			//
 		} finally {
-			setUploading(false);
+			setRemoving(false);
 		}
 	}
 
