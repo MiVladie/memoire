@@ -3,20 +3,26 @@ import { PatchUpdateHandler, PatchPasswordHandler, PostImageHandler, DeleteImage
 import * as userService from '@/services/user';
 
 export const patchUpdate: PatchUpdateHandler = async (req, res, next) => {
-	const { user } = res.locals;
+	const {
+		user: { id }
+	} = res.locals;
 
-	await userService.update(user.id, req.body);
+	const { user } = await userService.update(id, req.body);
 
 	res.status(200).json({
+		user,
 		message: 'User updated successfully!'
 	});
 };
 
 export const patchPassword: PatchPasswordHandler = async (req, res, next) => {
-	const { user } = res.locals;
+	const {
+		user: { id }
+	} = res.locals;
+
 	const { password, newPassword } = req.body;
 
-	await userService.updatePassword(user.id, { password, newPassword });
+	await userService.updatePassword(id, { password, newPassword });
 
 	res.status(200).json({
 		message: 'User password updated successfully!'

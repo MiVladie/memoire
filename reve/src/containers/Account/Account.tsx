@@ -3,19 +3,23 @@ import React, { useState } from 'react';
 import { PROFILE_PICTURE } from 'config/data';
 import { AuthStorage } from 'interfaces/storage';
 import { AUTH_STORAGE_KEYS } from 'config/storage';
+import { User } from 'interfaces/models';
 import { navigate } from 'gatsby';
-import { delay } from 'utils/date';
 
 import Form from 'containers/Form/Form';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
 
 import useForm from 'hooks/useForm';
+import useFile from 'hooks/useFile';
 
 import Upload from 'assets/icons/upload.svg';
 import Trash from 'assets/icons/trash.svg';
 
 import Storage from 'shared/Storage';
+
+import * as API from 'api';
+import * as File from 'constants/file';
 
 import * as classes from './Account.module.scss';
 
@@ -29,17 +33,33 @@ type CredentialsFields = {
 	newPassword: string;
 };
 
+function initialUser(): User {
+	const { user } = Storage.get<AuthStorage>(['user']);
+
+	return user!;
+}
+
 const Account = () => {
+	const [user, setUser] = useState<User>(initialUser);
+
+	const [uploading, setUploading] = useState<boolean>(false);
+	const [removing, setRemoving] = useState<boolean>(false);
+
 	const [loadingMeta, setLoadingMeta] = useState<boolean>(false);
 	const [loadingCredentials, setLoadingCredentials] = useState<boolean>(false);
 
 	const [errorMeta, setErrorMeta] = useState<string>();
 	const [errorCredentials, setErrorCredentials] = useState<string>();
 
+	const { handleUpload } = useFile({
+		types: File.IMAGE_TYPES,
+		onUpload: uploadImageHandler
+	});
+
 	const mForm = useForm<MetaFields>({
 		initialValues: {
-			name: '',
-			email: ''
+			name: user.name,
+			email: user.email
 		},
 		rules: {
 			name: {
@@ -72,16 +92,75 @@ const Account = () => {
 		onRefill: () => setErrorCredentials(undefined)
 	});
 
-	async function submitMetaHandler() {
-		setLoadingMeta(true);
+	async function uploadImageHandler(image: File) {
+		setRemoving(true);
 
-		await delay(2);
+		try {
+			const { user } = await API.User.uploadImage({ image });
+
+			Storage.set<AuthStorage>({ user });
+
+			setUser(user);
+		} catch (error: any) {
+			//
+		} finally {
+			setRemoving(false);
+		}
 	}
 
-	async function submitCredentialsHandler() {
+	async function removeImageHandler() {
+		setUploading(true);
+
+		try {
+			const { user } = await API.User.removeImage();
+
+			Storage.set<AuthStorage>({ user });
+
+			setUser(user);
+		} catch (error: any) {
+			//
+		} finally {
+			setUploading(false);
+		}
+	}
+
+	async function submitMetaHandler({ name }: MetaFields) {
+		setLoadingMeta(true);
+
+		try {
+			const { user } = await API.User.update({ name });
+
+			Storage.set<AuthStorage>({ user });
+
+			setUser(user);
+		} catch (error: any) {
+			if (error.meta) {
+				mForm.handleErrors(error.meta);
+			} else {
+				setErrorMeta(error.message);
+			}
+		} finally {
+			setLoadingMeta(false);
+		}
+	}
+
+	async function submitCredentialsHandler({ password, newPassword }: CredentialsFields) {
 		setLoadingCredentials(true);
 
-		await delay(2);
+		try {
+			await API.User.updatePassword({ password, newPassword });
+		} catch (error: any) {
+			if (error.meta) {
+				cForm.handleErrors(error.meta);
+			} else {
+				setErrorCredentials(error.message);
+			}
+		} finally {
+			cForm.handleChange('', 'password');
+			cForm.handleChange('', 'newPassword');
+
+			setLoadingCredentials(false);
+		}
 	}
 
 	function logoutHandler() {
@@ -94,14 +173,28 @@ const Account = () => {
 		<div className={classes.Account}>
 			<div>
 				<div className={classes.Visual}>
-					<img src={PROFILE_PICTURE} alt='username' className={classes.Picture} />
+					<img src={user.image || PROFILE_PICTURE} alt='username' className={classes.Picture} />
 
 					<div className={classes.Actions}>
-						<Button className={classes.Action} iconClassName={classes.Icon} icon={<Upload />} ghost>
+						<Button
+							className={classes.Action}
+							iconClassName={classes.Icon}
+							onClick={handleUpload}
+							icon={<Upload />}
+							loading={uploading}
+							disabled={removing}
+							ghost>
 							Upload
 						</Button>
 
-						<Button className={classes.Action} iconClassName={classes.Icon} icon={<Trash />} ghost>
+						<Button
+							className={classes.Action}
+							iconClassName={classes.Icon}
+							onClick={removeImageHandler}
+							icon={<Trash />}
+							loading={removing}
+							disabled={uploading}
+							ghost>
 							Remove
 						</Button>
 					</div>

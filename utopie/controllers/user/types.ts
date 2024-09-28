@@ -6,7 +6,17 @@ export interface PatchUpdateRequestBody {
 	name?: string;
 }
 
-export type PatchUpdateHandler = RequestHandler<unknown, ResponseBody, PatchUpdateRequestBody, unknown, WithUserLocals>;
+export interface PatchUpdateResponseBody extends ResponseBody {
+	user: UserDTO;
+}
+
+export type PatchUpdateHandler = RequestHandler<
+	unknown,
+	PatchUpdateResponseBody,
+	PatchUpdateRequestBody,
+	unknown,
+	WithUserLocals
+>;
 
 export interface PatchPasswordRequestBody {
 	password: string;

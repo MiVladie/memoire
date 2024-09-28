@@ -10,6 +10,20 @@ import path from 'path';
 import * as userRepository from '@/repositories/user';
 
 export async function update(userId: number, params: UpdateParams): Promise<UpdateType> {
+	if (params.name) {
+		const userByName = await userRepository.findOne({ name: params.name });
+
+		if (userByName) {
+			throw new APIError(Errors.NAME_ALREADY_IN_USE);
+		}
+
+		const userByEmail = await userRepository.findOne({ email: params.name });
+
+		if (userByEmail) {
+			throw new APIError(Errors.NAME_ALREADY_IN_USE);
+		}
+	}
+
 	const user = await userRepository.update(userId, params);
 
 	return {

@@ -6,7 +6,7 @@ import APIError from 'shared/APIErrors';
 import * as Config from 'constants/config';
 
 export default class Request {
-	public static async get<T, M>(url: string, config?: AxiosRequestConfig): Promise<T> {
+	public static async get<T, M = undefined>(url: string, config?: AxiosRequestConfig): Promise<T> {
 		try {
 			const { data } = await axios.get<T>(url, config);
 
@@ -22,7 +22,7 @@ export default class Request {
 		}
 	}
 
-	public static async post<T, M>(url: string, payload?: object, config?: AxiosRequestConfig): Promise<T> {
+	public static async post<T, M = undefined>(url: string, payload?: object, config?: AxiosRequestConfig): Promise<T> {
 		try {
 			const { data } = await axios.post<T>(url, payload, config);
 
@@ -38,7 +38,11 @@ export default class Request {
 		}
 	}
 
-	public static async patch<T, M>(url: string, payload?: object, config?: AxiosRequestConfig): Promise<T> {
+	public static async patch<T, M = undefined>(
+		url: string,
+		payload?: object,
+		config?: AxiosRequestConfig
+	): Promise<T> {
 		try {
 			const { data } = await axios.patch<T>(url, payload, config);
 
@@ -54,7 +58,7 @@ export default class Request {
 		}
 	}
 
-	public static async delete<T, M>(url: string, config?: AxiosRequestConfig): Promise<T> {
+	public static async delete<T, M = undefined>(url: string, config?: AxiosRequestConfig): Promise<T> {
 		try {
 			const { data } = await axios.delete<T>(url, config);
 
