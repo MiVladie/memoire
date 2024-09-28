@@ -30,30 +30,13 @@
 		.Actions {
 			margin-left: calc(#{$container_spacing_mobile} / 2);
 
-			.Action {
+			.Upload,
+			.Remove {
 				height: 48px;
 				padding: 12px;
 
 				justify-content: center;
 				align-items: center;
-
-				&:first-of-type {
-					color: $secondary-color;
-
-					.Icon {
-						fill: $secondary-color;
-					}
-				}
-
-				&:last-of-type {
-					color: $danger-color;
-
-					margin-top: 2px;
-
-					.Icon {
-						fill: $danger-color;
-					}
-				}
 
 				&:hover:enabled {
 					background-color: lighten($primary-color, 3);
@@ -61,6 +44,24 @@
 
 				&:active:enabled {
 					background-color: lighten($primary-color, 5);
+				}
+			}
+
+			.Upload {
+				color: $secondary-color;
+
+				.Icon {
+					fill: $secondary-color;
+				}
+			}
+
+			.Remove {
+				color: $danger-color;
+
+				margin-top: 2px;
+
+				.Icon {
+					fill: $danger-color;
 				}
 			}
 		}

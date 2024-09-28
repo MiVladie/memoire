@@ -178,7 +178,7 @@ const Account = () => {
 
 					<div className={classes.Actions}>
 						<Button
-							className={classes.Action}
+							className={classes.Upload}
 							iconClassName={classes.Icon}
 							onClick={handleUpload}
 							icon={<Upload />}
@@ -188,16 +188,18 @@ const Account = () => {
 							Upload
 						</Button>
 
-						<Button
-							className={classes.Action}
-							iconClassName={classes.Icon}
-							onClick={removeImageHandler}
-							icon={<Trash />}
-							loading={removing}
-							disabled={uploading}
-							ghost>
-							Remove
-						</Button>
+						{user.image && (
+							<Button
+								className={classes.Remove}
+								iconClassName={classes.Icon}
+								onClick={removeImageHandler}
+								icon={<Trash />}
+								loading={removing}
+								disabled={uploading}
+								ghost>
+								Remove
+							</Button>
+						)}
 					</div>
 				</div>
 
