@@ -1,0 +1,13 @@
+model Song {
+    id          Int         @id @default(autoincrement())
+    name        String      @unique
+    image       String?
+    author      String
+    url         String
+    duration    Int
+    isPresent   Boolean
+
+    playlist    PlaylistsSongs[]
+
+    @@map("songs")
+}
