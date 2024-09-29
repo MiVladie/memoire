@@ -13,3 +13,9 @@ export interface Recovery {
 	expiresAt: Date;
 	userId: number;
 }
+
+export interface Platform {
+	id: number;
+	name: string;
+	theme: string;
+}
