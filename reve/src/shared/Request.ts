@@ -1,6 +1,6 @@
 import { ErrorResponseBody } from 'interfaces/error';
 
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import APIError from 'shared/APIErrors';
 
 import * as Config from 'constants/config';
@@ -11,10 +11,10 @@ export default class Request {
 			const { data } = await axios.get<T>(url, config);
 
 			return data;
-		} catch (error: unknown) {
+		} catch (error: any) {
 			if (!Config.PROD) console.log(error);
 
-			if (error instanceof AxiosError) {
+			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
 			}
 
@@ -27,10 +27,10 @@ export default class Request {
 			const { data } = await axios.post<T>(url, payload, config);
 
 			return data;
-		} catch (error: unknown) {
+		} catch (error: any) {
 			if (!Config.PROD) console.log(error);
 
-			if (error instanceof AxiosError) {
+			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
 			}
 
@@ -47,10 +47,10 @@ export default class Request {
 			const { data } = await axios.patch<T>(url, payload, config);
 
 			return data;
-		} catch (error: unknown) {
+		} catch (error: any) {
 			if (!Config.PROD) console.log(error);
 
-			if (error instanceof AxiosError) {
+			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
 			}
 
@@ -63,10 +63,10 @@ export default class Request {
 			const { data } = await axios.delete<T>(url, config);
 
 			return data;
-		} catch (error: unknown) {
+		} catch (error: any) {
 			if (!Config.PROD) console.log(error);
 
-			if (error instanceof AxiosError) {
+			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
 			}
 

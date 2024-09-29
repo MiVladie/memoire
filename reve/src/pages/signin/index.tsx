@@ -53,6 +53,7 @@ const SignIn = () => {
 
 			navigate('/home');
 		} catch (error: any) {
+			console.log(error);
 			handleChange('', 'password');
 
 			if (error.meta) {
