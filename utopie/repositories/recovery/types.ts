@@ -1,4 +1,4 @@
-import { Recovery } from '@/interfaces/models';
+import { Recovery } from '@prisma/client';
 
 export interface FindOneParams extends Partial<Recovery> {}
 

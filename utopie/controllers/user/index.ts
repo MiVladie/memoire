@@ -1,6 +1,25 @@
-import { PatchUpdateHandler, PatchPasswordHandler, PostImageHandler, DeleteImageHandler } from './types';
+import {
+	PatchUpdateHandler,
+	PatchPasswordHandler,
+	PostImageHandler,
+	DeleteImageHandler,
+	GetPlaylistsHandler
+} from './types';
 
 import * as userService from '@/services/user';
+import * as playlistService from '@/services/playlist';
+
+export const getPlaylists: GetPlaylistsHandler = async (req, res, next) => {
+	const { user } = res.locals;
+	const { platformId } = req.query;
+
+	const { playlists } = await playlistService.get({ userId: user.id, platformId: parseInt(platformId) });
+
+	res.status(200).json({
+		playlists,
+		message: 'Playlists retrieved successfully!'
+	});
+};
 
 export const patchUpdate: PatchUpdateHandler = async (req, res, next) => {
 	const {

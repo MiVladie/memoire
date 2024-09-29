@@ -1,3 +1,3 @@
-import { Platform } from '@/interfaces/models';
+import { Platform } from '@prisma/client';
 
 export interface FindManyParams extends Partial<Platform> {}

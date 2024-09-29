@@ -1,4 +1,4 @@
-import { User } from '@/interfaces/models';
+import { User } from '@prisma/client';
 
 export interface FindOneParams extends Partial<User> {}
 

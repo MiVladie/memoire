@@ -1,7 +1,25 @@
-import { PatchPasswordHandler, PatchPasswordRequestBody, PatchUpdateHandler, PatchUpdateRequestBody } from './types';
+import {
+	GetPlaylistsHandler,
+	GetPlaylistsQueryParams,
+	PatchPasswordHandler,
+	PatchPasswordRequestBody,
+	PatchUpdateHandler,
+	PatchUpdateRequestBody
+} from './types';
 import { validate } from '@/util/validation';
 
 import joi from 'joi';
+
+export const playlists: GetPlaylistsHandler = (req, res, next) => {
+	validate<GetPlaylistsQueryParams>(
+		{
+			platformId: joi.string().required()
+		},
+		req.query
+	);
+
+	next();
+};
 
 export const update: PatchUpdateHandler = (req, res, next) => {
 	validate<PatchUpdateRequestBody>(

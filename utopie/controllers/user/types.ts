@@ -1,6 +1,23 @@
 import { RequestHandler } from 'express';
 import { ResponseBody, WithFileLocals, WithUserLocals } from '@/interfaces/api';
 import { UserDTO } from '@/dtos/user/types';
+import { PlaylistDTO } from '@/dtos/playlist/types';
+
+export interface GetPlaylistsQueryParams {
+	platformId: string;
+}
+
+export interface GetPlaylistsResponseBody extends ResponseBody {
+	playlists: PlaylistDTO[];
+}
+
+export type GetPlaylistsHandler = RequestHandler<
+	unknown,
+	GetPlaylistsResponseBody,
+	unknown,
+	GetPlaylistsQueryParams,
+	WithUserLocals
+>;
 
 export interface PatchUpdateRequestBody {
 	name?: string;

@@ -19,3 +19,8 @@ export interface Platform {
 	name: string;
 	theme: string;
 }
+
+export interface Playlist {
+	id: number;
+	name: string;
+}
