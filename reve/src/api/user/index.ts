@@ -1,4 +1,7 @@
 import {
+	GetPlaylistsPayload,
+	GetPlaylistsResponse,
+	GetPlaylistSongsResponse,
 	UpdatePayload,
 	UpdateResponse,
 	UpdatePasswordPayload,
@@ -8,8 +11,17 @@ import {
 	UploadImagePayload
 } from 'api/user/types';
 import { API } from 'constants/api';
+import { paramify } from 'utils/api';
 
 import Request from 'shared/Request';
+
+export function getPlaylists(payload: GetPlaylistsPayload): Promise<GetPlaylistsResponse> {
+	return Request.get<GetPlaylistsResponse, GetPlaylistsPayload>(API + `/me/playlists${paramify(payload)}`);
+}
+
+export function getPlaylistSongs(playlistId: number): Promise<GetPlaylistSongsResponse> {
+	return Request.get<GetPlaylistSongsResponse>(API + `/me/playlists/${playlistId}/songs`);
+}
 
 export function update(payload: UpdatePayload): Promise<UpdateResponse> {
 	return Request.patch<UpdateResponse, UpdatePayload>(API + '/me', payload);

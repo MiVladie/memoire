@@ -1,5 +1,17 @@
 import { ResponseBody } from 'interfaces/api';
-import { User } from 'interfaces/models';
+import { Playlist, Song, User } from 'interfaces/models';
+
+export interface GetPlaylistsPayload {
+	platformId: number;
+}
+
+export interface GetPlaylistsResponse extends ResponseBody {
+	playlists: Playlist[];
+}
+
+export interface GetPlaylistSongsResponse extends ResponseBody {
+	songs: Song[];
+}
 
 export interface UpdatePayload {
 	name: string;

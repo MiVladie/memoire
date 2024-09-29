@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ISong } from 'interfaces/data';
+import { Song as ISong } from 'interfaces/models';
 
 import Song from 'components/Song/Song';
 import SongSkeleton from 'components/Song/Skeleton';
@@ -20,7 +20,7 @@ interface Props {
 const Songs = ({ data, loading, className }: Props) => (
 	<ul className={[classes.Songs, className].join(' ')}>
 		{!loading
-			? [...data, ...data].map((song) => (
+			? data.map((song) => (
 					<Song
 						className={classes.Song}
 						image={song.image || placeholder}
@@ -28,7 +28,7 @@ const Songs = ({ data, loading, className }: Props) => (
 						author={song.author}
 						url={song.url}
 						duration={song.duration}
-						is_present={song.is_present}
+						is_present={song.isPresent}
 						key={song.id}
 					/>
 			  ))

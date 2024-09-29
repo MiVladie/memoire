@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { PROFILE_PICTURE } from 'config/data';
-import { AuthStorage } from 'interfaces/storage';
-import { AUTH_STORAGE_KEYS } from 'config/storage';
+import { AuthStorage, PlatformStorage } from 'interfaces/storage';
+import { AUTH_STORAGE_KEYS, PLATFORM_STORAGE_KEYS } from 'config/storage';
 import { User } from 'interfaces/models';
 import { navigate } from 'gatsby';
 
@@ -22,7 +22,6 @@ import * as API from 'api';
 import * as File from 'constants/file';
 
 import * as classes from './Account.module.scss';
-import { delay } from 'utils/date';
 
 type MetaFields = {
 	name: string;
@@ -166,6 +165,7 @@ const Account = () => {
 
 	function logoutHandler() {
 		Storage.remove<AuthStorage>(AUTH_STORAGE_KEYS);
+		Storage.remove<PlatformStorage>(PLATFORM_STORAGE_KEYS);
 
 		navigate('/signin');
 	}
