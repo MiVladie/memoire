@@ -8,18 +8,18 @@ model Playlist {
     user        User        @relation(fields: [userId], references: [id])
     userId      Int
 
-    songs        PlaylistsSongs[]
+    songs       PlaylistsSongs[]
 
     @@map("playlists")
 }
 
 model PlaylistsSongs {
-    song        Song        @relation(fields: [songId], references: [id])
-    songId      Int
-
     playlist    Playlist    @relation(fields: [playlistId], references: [id])
     playlistId  Int
 
-    @@id([songId, playlistId])
+    song        Song        @relation(fields: [songId], references: [id])
+    songId      Int
+
+    @@id([playlistId, songId])
     @@map("playlists_songs")
 }

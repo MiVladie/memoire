@@ -24,3 +24,13 @@ export interface Playlist {
 	id: number;
 	name: string;
 }
+
+export interface Song {
+	id: number;
+	name: string;
+	image: string | null;
+	author: string;
+	url: string;
+	duration: number;
+	isPresent: boolean;
+}

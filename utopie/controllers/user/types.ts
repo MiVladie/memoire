@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import { ResponseBody, WithFileLocals, WithUserLocals } from '@/interfaces/api';
 import { UserDTO } from '@/dtos/user/types';
 import { PlaylistDTO } from '@/dtos/playlist/types';
+import { SongDTO } from '@/dtos/song/types';
 
 export interface GetPlaylistsQueryParams {
 	platformId: string;
@@ -16,6 +17,26 @@ export type GetPlaylistsHandler = RequestHandler<
 	GetPlaylistsResponseBody,
 	unknown,
 	GetPlaylistsQueryParams,
+	WithUserLocals
+>;
+
+export interface GetPlaylistSongsRequestParams {
+	playlistId: string;
+}
+
+export interface GetPlaylistSongsQueryParams {
+	page: string;
+}
+
+export interface GetPlaylistSongsResponseBody extends ResponseBody {
+	songs: SongDTO[];
+}
+
+export type GetPlaylistSongsHandler = RequestHandler<
+	GetPlaylistSongsRequestParams,
+	GetPlaylistSongsResponseBody,
+	unknown,
+	GetPlaylistSongsQueryParams,
 	WithUserLocals
 >;
 

@@ -1,5 +1,7 @@
 import {
 	GetPlaylistsHandler,
+	GetPlaylistSongsHandler,
+	GetPlaylistSongsRequestParams,
 	GetPlaylistsQueryParams,
 	PatchPasswordHandler,
 	PatchPasswordRequestBody,
@@ -16,6 +18,17 @@ export const playlists: GetPlaylistsHandler = (req, res, next) => {
 			platformId: joi.string().required()
 		},
 		req.query
+	);
+
+	next();
+};
+
+export const playlistSongs: GetPlaylistSongsHandler = (req, res, next) => {
+	validate<GetPlaylistSongsRequestParams>(
+		{
+			playlistId: joi.string().required()
+		},
+		req.params
 	);
 
 	next();

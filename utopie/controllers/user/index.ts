@@ -1,9 +1,10 @@
 import {
+	GetPlaylistsHandler,
+	GetPlaylistSongsHandler,
 	PatchUpdateHandler,
 	PatchPasswordHandler,
 	PostImageHandler,
-	DeleteImageHandler,
-	GetPlaylistsHandler
+	DeleteImageHandler
 } from './types';
 
 import * as userService from '@/services/user';
@@ -18,6 +19,17 @@ export const getPlaylists: GetPlaylistsHandler = async (req, res, next) => {
 	res.status(200).json({
 		playlists,
 		message: 'Playlists retrieved successfully!'
+	});
+};
+
+export const getPlaylistSongs: GetPlaylistSongsHandler = async (req, res, next) => {
+	const { playlistId } = req.params;
+
+	const { songs } = await playlistService.getSongs({ playlistId: parseInt(playlistId) });
+
+	res.status(200).json({
+		songs,
+		message: 'Songs retrieved successfully!'
 	});
 };
 
