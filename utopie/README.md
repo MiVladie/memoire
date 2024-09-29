@@ -7,12 +7,14 @@ The backend-end codebase for mémoire project.
 -   [:memo: Table of Contents](#memo-table-of-contents)
 -   [:rocket: Quick Start](#rocket-quick-start)
     -   [Step 1: Installing the dependencies](#step-1-installing-the-dependencies)
-    -   [Step 2: Launching the server](#step-2-launching-the-server)
+    -   [Step 2: Migrating the database](#step-2-migrating-the-database)
+    -   [Step 3: Launching the server](#step-3-launching-the-server)
 -   [:desktop_computer: Installation](#desktop_computer-installation)
     -   [NodeJS](#nodejs)
 -   [:keyboard: Available Scripts](#keyboard-available-scripts)
 -   [:green_book: Learn More](#green_book-learn-more)
     -   [TypeScript](#typescript)
+    -   [Prisma](#prisma)
 
 # :rocket: Quick Start
 
@@ -26,7 +28,13 @@ Quick start guide to set the server up and running.
 
 Installs all of the necessary dependencies.
 
-## Step 2: Launching the server
+## Step 2: Migrating the database
+
+### Run `npm run migrate`
+
+Creates database tables & runs seeders.
+
+## Step 3: Launching the server
 
 ### Run `npm start`
 
@@ -63,3 +71,9 @@ References to the tools used in the project.
 TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
 
 -   [Documentation](https://www.typescriptlang.org/docs/)
+
+## Prisma
+
+Prisma helps us unify data access from multiple enterprise systems into a single API.
+
+-   [Documentation](https://www.prisma.io/docs/)
