@@ -1,4 +1,6 @@
+@import 'styles/fonts.scss';
 @import 'styles/colors.scss';
+@import 'styles/sizing.scss';
 
 $SIZE: 35px;
 
@@ -9,6 +11,13 @@ $SIZE: 35px;
 	fill: $secondary-color;
 
 	cursor: pointer;
+}
+
+.Error {
+	font-family: $primary-font;
+	font-size: $sm;
+
+	color: $secondary-color;
 }
 
 @media (min-width: 1025px) {

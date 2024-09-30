@@ -12,7 +12,7 @@ export default class Request {
 
 			return data;
 		} catch (error: any) {
-			if (!Config.PROD) console.log(error);
+			if (!Config.PROD) console.error(error);
 
 			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
@@ -28,7 +28,7 @@ export default class Request {
 
 			return data;
 		} catch (error: any) {
-			if (!Config.PROD) console.log(error);
+			if (!Config.PROD) console.error(error);
 
 			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
@@ -48,7 +48,7 @@ export default class Request {
 
 			return data;
 		} catch (error: any) {
-			if (!Config.PROD) console.log(error);
+			if (!Config.PROD) console.error(error);
 
 			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
@@ -64,7 +64,7 @@ export default class Request {
 
 			return data;
 		} catch (error: any) {
-			if (!Config.PROD) console.log(error);
+			if (!Config.PROD) console.error(error);
 
 			if (error!.response) {
 				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);

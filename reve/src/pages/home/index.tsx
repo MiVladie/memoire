@@ -26,6 +26,8 @@ const Home = () => {
 	const [loadingPlaylists, setLoadingPlaylists] = useState<boolean>(true);
 	const [loadingSongs, setLoadingSongs] = useState<boolean>(true);
 
+	const [error, setError] = useState<string>();
+
 	useEffect(() => {
 		fetchData();
 	}, []);
@@ -46,6 +48,7 @@ const Home = () => {
 
 	async function fetchData() {
 		try {
+			// @ts-ignore
 			const platforms = await fetchPlatforms();
 
 			const { playlists } = await API.User.getPlaylists({ platformId: platforms[0].id });
@@ -57,7 +60,7 @@ const Home = () => {
 			setPlaylists(playlists);
 			setSongs(songs);
 		} catch (error: any) {
-			//
+			setError('oh, something is off.. 🙁');
 		} finally {
 			setLoadingPlatforms(false);
 			setLoadingPlaylists(false);
@@ -84,7 +87,7 @@ const Home = () => {
 
 			await delay(2);
 		} catch (error: any) {
-			console.log(error);
+			setError('oh, something is off.. 🙁');
 		} finally {
 			setLoadingPlaylists(false);
 			setLoadingSongs(false);
@@ -103,7 +106,7 @@ const Home = () => {
 
 			setSongs(songs);
 		} catch (error: any) {
-			//
+			setError('oh, something is off.. 🙁');
 		} finally {
 			setLoadingSongs(false);
 		}
@@ -114,18 +117,16 @@ const Home = () => {
 	}
 
 	return (
-		<div>
-			<Platforms
-				platforms={platforms}
-				playlists={playlists}
-				onPlatform={platformHandler}
-				onPlaylist={playlistHandler}
-				actions={<Avatar className={classes.Avatar} onClick={profileHandler} />}
-				loadingPlatforms={loadingPlatforms}
-				loadingPlaylists={loadingPlaylists}>
-				<Songs data={songs} loading={loadingSongs} />
-			</Platforms>
-		</div>
+		<Platforms
+			platforms={platforms}
+			playlists={playlists}
+			onPlatform={platformHandler}
+			onPlaylist={playlistHandler}
+			actions={<Avatar className={classes.Avatar} onClick={profileHandler} />}
+			loadingPlatforms={loadingPlatforms}
+			loadingPlaylists={loadingPlaylists}>
+			{!error ? <Songs data={songs} loading={loadingSongs} /> : <p className={classes.Error}>{error}</p>}
+		</Platforms>
 	);
 };
 

@@ -24,15 +24,6 @@ html {
 	position: relative;
 
 	overflow: hidden;
-
-	.Loading {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		width: 100vw;
-		height: 100vh;
-	}
 }
 
 @media (min-width: 1025px) {

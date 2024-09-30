@@ -7,7 +7,6 @@ import { AUTH_ROUTES, HOME_ROUTES } from 'constants/route';
 import { isPath } from 'utils/route';
 import { delay } from 'utils/date';
 
-import Spinner from 'components/Spinner/Spinner';
 import Storage from 'shared/Storage';
 
 import * as classes from './Layout.module.scss';
@@ -46,13 +45,7 @@ const Layout = ({ children, className, style, path }: Props) => {
 
 	return (
 		<main className={[classes.Layout, className].join(' ')} style={style}>
-			{!loading ? (
-				children
-			) : (
-				<div className={classes.Loading}>
-					<Spinner />
-				</div>
-			)}
+			{!loading && children}
 		</main>
 	);
 };
