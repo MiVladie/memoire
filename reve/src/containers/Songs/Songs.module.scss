@@ -1,5 +1,17 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/sizing.scss';
+@import 'styles/spacing.scss';
+
 .Songs {
 	.Song {
 		margin-bottom: 32px;
+	}
+
+	.Empty {
+		font-family: $primary-font;
+		font-size: $sm;
+
+		color: $secondary-color;
 	}
 }

@@ -19,8 +19,9 @@ interface Props {
 
 const Songs = ({ data, loading, className }: Props) => (
 	<ul className={[classes.Songs, className].join(' ')}>
-		{!loading
-			? data.map((song) => (
+		{!loading ? (
+			data.length ? (
+				data.map((song) => (
 					<Song
 						className={classes.Song}
 						image={song.image || placeholder}
@@ -31,8 +32,18 @@ const Songs = ({ data, loading, className }: Props) => (
 						is_present={song.isPresent}
 						key={song.id}
 					/>
-			  ))
-			: new Array(SKELETON_SIZE).fill(null).map((_, i) => <SongSkeleton className={classes.Song} key={i} />)}
+				))
+			) : (
+				<p className={classes.Empty}>
+					songs not found :/
+					<br />
+					<br />
+					have you linked your account in settings? 🤔
+				</p>
+			)
+		) : (
+			new Array(SKELETON_SIZE).fill(null).map((_, i) => <SongSkeleton className={classes.Song} key={i} />)
+		)}
 	</ul>
 );
 
