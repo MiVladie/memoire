@@ -4,11 +4,14 @@ import {
 	GetPlaylistSongsResponse,
 	UpdatePayload,
 	UpdateResponse,
+	LinkSoundCloudPayload,
+	LinkSoundCloudResponse,
 	UpdatePasswordPayload,
 	UpdatePasswordResponse,
 	RemoveImageResponse,
 	UploadImageResponse,
-	UploadImagePayload
+	UploadImagePayload,
+	UnlinkSoundCloudResponse
 } from 'api/user/types';
 import { API } from 'constants/api';
 import { paramify } from 'utils/api';
@@ -27,6 +30,10 @@ export function update(payload: UpdatePayload): Promise<UpdateResponse> {
 	return Request.patch<UpdateResponse, UpdatePayload>(API + '/me', payload);
 }
 
+export function linkSoundCloud(payload: LinkSoundCloudPayload): Promise<LinkSoundCloudResponse> {
+	return Request.post<LinkSoundCloudResponse, LinkSoundCloudPayload>(API + '/me/soundcloud', payload);
+}
+
 export function updatePassword(payload: UpdatePasswordPayload): Promise<UpdatePasswordResponse> {
 	return Request.patch<UpdatePasswordResponse, UpdatePasswordPayload>(API + '/me/password', payload);
 }
@@ -40,4 +47,8 @@ export function uploadImage({ image }: UploadImagePayload): Promise<UploadImageR
 
 export function removeImage(): Promise<RemoveImageResponse> {
 	return Request.delete<RemoveImageResponse>(API + '/me/image');
+}
+
+export function unlinkSoundCloud(): Promise<UnlinkSoundCloudResponse> {
+	return Request.delete<UnlinkSoundCloudResponse>(API + '/me/soundcloud');
 }

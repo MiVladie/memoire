@@ -22,6 +22,14 @@ export interface UpdateResponse extends ResponseBody {
 	user: User;
 }
 
+export interface LinkSoundCloudPayload {
+	soundcloudName: string;
+}
+
+export interface LinkSoundCloudResponse extends ResponseBody {
+	user: User;
+}
+
 export interface UpdatePasswordPayload {
 	password: string;
 	newPassword: string;
@@ -38,5 +46,9 @@ export interface UploadImageResponse extends ResponseBody {
 }
 
 export interface RemoveImageResponse extends ResponseBody {
+	user: User;
+}
+
+export interface UnlinkSoundCloudResponse extends ResponseBody {
 	user: User;
 }

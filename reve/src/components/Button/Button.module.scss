@@ -36,6 +36,7 @@
 	}
 
 	&:disabled {
+		color: $third-color;
 		border-color: $third-color;
 
 		.Icon {

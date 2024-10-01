@@ -23,6 +23,23 @@
 		}
 	}
 
+	.Info {
+		.Warning {
+			font-family: $primary-font;
+			font-size: $sm;
+
+			color: $danger-color;
+		}
+
+		.Agree {
+			margin-top: 32px;
+		}
+
+		.Button {
+			margin-top: 32px;
+		}
+	}
+
 	.Instructions {
 		margin-top: 4em;
 
@@ -49,14 +66,14 @@
 		align-items: flex-start;
 
 		.Form,
-		.Instructions {
+		.Instructions,
+		.Info {
 			margin-top: 6em;
 		}
 
-		.Form {
-			.Username {
-				width: 300px;
-			}
+		.Form,
+		.Info {
+			min-width: 350px;
 		}
 
 		.Instructions {
