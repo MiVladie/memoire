@@ -51,15 +51,23 @@ const Home = () => {
 			// @ts-ignore
 			const platforms = await fetchPlatforms();
 
+			if (!platforms || !platforms.length) {
+				throw new Error('No platforms found!');
+			}
+
 			const { playlists } = await API.User.getPlaylists({ platformId: platforms[0].id });
-			const { songs } = await API.User.getPlaylistSongs(playlists[0].id);
+
+			if (playlists && playlists.length) {
+				const { songs } = await API.User.getPlaylistSongs(playlists[0].id);
+				setSongs(songs);
+			}
 
 			await delay(2);
 
 			setPlatforms(platforms);
 			setPlaylists(playlists);
-			setSongs(songs);
 		} catch (error: any) {
+			console.error(error);
 			setError('oh, something is off.. 🙁');
 		} finally {
 			setLoadingPlatforms(false);
@@ -87,6 +95,7 @@ const Home = () => {
 
 			await delay(2);
 		} catch (error: any) {
+			console.error(error);
 			setError('oh, something is off.. 🙁');
 		} finally {
 			setLoadingPlaylists(false);
@@ -106,6 +115,7 @@ const Home = () => {
 
 			setSongs(songs);
 		} catch (error: any) {
+			console.error(error);
 			setError('oh, something is off.. 🙁');
 		} finally {
 			setLoadingSongs(false);

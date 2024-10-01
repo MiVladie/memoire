@@ -17,21 +17,21 @@ interface Props {
 }
 
 const Settings = ({ data, onUpdate, className, containerClassName, actions, children }: Props) => {
-	const [setting, setSetting] = useState<number>(0);
+	const [section, setSection] = useState<number>(0);
 
-	function settingHandler(index: number) {
-		if (setting === index) return;
+	function sectionHandler(index: number) {
+		if (section === index) return;
 
-		setSetting(index);
+		setSection(index);
 
 		onUpdate?.(data[index].id);
 	}
 
 	return (
 		<div className={[classes.Container, className].join(' ')}>
-			<SnapScroll active={setting} onSelect={settingHandler} className={classes.Settings}>
+			<SnapScroll active={section} onSelect={sectionHandler} className={classes.Settings}>
 				{data.map((s, index) => {
-					const isActive = setting === index;
+					const isActive = section === index;
 
 					return (
 						<li className={[classes.Setting, isActive && classes.SettingSelected].join(' ')} key={s.id}>

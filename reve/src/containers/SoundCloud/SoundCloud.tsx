@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import { delay } from 'utils/date';
-
 import Form from 'containers/Form/Form';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
@@ -9,11 +7,12 @@ import useForm from 'hooks/useForm';
 
 import Code from 'assets/icons/code.svg';
 
+import * as API from 'api';
+
 import * as classes from './SoundCloud.module.scss';
-import { PLATFORMS_DATA, PLAYLIST_DATA } from 'config/data';
 
 type ConfigFields = {
-	code: string;
+	soundcloudName: string;
 };
 
 const SoundCloud = () => {
@@ -21,12 +20,12 @@ const SoundCloud = () => {
 
 	const [error, setError] = useState<string>();
 
-	const { values, errors, handleChange, handleFocus, handleSubmit } = useForm<ConfigFields>({
+	const { values, errors, handleChange, handleFocus, handleErrors, handleSubmit } = useForm<ConfigFields>({
 		initialValues: {
-			code: ''
+			soundcloudName: ''
 		},
 		rules: {
-			code: {
+			soundcloudName: {
 				required: true
 			}
 		},
@@ -34,10 +33,20 @@ const SoundCloud = () => {
 		onRefill: () => setError(undefined)
 	});
 
-	async function submitHandler() {
+	async function submitHandler({ soundcloudName }: ConfigFields) {
 		setLoading(true);
 
-		await delay(2);
+		try {
+			await API.User.update({ soundcloudName });
+		} catch (error: any) {
+			if (error.meta) {
+				handleErrors(error.meta);
+			} else {
+				setError(error.message);
+			}
+		} finally {
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -45,14 +54,16 @@ const SoundCloud = () => {
 			<Form className={classes.Form}>
 				<Input
 					icon={<Code />}
-					name='code'
-					placeholder='your api_key'
-					value={values.code}
+					inputClassName={classes.Input}
+					className={classes.Username}
+					name='soundcloudName'
+					placeholder='yourcreativename'
+					value={values.soundcloudName}
 					disabled={loading}
 					onChange={handleChange}
 					onFocus={handleFocus}
 					autoComplete={false}
-					error={errors.code}
+					error={errors.soundcloudName}
 				/>
 
 				{error && <p className={classes.Error}>{error}</p>}

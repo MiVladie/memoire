@@ -14,7 +14,8 @@ export interface GetPlaylistSongsResponse extends ResponseBody {
 }
 
 export interface UpdatePayload {
-	name: string;
+	name?: string;
+	soundcloudName?: string;
 }
 
 export interface UpdateResponse extends ResponseBody {

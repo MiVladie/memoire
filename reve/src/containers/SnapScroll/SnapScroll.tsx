@@ -182,6 +182,10 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset, childr
 		container.current!.scrollTo({ left, behavior: 'smooth' });
 	}, [active]);
 
+	if (!React.Children.count(children)) {
+		return;
+	}
+
 	return (
 		<ul
 			className={[classes.SnapScroll, className].join(' ')}

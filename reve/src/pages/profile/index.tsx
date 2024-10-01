@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { HeadFC, navigate } from 'gatsby';
-import { SETTINGS_DATA } from 'config/data';
+import { PLATFORM_STORAGE_KEYS } from 'config/storage';
+import { PlatformStorage } from 'interfaces/storage';
+import { ISetting } from 'interfaces/data';
 
 import Account from 'containers/Account/Account';
 import SoundCloud from 'containers/SoundCloud/SoundCloud';
+import Storage from 'shared/Storage';
 import Settings from 'containers/Settings/Settings';
 import Seo from 'hoc/Seo/Seo';
 
@@ -13,10 +16,18 @@ import X from 'assets/icons/close.svg';
 import * as classes from './Profile.module.scss';
 
 const Profile = () => {
-	const [setting, setSetting] = useState<number>(1);
+	const [section, setSection] = useState<number>(0);
 
-	function settingHandler(id: number) {
-		setSetting(id);
+	const settings = useMemo<ISetting[]>(initialSettings, []);
+
+	function initialSettings() {
+		const { platforms } = Storage.get<PlatformStorage>(PLATFORM_STORAGE_KEYS);
+
+		return [{ id: 0, name: 'Account' }, ...platforms!];
+	}
+
+	function sectionHandler(id: number) {
+		setSection(id);
 	}
 
 	function backHandler() {
@@ -26,10 +37,10 @@ const Profile = () => {
 	return (
 		<div>
 			<Settings
-				data={SETTINGS_DATA}
-				onUpdate={settingHandler}
+				data={settings}
+				onUpdate={sectionHandler}
 				actions={<X className={classes.X} onClick={backHandler} />}>
-				{setting === 1 ? <Account /> : <SoundCloud />}
+				{section === 0 ? <Account /> : section === 1 ? <SoundCloud /> : null}
 			</Settings>
 		</div>
 	);
