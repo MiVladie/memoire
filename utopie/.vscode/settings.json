@@ -11,7 +11,7 @@
 			"driver": "MySQL",
 			"database": "memoire",
 			"username": "root",
-			"name": "Memoire"
+			"name": "Main"
 		}
 	]
 }
