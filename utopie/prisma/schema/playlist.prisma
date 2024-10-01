@@ -1,25 +1,36 @@
 model Playlist {
-    id          Int         @id @default(autoincrement())
-    name        String      @unique
+    id                          Int                     @id @default(autoincrement())
+    name                        String                  @unique
 
-    platform    Platform    @relation(fields: [platformId], references: [id])
-    platformId  Int
+    platform                    Platform                @relation(fields: [platformId], references: [id])
+    platformId                  Int
 
-    user        User        @relation(fields: [userId], references: [id])
-    userId      Int
+    user                        User                    @relation(fields: [userId], references: [id])
+    userId                      Int
 
-    songs       PlaylistsSongs[]
+    soundcloudPlaylist          SoundCloudPlaylist?
+
+    songs                       PlaylistsSongs[]
 
     @@map("playlists")
 }
 
 model PlaylistsSongs {
-    playlist    Playlist    @relation(fields: [playlistId], references: [id])
-    playlistId  Int
+    playlist                    Playlist                @relation(fields: [playlistId], references: [id])
+    playlistId                  Int
 
-    song        Song        @relation(fields: [songId], references: [id])
-    songId      Int
+    song                        Song                    @relation(fields: [songId], references: [id])
+    songId                      Int
 
     @@id([playlistId, songId])
     @@map("playlists_songs")
+}
+
+model SoundCloudPlaylist {
+    soundcloudPlaylistId      Int                      @unique
+
+    playlist                    Playlist                 @relation(fields: [playlistId], references: [id])
+    playlistId                  Int                      @unique
+
+    @@map("soundcloud_playlists")
 }

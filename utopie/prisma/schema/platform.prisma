@@ -4,6 +4,7 @@ model Platform {
     theme       String      @default("#fff")
 
     playlist    Playlist[]
+    song        Song[]
 
     @@map("platforms")
 }

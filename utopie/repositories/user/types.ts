@@ -12,4 +12,5 @@ export interface UpdateParams {
 	name?: string;
 	password?: string;
 	image?: string | null;
+	soundcloudId?: number | null;
 }

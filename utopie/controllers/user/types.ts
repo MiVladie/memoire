@@ -42,6 +42,7 @@ export type GetPlaylistSongsHandler = RequestHandler<
 
 export interface PatchUpdateRequestBody {
 	name?: string;
+	soundcloudName?: string;
 }
 
 export interface PatchUpdateResponseBody extends ResponseBody {
@@ -52,6 +53,22 @@ export type PatchUpdateHandler = RequestHandler<
 	unknown,
 	PatchUpdateResponseBody,
 	PatchUpdateRequestBody,
+	unknown,
+	WithUserLocals
+>;
+
+export interface PostSoundCloudRequestBody {
+	soundcloudName: string;
+}
+
+export interface PostSoundCloudResponseBody extends ResponseBody {
+	user: UserDTO;
+}
+
+export type PostSoundCloudHandler = RequestHandler<
+	unknown,
+	PostSoundCloudResponseBody,
+	PostSoundCloudRequestBody,
 	unknown,
 	WithUserLocals
 >;
@@ -82,3 +99,15 @@ export interface DeleteImageResponseBody extends ResponseBody {
 }
 
 export type DeleteImageHandler = RequestHandler<unknown, DeleteImageResponseBody, unknown, unknown, WithUserLocals>;
+
+export interface DeleteSoundCloudResponseBody extends ResponseBody {
+	user: UserDTO;
+}
+
+export type DeleteSoundCloudHandler = RequestHandler<
+	unknown,
+	DeleteSoundCloudResponseBody,
+	unknown,
+	unknown,
+	WithUserLocals
+>;

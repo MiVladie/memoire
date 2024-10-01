@@ -1,13 +1,27 @@
 model Song {
-    id          Int         @id @default(autoincrement())
-    name        String      @unique
-    image       String?
-    author      String
-    url         String
-    duration    Int
-    isPresent   Boolean
+    id                      Int                 @id @default(autoincrement())
+    name                    String              @unique
+    image                   String?
+    author                  String
+    url                     String
+    duration                Int
+    isPresent               Boolean
 
-    playlist    PlaylistsSongs[]
+    platform                Platform            @relation(fields: [platformId], references: [id])
+    platformId              Int
+
+    soundcloudSong          SoundCloudSong?
+
+    playlist                PlaylistsSongs[]
 
     @@map("songs")
+}
+
+model SoundCloudSong {
+    soundcloudTrackId     Int                 @unique
+
+    song                    Song                @relation(fields: [songId], references: [id])
+    songId                  Int                 @unique
+
+    @@map("soundcloud_songs")
 }

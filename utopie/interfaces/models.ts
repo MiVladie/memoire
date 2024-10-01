@@ -5,6 +5,7 @@ export interface User {
 	password: string;
 	image: string | null;
 	createdAt: Date;
+	soundcloudId: number | null;
 }
 
 export interface Recovery {

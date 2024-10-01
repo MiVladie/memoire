@@ -2,6 +2,10 @@ import { UserDTO } from '@/dtos/user/types';
 import { ErrorType, ErrorMeta } from './error';
 import { RequestHandler } from 'express';
 
+export interface QueryParams {
+	[key: string]: any;
+}
+
 export interface ResponseBody {
 	message: string;
 }

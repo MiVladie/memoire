@@ -2,13 +2,17 @@ import {
 	GetPlaylistsHandler,
 	GetPlaylistSongsHandler,
 	PatchUpdateHandler,
+	PostSoundCloudHandler,
 	PatchPasswordHandler,
 	PostImageHandler,
-	DeleteImageHandler
+	DeleteImageHandler,
+	DeleteSoundCloudHandler
 } from './types';
 
 import * as userService from '@/services/user';
 import * as playlistService from '@/services/playlist';
+
+import * as soundCloudService from '@/services/soundcloud';
 
 export const getPlaylists: GetPlaylistsHandler = async (req, res, next) => {
 	const { user } = res.locals;
@@ -30,6 +34,21 @@ export const getPlaylistSongs: GetPlaylistSongsHandler = async (req, res, next) 
 	res.status(200).json({
 		songs,
 		message: 'Songs retrieved successfully!'
+	});
+};
+
+export const postSoundCloud: PostSoundCloudHandler = async (req, res, next) => {
+	const {
+		user: { id }
+	} = res.locals;
+
+	const soundCloudUser = await soundCloudService.findUser({ name: req.body.soundcloudName });
+
+	const { user } = await userService.update(id, { soundcloudId: soundCloudUser.user.id });
+
+	res.status(200).json({
+		user,
+		message: 'User SoundCloud linked successfully!'
 	});
 };
 
@@ -84,5 +103,18 @@ export const deleteImage: DeleteImageHandler = async (req, res, next) => {
 	res.status(200).json({
 		user,
 		message: 'User image deleted successfully!'
+	});
+};
+
+export const deleteSoundCloud: DeleteSoundCloudHandler = async (req, res, next) => {
+	const {
+		user: { id }
+	} = res.locals;
+
+	const { user } = await userService.update(id, { soundcloudId: null });
+
+	res.status(200).json({
+		user,
+		message: 'User SoundCloud unlinked successfully!'
 	});
 };

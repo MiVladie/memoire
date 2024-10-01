@@ -3,6 +3,8 @@ import {
 	GetPlaylistSongsHandler,
 	GetPlaylistSongsRequestParams,
 	GetPlaylistsQueryParams,
+	PostSoundCloudHandler,
+	PostSoundCloudRequestBody,
 	PatchPasswordHandler,
 	PatchPasswordRequestBody,
 	PatchUpdateHandler,
@@ -37,7 +39,19 @@ export const playlistSongs: GetPlaylistSongsHandler = (req, res, next) => {
 export const update: PatchUpdateHandler = (req, res, next) => {
 	validate<PatchUpdateRequestBody>(
 		{
-			name: joi.string()
+			name: joi.string(),
+			soundcloudName: joi.string()
+		},
+		req.body
+	);
+
+	next();
+};
+
+export const soundCloud: PostSoundCloudHandler = (req, res, next) => {
+	validate<PostSoundCloudRequestBody>(
+		{
+			soundcloudName: joi.string().required()
 		},
 		req.body
 	);
