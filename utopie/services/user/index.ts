@@ -24,7 +24,11 @@ export async function update(userId: number, params: UpdateParams): Promise<Upda
 		}
 	}
 
-	const user = await userRepository.update(userId, { name: params.name, soundcloudId: params.soundcloudId });
+	const user = await userRepository.update(userId, {
+		name: params.name,
+		image: params.image,
+		soundcloudId: params.soundcloudId
+	});
 
 	return {
 		user: toUserDTO(user)
