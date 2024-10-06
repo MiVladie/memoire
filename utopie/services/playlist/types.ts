@@ -1,4 +1,4 @@
-import { PlaylistDTO } from '@/dtos/playlist/types';
+import { CreatePlaylistDTO, PlaylistDTO } from '@/dtos/playlist/types';
 import { SongDTO } from '@/dtos/song/types';
 
 export interface GetParams {
@@ -17,3 +17,9 @@ export interface GetSongsParams {
 export interface GetSongsType {
 	songs: SongDTO[];
 }
+
+export interface AddPlaylistsParams {
+	playlists: CreatePlaylistDTO[];
+}
+
+export type AddPlaylistsType = void;

@@ -1,4 +1,4 @@
-import { UpdateParams, UpdatePasswordParams, UpdateType } from './types';
+import { UpdateParams, UpdatePasswordParams, AddSoundCloudParams, UpdateType } from './types';
 import { comparePasswords, encryptPassword } from '@/util/auth';
 import { deleteFile } from '@/util/file';
 import { toUserDTO } from '@/dtos/user';
@@ -6,6 +6,9 @@ import { File } from '@/constants';
 
 import APIError, { Errors } from '@/shared/APIError';
 import path from 'path';
+
+import * as soundCloudService from '@/services/soundcloud';
+import * as playlistService from '@/services/playlist';
 
 import * as userRepository from '@/repositories/user';
 
@@ -47,6 +50,23 @@ export async function updatePassword(userId: number, params: UpdatePasswordParam
 	const encryptedPassword = await encryptPassword(params.newPassword);
 
 	await userRepository.update(userId, { password: encryptedPassword });
+
+	return {
+		user: toUserDTO(user)
+	};
+}
+
+export async function linkSoundCloud(userId: number, params: AddSoundCloudParams): Promise<UpdateType> {
+	const soundCloudUser = await soundCloudService.findUser({ name: params.soundcloudName });
+
+	const user = await userRepository.update(userId, { soundcloudId: soundCloudUser.user.id });
+
+	const { playlists } = await soundCloudService.getPlaylists({
+		userId: user.id,
+		soundcloudUserId: soundCloudUser.user.id
+	});
+
+	await playlistService.addPlaylists({ playlists });
 
 	return {
 		user: toUserDTO(user)

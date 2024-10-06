@@ -31,7 +31,7 @@ export function update(payload: UpdatePayload): Promise<UpdateResponse> {
 }
 
 export function linkSoundCloud(payload: LinkSoundCloudPayload): Promise<LinkSoundCloudResponse> {
-	return Request.post<LinkSoundCloudResponse, LinkSoundCloudPayload>(API + '/me/soundcloud', payload);
+	return Request.put<LinkSoundCloudResponse, LinkSoundCloudPayload>(API + '/me/soundcloud', payload);
 }
 
 export function updatePassword(payload: UpdatePasswordPayload): Promise<UpdatePasswordResponse> {

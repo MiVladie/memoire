@@ -1,4 +1,4 @@
-import { GetParams, GetSongsParams, GetSongsType, GetType } from './types';
+import { AddPlaylistsParams, AddPlaylistsType, GetParams, GetSongsParams, GetSongsType, GetType } from './types';
 import { toPlaylistsDTO } from '@/dtos/playlist';
 import { toSongsDTO } from '@/dtos/song';
 
@@ -27,7 +27,12 @@ export async function getSongs(params: GetSongsParams): Promise<GetSongsType> {
 	const songs = await playlistRepository.findSongs({ id: params.playlistId });
 
 	return {
-		// @ts-ignore
 		songs: toSongsDTO(songs)
 	};
+}
+
+export async function addPlaylists(params: AddPlaylistsParams): Promise<AddPlaylistsType> {
+	for (let playlist of params.playlists) {
+		await playlistRepository.create(playlist);
+	}
 }

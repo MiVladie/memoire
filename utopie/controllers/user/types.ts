@@ -57,18 +57,18 @@ export type PatchUpdateHandler = RequestHandler<
 	WithUserLocals
 >;
 
-export interface PostSoundCloudRequestBody {
+export interface PutSoundCloudRequestBody {
 	soundcloudName: string;
 }
 
-export interface PostSoundCloudResponseBody extends ResponseBody {
+export interface PutSoundCloudResponseBody extends ResponseBody {
 	user: UserDTO;
 }
 
-export type PostSoundCloudHandler = RequestHandler<
+export type PutSoundCloudHandler = RequestHandler<
 	unknown,
-	PostSoundCloudResponseBody,
-	PostSoundCloudRequestBody,
+	PutSoundCloudResponseBody,
+	PutSoundCloudRequestBody,
 	unknown,
 	WithUserLocals
 >;

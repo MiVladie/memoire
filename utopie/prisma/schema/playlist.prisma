@@ -27,7 +27,7 @@ model PlaylistsSongs {
 }
 
 model SoundCloudPlaylist {
-    soundcloudPlaylistId      Int                      @unique
+    soundcloudPlaylistId        Int                      @unique
 
     playlist                    Playlist                 @relation(fields: [playlistId], references: [id])
     playlistId                  Int                      @unique

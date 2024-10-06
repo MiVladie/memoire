@@ -1,11 +1,15 @@
-import { SearchCollectionItem, User } from '@/interfaces/soundcloud';
+import { SoundCloudSearchCollectionItem, SoundCloudUser, SoundCloudPlaylist } from '@/interfaces/soundcloud';
 
 export interface SearchPayload {
 	query: string;
 }
 
 export interface SearchResponse {
-	collection: SearchCollectionItem[];
+	collection: SoundCloudSearchCollectionItem[];
 }
 
-export type GetUserResponse = User;
+export type GetUserResponse = SoundCloudUser;
+
+export type GetUserPlaylistsResponse = {
+	collection: SoundCloudPlaylist[];
+};

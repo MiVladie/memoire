@@ -38,6 +38,22 @@ export default class Request {
 		}
 	}
 
+	public static async put<T, M = undefined>(url: string, payload?: object, config?: AxiosRequestConfig): Promise<T> {
+		try {
+			const { data } = await axios.put<T>(url, payload, config);
+
+			return data;
+		} catch (error: any) {
+			if (!Config.PROD) console.error(error);
+
+			if (error!.response) {
+				throw new APIError<M>(error.response!.data as ErrorResponseBody<M>);
+			}
+
+			throw error;
+		}
+	}
+
 	public static async patch<T, M = undefined>(
 		url: string,
 		payload?: object,

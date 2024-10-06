@@ -2,7 +2,7 @@ import {
 	GetPlaylistsHandler,
 	GetPlaylistSongsHandler,
 	PatchUpdateHandler,
-	PostSoundCloudHandler,
+	PutSoundCloudHandler,
 	PatchPasswordHandler,
 	PostImageHandler,
 	DeleteImageHandler,
@@ -11,8 +11,6 @@ import {
 
 import * as userService from '@/services/user';
 import * as playlistService from '@/services/playlist';
-
-import * as soundCloudService from '@/services/soundcloud';
 
 export const getPlaylists: GetPlaylistsHandler = async (req, res, next) => {
 	const { user } = res.locals;
@@ -37,14 +35,14 @@ export const getPlaylistSongs: GetPlaylistSongsHandler = async (req, res, next) 
 	});
 };
 
-export const postSoundCloud: PostSoundCloudHandler = async (req, res, next) => {
+export const putSoundCloud: PutSoundCloudHandler = async (req, res, next) => {
 	const {
 		user: { id }
 	} = res.locals;
 
-	const soundCloudUser = await soundCloudService.findUser({ name: req.body.soundcloudName });
+	const { soundcloudName } = req.body;
 
-	const { user } = await userService.update(id, { soundcloudId: soundCloudUser.user.id });
+	const { user } = await userService.linkSoundCloud(id, { soundcloudName });
 
 	res.status(200).json({
 		user,

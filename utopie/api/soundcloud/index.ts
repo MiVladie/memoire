@@ -1,4 +1,4 @@
-import { SearchPayload, SearchResponse, GetUserResponse } from '@/api/soundcloud/types';
+import { SearchPayload, SearchResponse, GetUserResponse, GetUserPlaylistsResponse } from '@/api/soundcloud/types';
 import { SOUNDCLOUD_API, SOUNDCLOUD_CLIENT_ID } from '@/constants/api';
 import { paramify } from '@/util/api';
 
@@ -14,4 +14,10 @@ export function search({ query, ...payload }: SearchPayload): Promise<SearchResp
 
 export function getUser(id: number): Promise<GetUserResponse> {
 	return Request.get<GetUserResponse>(SOUNDCLOUD_API + `/users/${id}${paramify(defaultParams)}`);
+}
+
+export function getPlaylists(userId: number): Promise<GetUserPlaylistsResponse> {
+	return Request.get<GetUserPlaylistsResponse>(
+		SOUNDCLOUD_API + `/users/${userId}/playlists${paramify(defaultParams)}`
+	);
 }

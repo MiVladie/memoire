@@ -11,6 +11,10 @@ export interface UpdatePasswordParams {
 	newPassword: string;
 }
 
+export interface AddSoundCloudParams {
+	soundcloudName: string;
+}
+
 export interface UpdateType {
 	user: UserDTO;
 }

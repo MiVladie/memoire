@@ -1,15 +1,22 @@
-export interface SearchCollectionItem {
+export interface SoundCloudSearchCollectionItem {
 	id: number;
 	permalink: string;
 	kind: 'user' | 'track';
 	avatar_url: string | null;
 }
 
-export interface User {
+export interface SoundCloudUser {
 	id: number;
 	username: string;
 	description: string;
 	avatar_url: string | null;
 	permalink: string;
+	created_at: string;
+}
+
+export interface SoundCloudPlaylist {
+	id: number;
+	title: string;
+	avatar_url: string | null;
 	created_at: string;
 }
