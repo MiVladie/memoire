@@ -89,7 +89,6 @@ const SoundCloud = () => {
 					<Input
 						icon={<Code />}
 						inputClassName={classes.Input}
-						className={classes.Username}
 						name='soundcloudName'
 						placeholder='yourcreativename'
 						value={values.soundcloudName}

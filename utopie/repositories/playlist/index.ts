@@ -4,18 +4,18 @@ import { CreateParams, FindOneParams, FindManyParams, FindSongsParams } from './
 import db from '@/config/db';
 
 export function create(data: CreateParams) {
+	const soundcloudData: any = {
+		soundcloudPlaylist: {
+			create: {
+				soundcloudPlaylistId: data.soundcloudId
+			}
+		}
+	};
+
 	return db.playlist.create({
 		data: {
 			...excludeKeys(data, ['soundcloudId']),
-			...(data.soundcloudId
-				? {
-						soundcloudPlaylist: {
-							create: {
-								soundcloudPlaylistId: data.soundcloudId
-							}
-						}
-				  }
-				: {})
+			...(data.soundcloudId ? soundcloudData : {})
 		}
 	});
 }
