@@ -6,6 +6,8 @@ import {
 } from '@/services/soundcloud/types';
 import { fromSoundCloudPlaylistsDTO } from '@/dtos/playlist';
 import { CreatePlaylistDTO } from '@/dtos/playlist/types';
+import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
+import { SOUNDCLOUD_DEFAULT_PLAYLISTS } from '@/constants/soundcloud';
 
 import APIError, { Errors } from '@/shared/APIError';
 
@@ -31,7 +33,13 @@ export async function getPlaylists({
 }: GetSoundCloudPlaylistsParams): Promise<GetSoundCloudPlaylistsType> {
 	const { collection } = await API.SoundCloud.getPlaylists(soundcloudUserId);
 
-	const playlists: CreatePlaylistDTO[] = fromSoundCloudPlaylistsDTO(collection).map((p) => ({ ...p, userId }));
+	const customPlaylists: CreatePlaylistDTO[] = fromSoundCloudPlaylistsDTO(collection).map((p) => ({
+		...p,
+		type: SoundCloudPlaylistType.CUSTOM,
+		userId
+	}));
 
-	return { playlists };
+	const defaultPlaylists: CreatePlaylistDTO[] = [...SOUNDCLOUD_DEFAULT_PLAYLISTS].map((p) => ({ ...p, userId }));
+
+	return { playlists: [...defaultPlaylists, ...customPlaylists] };
 }

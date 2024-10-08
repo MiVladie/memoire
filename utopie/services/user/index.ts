@@ -1,5 +1,6 @@
 import { UpdateParams, UpdatePasswordParams, AddSoundCloudParams, UpdateType } from './types';
 import { comparePasswords, encryptPassword } from '@/util/auth';
+import { PLATFORMS } from '@/constants/db';
 import { deleteFile } from '@/util/file';
 import { toUserDTO } from '@/dtos/user';
 import { File } from '@/constants';
@@ -86,5 +87,15 @@ export async function deleteImage(userId: number): Promise<UpdateType> {
 
 	return {
 		user: toUserDTO(updatedUser)
+	};
+}
+
+export async function unlinkSoundCloud(userId: number): Promise<UpdateType> {
+	const user = await userRepository.update(userId, { soundcloudId: null });
+
+	await playlistService.removePlaylists({ userId, platformId: PLATFORMS.SoundCloud.id });
+
+	return {
+		user: toUserDTO(user)
 	};
 }

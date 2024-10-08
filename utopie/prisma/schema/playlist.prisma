@@ -27,10 +27,18 @@ model PlaylistsSongs {
 }
 
 model SoundCloudPlaylist {
-    soundcloudPlaylistId        Int                      @unique
+    type                        SoundCloudPlaylistType   @default(CUSTOM)
 
-    playlist                    Playlist                 @relation(fields: [playlistId], references: [id])
+    soundcloudPlaylistId        Int?                     @unique
+
+    playlist                    Playlist                 @relation(fields: [playlistId], references: [id], onDelete: Cascade)
     playlistId                  Int                      @unique
 
     @@map("soundcloud_playlists")
+}
+
+enum SoundCloudPlaylistType {
+    REPOSTS
+    LIKES
+    CUSTOM
 }

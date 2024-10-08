@@ -20,3 +20,9 @@ export interface SoundCloudPlaylist {
 	avatar_url: string | null;
 	created_at: string;
 }
+
+export enum SoundCloudPlaylistType {
+	REPOSTS = 'REPOSTS',
+	LIKES = 'LIKES',
+	CUSTOM = 'CUSTOM'
+}

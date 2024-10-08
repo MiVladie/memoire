@@ -23,3 +23,10 @@ export interface AddPlaylistsParams {
 }
 
 export type AddPlaylistsType = void;
+
+export interface RemovePlaylistsParams {
+	userId?: number;
+	platformId?: number;
+}
+
+export type RemovePlaylistsType = void;

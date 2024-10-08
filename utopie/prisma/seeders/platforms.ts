@@ -5,15 +5,15 @@ import { PLATFORMS } from '../../constants/db';
 const prisma = new PrismaClient();
 
 export async function seed() {
-	const keys = Object.keys(PLATFORMS);
+	const keys = Object.keys(PLATFORMS) as Array<keyof typeof PLATFORMS>;
 
 	for (let key of keys) {
-		const platform: any = keys[key as any];
+		const { id, name, theme } = PLATFORMS[key];
 
 		await prisma.platform.upsert({
-			where: { id: platform.id },
-			update: { name: platform.name, theme: platform.theme },
-			create: { id: platform.id, name: platform.name, theme: platform.theme }
+			where: { id },
+			update: { name, theme },
+			create: { id, name, theme }
 		});
 	}
 }

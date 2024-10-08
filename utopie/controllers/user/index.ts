@@ -109,7 +109,7 @@ export const deleteSoundCloud: DeleteSoundCloudHandler = async (req, res, next) 
 		user: { id }
 	} = res.locals;
 
-	const { user } = await userService.update(id, { soundcloudId: null });
+	const { user } = await userService.unlinkSoundCloud(id);
 
 	res.status(200).json({
 		user,

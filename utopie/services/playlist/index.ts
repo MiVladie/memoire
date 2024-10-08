@@ -1,4 +1,13 @@
-import { AddPlaylistsParams, AddPlaylistsType, GetParams, GetSongsParams, GetSongsType, GetType } from './types';
+import {
+	AddPlaylistsParams,
+	AddPlaylistsType,
+	GetParams,
+	GetSongsParams,
+	GetSongsType,
+	GetType,
+	RemovePlaylistsParams,
+	RemovePlaylistsType
+} from './types';
 import { toPlaylistsDTO } from '@/dtos/playlist';
 import { toSongsDTO } from '@/dtos/song';
 
@@ -35,4 +44,8 @@ export async function addPlaylists(params: AddPlaylistsParams): Promise<AddPlayl
 	for (let playlist of params.playlists) {
 		await playlistRepository.create(playlist);
 	}
+}
+
+export async function removePlaylists(params: RemovePlaylistsParams): Promise<RemovePlaylistsType> {
+	await playlistRepository.remove(params);
 }
