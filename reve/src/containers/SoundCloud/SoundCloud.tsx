@@ -62,6 +62,8 @@ const SoundCloud = () => {
 				setError(error.message);
 			}
 		} finally {
+			handleChange('', 'soundcloudName');
+
 			setLoading(false);
 		}
 	}
@@ -107,12 +109,7 @@ const SoundCloud = () => {
 				</Form>
 			) : (
 				<div className={classes.Info}>
-					<p className={classes.Warning}>
-						WARNING:
-						<br />
-						<br />
-						this will erase all SoundCloud data!
-					</p>
+					<p className={classes.Success}>your account is linked!</p>
 
 					<Checkbox
 						name='agree'
@@ -121,8 +118,10 @@ const SoundCloud = () => {
 						onChange={(value) => setAgree(value)}
 						onFocus={handleFocus}
 						className={classes.Agree}>
-						i know, just unlink it
+						i wanna unlink it
 					</Checkbox>
+
+					<p className={classes.Warning}>warning: this will erase all SoundCloud data!</p>
 
 					<Button className={classes.Button} onClick={unlinkHandler} loading={loading} disabled={!agree}>
 						Unlink

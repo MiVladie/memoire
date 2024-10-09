@@ -24,15 +24,24 @@
 	}
 
 	.Info {
-		.Warning {
-			font-family: $primary-font;
+		.Success {
+			font-family: $secondary-font;
 			font-size: $sm;
 
-			color: $danger-color;
+			color: $secondary-color;
 		}
 
 		.Agree {
-			margin-top: 32px;
+			margin-top: 72px;
+		}
+
+		.Warning {
+			font-family: $primary-font;
+			font-size: $xs;
+
+			color: $danger-color;
+
+			margin-top: 4px;
 		}
 
 		.Button {
