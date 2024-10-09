@@ -35,10 +35,10 @@ const Songs = ({ data, loading, className }: Props) => (
 				))
 			) : (
 				<p className={classes.Empty}>
-					songs not found :/
+					for now, the stars are hidden behind the clouds
 					<br />
 					<br />
-					have you linked your account in settings? 🤔
+					..but the sky won't stay empty for long ✨ 🪐
 				</p>
 			)
 		) : (

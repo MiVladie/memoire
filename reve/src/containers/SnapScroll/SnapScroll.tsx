@@ -146,14 +146,14 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset, childr
 		// Scrolling to first element
 		if (!rtl) {
 			if (active === 0) {
-				container.current!.scrollTo({ left: 0, behavior: 'smooth' });
+				container.current?.scrollTo({ left: 0, behavior: 'smooth' });
 
 				return;
 			}
 		} else {
 			if (active === React.Children.count(children) - 1) {
 				container.current!.scrollTo({
-					left: container.current!.scrollWidth
+					left: container.current?.scrollWidth
 					// behavior: 'smooth'
 				});
 
@@ -162,7 +162,7 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset, childr
 		}
 
 		// Element to which content is snapped to
-		const snappedElement = container.current!.children[active] as HTMLElement;
+		const snappedElement = container.current?.children[active] as HTMLElement;
 
 		// Getting coordinates
 		const containerRect = container.current!.getBoundingClientRect();
@@ -179,7 +179,7 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset, childr
 			  offset!;
 
 		// Scrolling to snapped element within a parent container
-		container.current!.scrollTo({ left, behavior: 'smooth' });
+		container.current?.scrollTo({ left, behavior: 'smooth' });
 	}, [active]);
 
 	if (!React.Children.count(children)) {

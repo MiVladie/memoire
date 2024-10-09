@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import { HeadFC, navigate } from 'gatsby';
 import { Platform, Playlist, Song } from 'interfaces/models';
-import { PlatformStorage } from 'interfaces/storage';
-import { PLATFORM_STORAGE_KEYS } from 'config/storage';
+import { AuthStorage, PlatformStorage } from 'interfaces/storage';
+import { AUTH_STORAGE_KEYS, PLATFORM_STORAGE_KEYS } from 'config/storage';
+import { isLinked } from 'utils/settings';
+import { delay } from 'utils/date';
 
 import Platforms from 'containers/Platforms/Platforms';
 import Songs from 'containers/Songs/Songs';
@@ -15,7 +17,7 @@ import Avatar from 'assets/icons/account.svg';
 import * as API from 'api';
 
 import * as classes from './Home.module.scss';
-import { delay } from 'utils/date';
+import Button from 'components/Button/Button';
 
 const Home = () => {
 	const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -25,6 +27,8 @@ const Home = () => {
 	const [loadingPlatforms, setLoadingPlatforms] = useState<boolean>(true);
 	const [loadingPlaylists, setLoadingPlaylists] = useState<boolean>(true);
 	const [loadingSongs, setLoadingSongs] = useState<boolean>(true);
+
+	const [linked, setLinked] = useState<boolean>(true);
 
 	const [error, setError] = useState<string>();
 
@@ -47,6 +51,8 @@ const Home = () => {
 	}
 
 	async function fetchData() {
+		const { user } = Storage.get<AuthStorage>(AUTH_STORAGE_KEYS);
+
 		try {
 			// @ts-ignore
 			const platforms = await fetchPlatforms();
@@ -64,6 +70,8 @@ const Home = () => {
 
 			await delay(2);
 
+			setLinked(isLinked(platforms[0].id, user!));
+
 			setPlatforms(platforms);
 			setPlaylists(playlists);
 		} catch (error: any) {
@@ -77,11 +85,21 @@ const Home = () => {
 	}
 
 	async function platformHandler(id: number) {
-		setLoadingPlaylists(true);
-		setLoadingSongs(true);
-
 		setPlaylists([]);
 		setSongs([]);
+
+		const { user } = Storage.get<AuthStorage>(AUTH_STORAGE_KEYS);
+
+		if (!isLinked(id, user!)) {
+			setLinked(false);
+
+			return;
+		}
+
+		setLinked(true);
+
+		setLoadingPlaylists(true);
+		setLoadingSongs(true);
 
 		try {
 			const { playlists } = await API.User.getPlaylists({ platformId: id });
@@ -135,7 +153,21 @@ const Home = () => {
 			actions={<Avatar className={classes.Avatar} onClick={profileHandler} />}
 			loadingPlatforms={loadingPlatforms}
 			loadingPlaylists={loadingPlaylists}>
-			{!error ? <Songs data={songs} loading={loadingSongs} /> : <p className={classes.Error}>{error}</p>}
+			{!error ? (
+				linked ? (
+					<Songs data={songs} loading={loadingSongs} />
+				) : (
+					<div className={classes.Linking}>
+						<p className={classes.Info}>seems like you haven't linked account yet..</p>
+
+						<Button onClick={profileHandler} className={classes.Settings}>
+							link now
+						</Button>
+					</div>
+				)
+			) : (
+				<p className={classes.Error}>{error}</p>
+			)}
 		</Platforms>
 	);
 };

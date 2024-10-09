@@ -13,6 +13,19 @@ $SIZE: 35px;
 	cursor: pointer;
 }
 
+.Linking {
+	.Info {
+		font-family: $primary-font;
+		font-size: $sm;
+
+		color: $secondary-color;
+	}
+
+	.Settings {
+		margin-top: 72px;
+	}
+}
+
 .Error {
 	font-family: $primary-font;
 	font-size: $sm;
