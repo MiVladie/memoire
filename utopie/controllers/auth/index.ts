@@ -55,10 +55,7 @@ export const postSignUp: PostSignUpHandler = async (req, res, next) => {
 export const postRecover: PostRecoverHandler = async (req, res, next) => {
 	const { email } = req.body;
 
-	const { code, expiresAt } = await authService.recover({ email });
-
-	// TODO: send email
-	console.log({ code, expiresAt });
+	await authService.recover({ email });
 
 	res.status(200).json({
 		message: 'Recovery email was sent successfully!'

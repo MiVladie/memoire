@@ -1,0 +1,50 @@
+<style>
+	#content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		flex-flow: column;
+
+		padding-top: 72px;
+	}
+
+	#content h2,
+	#content p {
+		text-align: center;
+	}
+
+	#content h2 {
+		margin-bottom: 72px;
+	}
+
+	#content p {
+		margin-bottom: 72px;
+	}
+
+	#content #box {
+		margin-bottom: 72px;
+		padding: 16px 32px;
+
+		background-color: #ffffff;
+	}
+
+	#content #box code {
+		font-family: 'Graduate';
+		font-size: 20px;
+		color: #121212;
+
+		margin: 0;
+	}
+</style>
+
+<div id="content">
+	<h2>heyo there</h2>
+	<p>requested to reset your password?<br />here's your code:</p>
+
+	<div id="box">
+		<code><%= code %></code>
+	</div>
+
+	<p>see you soon! ✨</p>
+</div>

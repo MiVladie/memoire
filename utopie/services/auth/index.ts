@@ -2,7 +2,7 @@ import {
 	AuthenticateParams,
 	AuthType,
 	RecoverParams,
-	RecoveryType,
+	RecoverType,
 	SignInParams,
 	SignUpParams,
 	VerifyParams,
@@ -19,6 +19,8 @@ import { RecoveryTokenDTO } from '@/dtos/recovery/types';
 import APIError, { Errors } from '@/shared/APIError';
 
 import * as Constants from '@/constants';
+
+import * as mailService from '@/services/mail';
 
 import * as userRepository from '@/repositories/user';
 import * as recoveryRepository from '@/repositories/recovery';
@@ -84,7 +86,7 @@ export async function signUp({ name, email, password }: SignUpParams): Promise<A
 	};
 }
 
-export async function recover({ email }: RecoverParams): Promise<RecoveryType> {
+export async function recover({ email }: RecoverParams): Promise<RecoverType> {
 	const user = await userRepository.findOne({ email });
 
 	if (!user) {
@@ -100,6 +102,8 @@ export async function recover({ email }: RecoverParams): Promise<RecoveryType> {
 	expiresAt.setMinutes(expiresAt.getMinutes() + Constants.Security.RECOVERY_CODE_EXPIRATION);
 
 	await recoveryRepository.create({ userId: user.id, code, expiresAt });
+
+	await mailService.sendRecovery({ recipient: user.email, code });
 
 	return {
 		code,

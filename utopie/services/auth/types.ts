@@ -24,7 +24,7 @@ export interface RecoverParams {
 	email: string;
 }
 
-export interface RecoveryType {
+export interface RecoverType {
 	code: string;
 	expiresAt: Date;
 }

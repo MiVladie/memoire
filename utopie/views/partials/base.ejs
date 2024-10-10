@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mémoire</title>
+
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Graduate&family=Holtwood+One+SC&family=Urbanist&display=swap');
+
+			* {
+				margin: 0;
+				color: #ffffff;
+
+				text-decoration: none;
+			}
+
+			body {
+				max-width: 800px;
+				min-width: 600px;
+
+				font-family: 'Urbanist';
+				font-size: 18px;
+
+				background-color: #121212;
+
+				overflow-x: hidden;
+			}
+
+			header {
+				padding: 48px;
+
+				position: relative;
+			}
+
+			header h1 {
+				font-family: 'Holtwood One SC';
+				font-size: 36px;
+
+				text-transform: uppercase;
+			}
+
+			header #circle {
+				width: 400px;
+				height: 400px;
+
+				border-radius: 250px;
+
+				background-color: #ffffff;
+
+				position: absolute;
+				top: -250px;
+				right: -100px;
+			}
+
+			main {
+				width: calc(100% - 96px);
+				min-height: 80vh;
+
+				margin: 0 auto;
+			}
+
+			footer {
+				padding: 16px 0;
+			}
+
+			footer p {
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<%- include('../partials/header') %>
+
+		<main><%- body %></main>
+
+		<%- include('../partials/footer') %>
+	</body>
+</html>
