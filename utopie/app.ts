@@ -8,6 +8,8 @@ import handleError from '@/middleware/handleError';
 import router from '@/routes';
 import uploads from '@/routes/uploads';
 
+import * as Server from '@/config/server';
+
 const app = express();
 
 // Set headers for incoming requests
@@ -26,4 +28,4 @@ app.use('/public', uploads);
 app.use(handleError);
 
 // Running the server
-app.listen(process.env.PORT || 8080);
+app.listen(Server.PORT);

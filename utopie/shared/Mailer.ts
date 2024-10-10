@@ -1,10 +1,10 @@
 import { transporter } from '@/config/mail';
-import { SMTP_FROM } from '@/constants/mail';
-import { Server } from '@/constants';
 
 import nodemailer from 'nodemailer';
 
-export default class Mail {
+import * as Server from '@/config/server';
+
+export default class Mailer {
 	private transporter: nodemailer.Transporter;
 
 	constructor() {
@@ -31,6 +31,6 @@ export default class Mail {
 			return;
 		}
 
-		await this.transporter.sendMail({ from: SMTP_FROM, to: recipient, subject, html: content });
+		await this.transporter.sendMail({ to: recipient, subject, html: content });
 	}
 }

@@ -1,9 +1,9 @@
 import { UpdateParams, UpdatePasswordParams, AddSoundCloudParams, UpdateType } from './types';
 import { comparePasswords, encryptPassword } from '@/util/auth';
-import { PLATFORMS } from '@/constants/db';
+import { Platform } from '@/constants';
 import { deleteFile } from '@/util/file';
 import { toUserDTO } from '@/dtos/user';
-import { File } from '@/constants';
+import { Path } from '@/constants';
 
 import APIError, { Errors } from '@/shared/APIError';
 import path from 'path';
@@ -81,7 +81,7 @@ export async function deleteImage(userId: number): Promise<UpdateType> {
 		throw new APIError(Errors.NOT_FOUND, { message: 'Image does not exist!' });
 	}
 
-	deleteFile(path.join(File.PUBLIC_PATH, File.IMAGES_PATH, user.image));
+	deleteFile(path.join(Path.Shared.images, user.image));
 
 	const updatedUser = (await userRepository.update(userId, { image: null }))!;
 
@@ -93,7 +93,7 @@ export async function deleteImage(userId: number): Promise<UpdateType> {
 export async function unlinkSoundCloud(userId: number): Promise<UpdateType> {
 	const user = await userRepository.update(userId, { soundcloudId: null });
 
-	await playlistService.removePlaylists({ userId, platformId: PLATFORMS.SoundCloud.id });
+	await playlistService.removePlaylists({ userId, platformId: Platform.SoundCloud.id });
 
 	return {
 		user: toUserDTO(user)

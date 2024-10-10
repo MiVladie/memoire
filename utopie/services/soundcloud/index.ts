@@ -7,7 +7,7 @@ import {
 import { fromSoundCloudPlaylistsDTO } from '@/dtos/playlist';
 import { CreatePlaylistDTO } from '@/dtos/playlist/types';
 import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
-import { SOUNDCLOUD_DEFAULT_PLAYLISTS } from '@/constants/soundcloud';
+import { Platform } from '@/constants';
 
 import APIError, { Errors } from '@/shared/APIError';
 
@@ -39,7 +39,11 @@ export async function getPlaylists({
 		userId
 	}));
 
-	const defaultPlaylists: CreatePlaylistDTO[] = [...SOUNDCLOUD_DEFAULT_PLAYLISTS].map((p) => ({ ...p, userId }));
+	const defaultPlaylists: CreatePlaylistDTO[] = [...Platform.SoundCloud.playlists].map((p) => ({
+		...p,
+		platformId: Platform.SoundCloud.id,
+		userId
+	}));
 
 	return { playlists: [...defaultPlaylists, ...customPlaylists] };
 }

@@ -1,11 +1,14 @@
-import { JOI_CUSTOM_MESSAGES } from '@/config/validation';
+import { Message } from '@/constants';
 import { ErrorMeta } from '@/interfaces/error';
 
 import APIError, { Errors } from '@/shared/APIError';
 import joi from 'joi';
 
 export function validate<T>(schema: joi.StrictSchemaMap<T>, data: T) {
-	const { error } = joi.object(schema).messages(JOI_CUSTOM_MESSAGES).validate(data, { abortEarly: false });
+	const { error } = joi
+		.object(schema)
+		.messages(Message.JOI_VALIDATION_MESSAGES)
+		.validate(data, { abortEarly: false });
 
 	if (!error) {
 		return;

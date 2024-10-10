@@ -1,12 +1,12 @@
 import { UserDTO, UserTokenDTO } from '@/dtos/user/types';
 import { User } from '@/interfaces/models';
 import { excludeKeys } from '@/util/optimization';
-import { File, Server } from '@/constants';
+import { Path } from '@/constants';
 
 import path from 'path';
 
 export function toUserDTO(user: User): UserDTO {
-	user.image = user.image ? Server.URL + path.join(File.PUBLIC_PATH, File.IMAGES_PATH, user.image) : null;
+	user.image = user.image ? Path.BASE_URL + path.join(Path.Shared.images, user.image) : null;
 
 	return excludeKeys(user, ['password', 'createdAt']);
 }

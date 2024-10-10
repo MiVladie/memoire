@@ -4,11 +4,9 @@ export type Payload = {
 	recovery: RecoveryPayload;
 };
 
-export interface TemplateMap {
-	[key: string]: {
-		file: Type;
-		subject: string;
-	};
+export interface Template {
+	file: Type;
+	subject: string;
 }
 
 interface RecoveryPayload {

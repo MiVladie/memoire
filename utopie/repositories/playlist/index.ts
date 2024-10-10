@@ -1,6 +1,6 @@
 import { excludeKeys } from '@/util/optimization';
 import { CreateParams, FindOneParams, FindManyParams, FindSongsParams, RemoveParams } from './types';
-import { PLATFORMS } from '@/constants/db';
+import { Platform } from '@/constants';
 
 import db from '@/config/db';
 
@@ -17,7 +17,7 @@ export function create(data: CreateParams) {
 	return db.playlist.create({
 		data: {
 			...excludeKeys(data, ['type', 'soundcloudId']),
-			...(data.platformId === PLATFORMS.SoundCloud.id ? soundcloudData : {})
+			...(data.platformId === Platform.SoundCloud.id ? soundcloudData : {})
 		}
 	});
 }

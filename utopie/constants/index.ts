@@ -1,10 +1,8 @@
 import * as API from '@/constants/api';
-import * as DB from '@/constants/db';
 import * as File from '@/constants/file';
-import * as Mail from '@/constants/mail';
-import * as Redis from '@/constants/redis';
-import * as Security from '@/constants/security';
-import * as Server from '@/constants/server';
-import * as SoundCloud from '@/constants/soundcloud';
+import * as Mail from '@/constants/template';
+import * as Message from '@/constants/message';
+import * as Path from '@/constants/path';
+import * as Platform from '@/constants/platform';
 
-export { API, DB, File, Mail, Redis, Security, Server, SoundCloud };
+export { API, File, Mail, Message, Path, Platform };

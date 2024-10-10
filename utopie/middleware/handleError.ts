@@ -3,7 +3,7 @@ import { ErrorHandler } from '@/interfaces/error';
 
 import APIError, { Errors } from '@/shared/APIError';
 
-import * as Constants from '@/constants';
+import * as Server from '@/config/server';
 
 export const handleError: ErrorHandler = (error, _, res, next) => {
 	let payload: ErrorResponseBody;
@@ -15,7 +15,7 @@ export const handleError: ErrorHandler = (error, _, res, next) => {
 	}
 
 	// Log development errors
-	if (Constants.Server.ENV === 'development') {
+	if (Server.ENV === 'development') {
 		Object.assign(payload, {
 			message: error.message,
 			stack: error.stack

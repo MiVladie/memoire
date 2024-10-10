@@ -15,6 +15,7 @@ import { toRecoveryTokenDTO } from '@/dtos/recovery';
 import { generateNumber } from '@/util/optimization';
 import { UserTokenDTO } from '@/dtos/user/types';
 import { RecoveryTokenDTO } from '@/dtos/recovery/types';
+import { Recovery } from '@/config/app';
 
 import APIError, { Errors } from '@/shared/APIError';
 
@@ -99,7 +100,7 @@ export async function recover({ email }: RecoverParams): Promise<RecoverType> {
 	const code = generateNumber(10000, 99999).toString();
 	const expiresAt = new Date();
 
-	expiresAt.setMinutes(expiresAt.getMinutes() + Constants.Security.RECOVERY_CODE_EXPIRATION);
+	expiresAt.setMinutes(expiresAt.getMinutes() + Recovery.CODE_EXPIRATION);
 
 	await recoveryRepository.create({ userId: user.id, code, expiresAt });
 
@@ -134,7 +135,7 @@ export async function verify({ email, code }: VerifyParams): Promise<VerifyType>
 		throw new APIError(Errors.RECOVERY_EXPIRED);
 	}
 
-	const token = generateToken(toRecoveryTokenDTO(recovery), Constants.Security.RECOVERY_TOKEN_EXPIRATION);
+	const token = generateToken(toRecoveryTokenDTO(recovery), Recovery.TOKEN_EXPIRATION);
 
 	return {
 		token

@@ -1,23 +1,23 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import * as Constants from '@/constants';
+import * as Security from '@/config/security';
 
 export function comparePasswords(original: string, encrypted: string): Promise<boolean> {
 	return bcrypt.compare(original, encrypted);
 }
 
 export function encryptPassword(password: string): Promise<string> {
-	return bcrypt.hash(password, Constants.Security.SALT_ROUNDS);
+	return bcrypt.hash(password, Security.bcrypt.SALT_ROUNDS);
 }
 
 export function generateToken<T extends object>(payload: T, expiresIn?: number): string {
-	return jwt.sign(payload, Constants.Security.JWT_SECRET, expiresIn ? { expiresIn: expiresIn * 60 } : undefined);
+	return jwt.sign(payload, Security.jwt.SECRET, expiresIn ? { expiresIn: expiresIn * 60 } : undefined);
 }
 
 export function verifyToken<T extends object>(token: string): T | null {
 	try {
-		return jwt.verify(token, Constants.Security.JWT_SECRET) as T;
+		return jwt.verify(token, Security.jwt.SECRET) as T;
 	} catch (error) {
 		return null;
 	}

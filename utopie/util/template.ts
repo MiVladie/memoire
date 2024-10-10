@@ -1,13 +1,12 @@
 import { Payload, Type } from '@/interfaces/mail';
+import { Path } from '@/constants';
 
 import path from 'path';
 import ejs from 'ejs';
 
-import * as Mail from '@/constants/mail';
-
 export async function renderTemplate<T extends Type>(name: T, data: Payload[T]): Promise<string> {
-	const templatePath = path.join(Mail.VIEWS_PATH, Mail.EMAILS_PATH, name + '.ejs');
-	const basePath = path.join(Mail.VIEWS_PATH, Mail.PARTIALS_PATH, 'base.ejs');
+	const templatePath = path.join(Path.Views.emails, name + '.ejs');
+	const basePath = path.join(Path.Views.partials, 'base.ejs');
 
 	try {
 		const body = await ejs.renderFile(templatePath, data);

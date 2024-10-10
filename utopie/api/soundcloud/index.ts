@@ -1,23 +1,23 @@
 import { SearchPayload, SearchResponse, GetUserResponse, GetUserPlaylistsResponse } from '@/api/soundcloud/types';
-import { SOUNDCLOUD_API, SOUNDCLOUD_CLIENT_ID } from '@/constants/api';
 import { paramify } from '@/util/api';
+import { API } from '@/constants';
 
 import Request from 'shared/Request';
 
-const defaultParams = { client_id: SOUNDCLOUD_CLIENT_ID };
+const defaultParams = { client_id: API.SoundCloud.CLIENT_ID };
 
 export function search({ query, ...payload }: SearchPayload): Promise<SearchResponse> {
 	return Request.get<SearchResponse>(
-		SOUNDCLOUD_API + `/search${paramify({ q: query, ...payload, ...defaultParams })}`
+		API.SoundCloud.BASE_URL + `/search${paramify({ q: query, ...payload, ...defaultParams })}`
 	);
 }
 
 export function getUser(id: number): Promise<GetUserResponse> {
-	return Request.get<GetUserResponse>(SOUNDCLOUD_API + `/users/${id}${paramify(defaultParams)}`);
+	return Request.get<GetUserResponse>(API.SoundCloud.BASE_URL + `/users/${id}${paramify(defaultParams)}`);
 }
 
 export function getPlaylists(userId: number): Promise<GetUserPlaylistsResponse> {
 	return Request.get<GetUserPlaylistsResponse>(
-		SOUNDCLOUD_API + `/users/${userId}/playlists${paramify(defaultParams)}`
+		API.SoundCloud.BASE_URL + `/users/${userId}/playlists${paramify(defaultParams)}`
 	);
 }

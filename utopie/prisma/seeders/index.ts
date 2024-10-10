@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import * as Platforms from './platforms';
+import * as Platforms from '@/prisma/seeders/platforms';
 
 const prisma = new PrismaClient();
 
