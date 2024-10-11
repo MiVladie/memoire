@@ -25,7 +25,7 @@ export interface GetPlaylistSongsRequestParams {
 }
 
 export interface GetPlaylistSongsQueryParams {
-	page: string;
+	cursor?: number;
 }
 
 export interface GetPlaylistSongsResponseBody extends ResponseBody {

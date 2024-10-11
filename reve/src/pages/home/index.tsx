@@ -8,6 +8,7 @@ import { isLinked } from 'utils/settings';
 import { delay } from 'utils/date';
 
 import Platforms from 'containers/Platforms/Platforms';
+import Button from 'components/Button/Button';
 import Songs from 'containers/Songs/Songs';
 import Storage from 'shared/Storage';
 import Seo from 'hoc/Seo/Seo';
@@ -17,7 +18,6 @@ import Avatar from 'assets/icons/account.svg';
 import * as API from 'api';
 
 import * as classes from './Home.module.scss';
-import Button from 'components/Button/Button';
 
 const Home = () => {
 	const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -68,7 +68,7 @@ const Home = () => {
 				setSongs(songs);
 			}
 
-			await delay(2);
+			await delay(0.5);
 
 			setLinked(isLinked(platforms[0].id, user!));
 
@@ -111,7 +111,7 @@ const Home = () => {
 				setSongs(songs);
 			}
 
-			await delay(2);
+			await delay(0.5);
 		} catch (error: any) {
 			console.error(error);
 			setError('oh, something is off.. 🙁');
@@ -129,7 +129,7 @@ const Home = () => {
 		try {
 			const { songs } = await API.User.getPlaylistSongs(id);
 
-			await delay(2);
+			await delay(0.5);
 
 			setSongs(songs);
 		} catch (error: any) {

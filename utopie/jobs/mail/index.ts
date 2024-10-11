@@ -5,7 +5,7 @@ import AbstractJob from '@/shared/Job';
 
 import * as mailService from '@/services/mail';
 
-export class Mail extends AbstractJob<Payload, Jobs> {
+export default class Mail extends AbstractJob<Payload, Jobs> {
 	constructor() {
 		super(QUEUE_NAME);
 	}

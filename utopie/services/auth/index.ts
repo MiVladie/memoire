@@ -15,16 +15,18 @@ import { toRecoveryTokenDTO } from '@/dtos/recovery';
 import { generateNumber } from '@/util/optimization';
 import { UserTokenDTO } from '@/dtos/user/types';
 import { RecoveryTokenDTO } from '@/dtos/recovery/types';
+import { renderTemplate } from '@/util/template';
 import { Recovery } from '@/config/app';
+import { Mail } from '@/constants';
+
+import MailJob from '@/jobs/mail';
 
 import APIError, { Errors } from '@/shared/APIError';
 
-import * as Constants from '@/constants';
-
-import * as mailService from '@/services/mail';
-
 import * as userRepository from '@/repositories/user';
 import * as recoveryRepository from '@/repositories/recovery';
+
+const MailQueue = new MailJob();
 
 export async function authenticate({ token }: AuthenticateParams): Promise<AuthType> {
 	const payload = verifyToken<UserTokenDTO>(token);
@@ -104,7 +106,9 @@ export async function recover({ email }: RecoverParams): Promise<RecoverType> {
 
 	await recoveryRepository.create({ userId: user.id, code, expiresAt });
 
-	await mailService.sendRecovery({ recipient: user.email, code });
+	const content = await renderTemplate(Mail.Recovery.file, { code });
+
+	await MailQueue.send({ recipient: user.email, subject: Mail.Recovery.subject, content });
 
 	return {
 		code,

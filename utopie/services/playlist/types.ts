@@ -12,6 +12,7 @@ export interface GetType {
 
 export interface GetSongsParams {
 	playlistId: number;
+	cursor?: number;
 }
 
 export interface GetSongsType {
@@ -23,6 +24,13 @@ export interface AddPlaylistsParams {
 }
 
 export type AddPlaylistsType = void;
+
+export interface AddSoundCloudPlaylistParams {
+	playlistId: number;
+	playlist: Required<Pick<CreatePlaylistDTO, 'soundcloudId'>> & CreatePlaylistDTO;
+}
+
+export type AddSoundCloudPlaylistType = void;
 
 export interface RemovePlaylistsParams {
 	userId?: number;

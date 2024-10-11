@@ -2,11 +2,22 @@ import {
 	GetSoundCloudUserParams,
 	GetSoundCloudPlaylistsParams,
 	GetSoundCloudPlaylistsType,
-	GetSoundCloudUserType
+	GetSoundCloudUserType,
+	GetSoundCloudRepostsParams,
+	GetSoundCloudRepostsType,
+	GetSoundCloudLikesParams,
+	GetSoundCloudLikesType,
+	GetSoundCloudPlaylistSongsParams,
+	GetSoundCloudPlaylistSongsType
 } from '@/services/soundcloud/types';
-import { fromSoundCloudPlaylistsDTO } from '@/dtos/playlist';
 import { CreatePlaylistDTO } from '@/dtos/playlist/types';
+import { CreateSongDTO } from '@/dtos/song/types';
+import { fromSoundCloudPlaylistsDTO } from '@/dtos/playlist';
+import { fromSoundCloudCollectionDTO, fromSoundCloudTracksDTO } from '@/dtos/song';
 import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
+import { getQueryParam } from '@/util/soundcloud';
+import { intoChunks } from '@/util/optimization';
+import { SoundCloud } from '@/constants/api';
 import { Platform } from '@/constants';
 
 import APIError, { Errors } from '@/shared/APIError';
@@ -46,4 +57,71 @@ export async function getPlaylists({
 	}));
 
 	return { playlists: [...defaultPlaylists, ...customPlaylists] };
+}
+
+export async function getReposts({ soundcloudUserId }: GetSoundCloudRepostsParams): Promise<GetSoundCloudRepostsType> {
+	const songs: CreateSongDTO[] = [];
+
+	let offset = '';
+
+	while (true) {
+		const { collection, next_href } = await API.SoundCloud.getReposts(soundcloudUserId, {
+			limit: SoundCloud.TRACK_LIMIT,
+			offset
+		});
+
+		if (collection.length === 0) {
+			break;
+		}
+
+		// Offsetting from the last song
+		offset = getQueryParam(next_href, 'offset');
+
+		// Inserting into songs
+		songs.push(...fromSoundCloudCollectionDTO(collection));
+	}
+
+	return { songs };
+}
+
+export async function getLikes({ soundcloudUserId }: GetSoundCloudLikesParams): Promise<GetSoundCloudLikesType> {
+	const songs: CreateSongDTO[] = [];
+
+	let offset = '';
+
+	while (true) {
+		const { collection, next_href } = await API.SoundCloud.getLikes(soundcloudUserId, {
+			limit: SoundCloud.TRACK_LIMIT,
+			offset
+		});
+
+		if (collection.length === 0) {
+			break;
+		}
+
+		// Offsetting from the last song
+		offset = getQueryParam(next_href, 'offset');
+
+		// Inserting into songs
+		songs.push(...fromSoundCloudCollectionDTO(collection));
+	}
+
+	return { songs };
+}
+
+export async function getPlaylistSongs({
+	soundcloudPlaylistId
+}: GetSoundCloudPlaylistSongsParams): Promise<GetSoundCloudPlaylistSongsType> {
+	const { tracks: shortTracks } = await API.SoundCloud.getPlaylist(soundcloudPlaylistId);
+
+	const songs: CreateSongDTO[] = [];
+	const chunks = intoChunks(shortTracks.map((t) => t.id));
+
+	for (let chunk of chunks) {
+		const tracks = await API.SoundCloud.getTracks(chunk);
+
+		songs.push(...fromSoundCloudTracksDTO(tracks));
+	}
+
+	return { songs };
 }

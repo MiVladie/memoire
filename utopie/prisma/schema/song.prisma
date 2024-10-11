@@ -1,13 +1,13 @@
 model Song {
     id                      Int                 @id @default(autoincrement())
-    name                    String              @unique
+    name                    String              
     image                   String?
     author                  String
     url                     String
     duration                Int
     isPresent               Boolean
 
-    platform                Platform            @relation(fields: [platformId], references: [id])
+    platform                Platform            @relation(fields: [platformId], references: [id], onDelete: Cascade)
     platformId              Int
 
     soundcloudSong          SoundCloudSong?
@@ -18,9 +18,9 @@ model Song {
 }
 
 model SoundCloudSong {
-    soundcloudTrackId     Int                 @unique
+    soundcloudTrackId       Int                 @unique
 
-    song                    Song                @relation(fields: [songId], references: [id])
+    song                    Song                @relation(fields: [songId], references: [id], onDelete: Cascade)
     songId                  Int                 @unique
 
     @@map("soundcloud_songs")
