@@ -28,7 +28,10 @@ export const getPlaylistSongs: GetPlaylistSongsHandler = async (req, res, next) 
 	const { playlistId } = req.params;
 	const { cursor } = req.query;
 
-	const { songs } = await playlistService.getSongs({ playlistId: parseInt(playlistId), cursor });
+	const { songs } = await playlistService.getSongs({
+		playlistId: parseInt(playlistId),
+		cursor: cursor ? parseInt(cursor) : undefined
+	});
 
 	res.status(200).json({
 		songs,

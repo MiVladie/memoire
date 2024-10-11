@@ -45,7 +45,7 @@ export async function getSongs(params: GetSongsParams): Promise<GetSongsType> {
 		throw new APIError(Errors.NOT_FOUND, { message: 'Request playlist does not exist!' });
 	}
 
-	const songs = await playlistRepository.findSongs({ id: params.playlistId });
+	const songs = await playlistRepository.findSongs({ id: params.playlistId }, params.cursor);
 
 	return {
 		songs: toSongsDTO(songs)
