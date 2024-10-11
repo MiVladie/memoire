@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Platform, Playlist } from 'interfaces/models';
 
@@ -6,6 +6,7 @@ import Container from 'hoc/Container/Container';
 import SnapScroll from 'containers/SnapScroll/SnapScroll';
 import Skeleton from 'components/Skeleton/Skeleton';
 import useScreen from 'hooks/useScreen';
+import useScroll from 'hooks/useScroll';
 
 import * as classes from './Platforms.module.scss';
 
@@ -16,6 +17,7 @@ interface Props {
 	playlists: Playlist[];
 	onPlatform?: (id: number) => void;
 	onPlaylist?: (id: number) => void;
+	onScrollEnd?: () => void;
 	className?: string;
 	actions?: React.ReactNode;
 	children: React.ReactNode;
@@ -28,6 +30,7 @@ const Platforms = ({
 	playlists,
 	onPlatform,
 	onPlaylist,
+	onScrollEnd,
 	className,
 	actions,
 	children,
@@ -39,6 +42,16 @@ const Platforms = ({
 
 	const { isDesktop } = useScreen();
 
+	const { element, crossed } = useScroll({ offset: 250 });
+
+	useEffect(() => {
+		if (!onScrollEnd) {
+			return;
+		}
+
+		onScrollEnd();
+	}, [crossed]);
+
 	function platformHandler(index: number) {
 		if (index === platformIndex) return;
 
@@ -46,6 +59,8 @@ const Platforms = ({
 		setPlaylistIndex(0);
 
 		onPlatform?.(platforms[index].id);
+
+		element.current!.scrollTop = 0;
 	}
 
 	function playlistHandler(index: number) {
@@ -54,6 +69,8 @@ const Platforms = ({
 		setPlaylistIndex(index);
 
 		onPlaylist?.(playlists[index].id);
+
+		element.current!.scrollTop = 0;
 	}
 
 	return (
@@ -118,7 +135,7 @@ const Platforms = ({
 
 			<div className={classes.ListShade} />
 
-			<Container className={classes.List}>
+			<Container className={classes.List} ref={element}>
 				<div className={classes.Contents}>{children}</div>
 			</Container>
 		</div>

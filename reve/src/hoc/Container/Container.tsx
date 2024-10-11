@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import * as classes from './Container.module.scss';
 
@@ -7,8 +7,12 @@ interface Props {
 	children?: React.ReactNode;
 }
 
-const Container = ({ className, children }: Props) => {
-	return <div className={[classes.Container, className].join(' ')}>{children}</div>;
-};
+const Container = forwardRef(({ className, children }: Props, ref) => {
+	return (
+		<div className={[classes.Container, className].join(' ')} ref={ref as any}>
+			{children}
+		</div>
+	);
+});
 
 export default Container;

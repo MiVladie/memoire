@@ -9,6 +9,10 @@ export interface GetPlaylistsResponse extends ResponseBody {
 	playlists: Playlist[];
 }
 
+export interface GetPlaylistSongsPayload {
+	cursor?: number;
+}
+
 export interface GetPlaylistSongsResponse extends ResponseBody {
 	songs: Song[];
 }

@@ -1,6 +1,7 @@
 import {
 	GetPlaylistsPayload,
 	GetPlaylistsResponse,
+	GetPlaylistSongsPayload,
 	GetPlaylistSongsResponse,
 	UpdatePayload,
 	UpdateResponse,
@@ -22,8 +23,11 @@ export function getPlaylists(payload: GetPlaylistsPayload): Promise<GetPlaylists
 	return Request.get<GetPlaylistsResponse, GetPlaylistsPayload>(API + `/me/playlists${paramify(payload)}`);
 }
 
-export function getPlaylistSongs(playlistId: number): Promise<GetPlaylistSongsResponse> {
-	return Request.get<GetPlaylistSongsResponse>(API + `/me/playlists/${playlistId}/songs`);
+export function getPlaylistSongs(
+	playlistId: number,
+	payload?: GetPlaylistSongsPayload
+): Promise<GetPlaylistSongsResponse> {
+	return Request.get<GetPlaylistSongsResponse>(API + `/me/playlists/${playlistId}/songs${paramify(payload)}`);
 }
 
 export function update(payload: UpdatePayload): Promise<UpdateResponse> {

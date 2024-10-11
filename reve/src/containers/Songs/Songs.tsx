@@ -19,9 +19,8 @@ interface Props {
 
 const Songs = ({ data, loading, className }: Props) => (
 	<ul className={[classes.Songs, className].join(' ')}>
-		{!loading ? (
-			data.length ? (
-				data.map((song) => (
+		{data.length
+			? data.map((song) => (
 					<Song
 						className={classes.Song}
 						image={song.image || placeholder}
@@ -32,18 +31,20 @@ const Songs = ({ data, loading, className }: Props) => (
 						is_present={song.isPresent}
 						key={song.id}
 					/>
-				))
-			) : (
-				<p className={classes.Empty}>
-					for now, the stars are hidden behind the clouds
-					<br />
-					<br />
-					..but the sky won't stay empty for long ✨ 🪐
-				</p>
-			)
-		) : (
-			new Array(SKELETON_SIZE).fill(null).map((_, i) => <SongSkeleton className={classes.Song} key={i} />)
-		)}
+			  ))
+			: null}
+
+		{loading &&
+			new Array(SKELETON_SIZE).fill(null).map((_, i) => <SongSkeleton className={classes.Song} key={i} />)}
+
+		{!data.length && !loading ? (
+			<p className={classes.Empty}>
+				for now, the stars are hidden behind the clouds
+				<br />
+				<br />
+				..but the sky won't stay empty for long ✨ 🪐
+			</p>
+		) : null}
 	</ul>
 );
 

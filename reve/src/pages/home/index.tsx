@@ -24,6 +24,9 @@ const Home = () => {
 	const [playlists, setPlaylists] = useState<Playlist[]>([]);
 	const [songs, setSongs] = useState<Song[]>([]);
 
+	const [playlist, setPlaylist] = useState<number>();
+	const [hasMoreSongs, setHasMoreSongs] = useState<boolean>(false);
+
 	const [loadingPlatforms, setLoadingPlatforms] = useState<boolean>(true);
 	const [loadingPlaylists, setLoadingPlaylists] = useState<boolean>(true);
 	const [loadingSongs, setLoadingSongs] = useState<boolean>(true);
@@ -63,15 +66,22 @@ const Home = () => {
 
 			const { playlists } = await API.User.getPlaylists({ platformId: platforms[0].id });
 
+			let songs: Song[] = [];
+
 			if (playlists && playlists.length) {
-				const { songs } = await API.User.getPlaylistSongs(playlists[0].id);
-				setSongs(songs);
+				const result = await API.User.getPlaylistSongs(playlists[0].id);
+
+				songs = result.songs;
+
+				setPlaylist(playlists[0].id);
+				setHasMoreSongs(songs.length > 0);
 			}
 
 			await delay(0.5);
 
 			setLinked(isLinked(platforms[0].id, user!));
 
+			setSongs(songs);
 			setPlatforms(platforms);
 			setPlaylists(playlists);
 		} catch (error: any) {
@@ -84,7 +94,35 @@ const Home = () => {
 		}
 	}
 
+	async function fetchSongs() {
+		if (loadingSongs || !hasMoreSongs || playlist == undefined) {
+			return;
+		}
+
+		setLoadingSongs(true);
+
+		try {
+			const data = await API.User.getPlaylistSongs(playlist, {
+				cursor: songs[songs.length - 1].id
+			});
+
+			if (data.songs.length === 0) {
+				setHasMoreSongs(false);
+			}
+
+			await delay(0.5);
+
+			setSongs((prevState) => [...prevState, ...data.songs]);
+		} catch (error: any) {
+			console.error(error);
+			setError('oh, something is off.. 🙁');
+		} finally {
+			setLoadingSongs(false);
+		}
+	}
+
 	async function platformHandler(id: number) {
+		setPlaylist(undefined);
 		setPlaylists([]);
 		setSongs([]);
 
@@ -106,12 +144,20 @@ const Home = () => {
 
 			setPlaylists(playlists);
 
+			let songs: Song[] = [];
+
 			if (playlists.length > 0) {
-				const { songs } = await API.User.getPlaylistSongs(playlists[0].id);
-				setSongs(songs);
+				const result = await API.User.getPlaylistSongs(playlists[0].id);
+
+				songs = result.songs;
+
+				setPlaylist(playlists[0].id);
+				setHasMoreSongs(songs.length > 0);
 			}
 
 			await delay(0.5);
+
+			setSongs(songs);
 		} catch (error: any) {
 			console.error(error);
 			setError('oh, something is off.. 🙁');
@@ -131,7 +177,9 @@ const Home = () => {
 
 			await delay(0.5);
 
+			setPlaylist(id);
 			setSongs(songs);
+			setHasMoreSongs(songs.length > 0);
 		} catch (error: any) {
 			console.error(error);
 			setError('oh, something is off.. 🙁');
@@ -150,6 +198,7 @@ const Home = () => {
 			playlists={playlists}
 			onPlatform={platformHandler}
 			onPlaylist={playlistHandler}
+			onScrollEnd={fetchSongs}
 			actions={<Avatar className={classes.Avatar} onClick={profileHandler} />}
 			loadingPlatforms={loadingPlatforms}
 			loadingPlaylists={loadingPlaylists}>
