@@ -1,5 +1,5 @@
 export const Jobs = {
-	POPULATE_PLAYLIST_REPETITION: '* * * * *'
+	POPULATE_PLAYLIST_REPETITION: '0 * * * *'
 };
 
 export const Recovery = {
