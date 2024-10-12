@@ -7,6 +7,8 @@ export default class Storage {
 				const value = localStorage.getItem(key as string);
 
 				result[key] = value ? JSON.parse(value) : undefined;
+			} else {
+				result[key] = undefined;
 			}
 		}
 
