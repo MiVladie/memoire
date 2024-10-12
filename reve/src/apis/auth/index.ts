@@ -11,7 +11,7 @@ import {
 	SignUpResponse,
 	VerifyPayload,
 	VerifyResponse
-} from 'api/auth/types';
+} from 'apis/auth/types';
 import { API } from 'constants/api';
 import { paramify } from 'utils/api';
 

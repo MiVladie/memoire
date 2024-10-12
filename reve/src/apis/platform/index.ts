@@ -1,4 +1,4 @@
-import { RetrieveResponse } from 'api/platform/types';
+import { RetrieveResponse } from 'apis/platform/types';
 import { API } from 'constants/api';
 
 import Request from 'shared/Request';

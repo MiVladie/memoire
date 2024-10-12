@@ -15,7 +15,7 @@ const config: GatsbyConfig = {
 		'gatsby-plugin-sass',
 		'gatsby-plugin-sitemap',
 		'gatsby-plugin-breakpoints',
-		'gatsby-alias-imports',
+		'gatsby-plugin-root-import',
 		{
 			resolve: 'gatsby-plugin-manifest',
 			options: {

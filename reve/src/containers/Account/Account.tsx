@@ -18,7 +18,7 @@ import Trash from 'assets/icons/trash.svg';
 
 import Storage from 'shared/Storage';
 
-import * as API from 'api';
+import * as API from 'apis';
 import * as File from 'constants/file';
 
 import * as classes from './Account.module.scss';
@@ -58,8 +58,8 @@ const Account = () => {
 
 	const mForm = useForm<MetaFields>({
 		initialValues: {
-			name: user.name,
-			email: user.email
+			name: user?.name,
+			email: user?.email
 		},
 		rules: {
 			name: {
@@ -174,7 +174,7 @@ const Account = () => {
 		<div className={classes.Account}>
 			<div>
 				<div className={classes.Visual}>
-					<img src={user.image || PROFILE_PICTURE} alt='username' className={classes.Picture} />
+					<img src={user?.image || PROFILE_PICTURE} alt='username' className={classes.Picture} />
 
 					<div className={classes.Actions}>
 						<Button
@@ -188,7 +188,7 @@ const Account = () => {
 							Upload
 						</Button>
 
-						{user.image && (
+						{user?.image && (
 							<Button
 								className={classes.Remove}
 								iconClassName={classes.Icon}

@@ -15,7 +15,7 @@ import Seo from 'hoc/Seo/Seo';
 
 import Avatar from 'assets/icons/account.svg';
 
-import * as API from 'api';
+import * as API from 'apis';
 
 import * as classes from './Home.module.scss';
 

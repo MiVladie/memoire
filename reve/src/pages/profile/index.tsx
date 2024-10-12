@@ -23,7 +23,7 @@ const Profile = () => {
 	function initialSettings() {
 		const { platforms } = Storage.get<PlatformStorage>(PLATFORM_STORAGE_KEYS);
 
-		return [{ id: 0, name: 'Account' }, ...platforms!];
+		return [{ id: 0, name: 'Account' }, ...(platforms || [])];
 	}
 
 	function sectionHandler(id: number) {

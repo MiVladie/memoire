@@ -12,7 +12,7 @@ import useForm from 'hooks/useForm';
 
 import Code from 'assets/icons/code.svg';
 
-import * as API from 'api';
+import * as API from 'apis';
 
 import * as classes from './SoundCloud.module.scss';
 

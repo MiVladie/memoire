@@ -13,7 +13,7 @@ import {
 	UploadImageResponse,
 	UploadImagePayload,
 	UnlinkSoundCloudResponse
-} from 'api/user/types';
+} from 'apis/user/types';
 import { API } from 'constants/api';
 import { paramify } from 'utils/api';
 
