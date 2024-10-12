@@ -8,14 +8,16 @@ import {
 	GetSoundCloudLikesParams,
 	GetSoundCloudLikesType,
 	GetSoundCloudPlaylistSongsParams,
-	GetSoundCloudPlaylistSongsType
+	GetSoundCloudPlaylistSongsType,
+	GetSoundCloudTracksParams,
+	GetSoundCloudTracksType
 } from '@/services/soundcloud/types';
 import { CreatePlaylistDTO } from '@/dtos/playlist/types';
 import { CreateSongDTO } from '@/dtos/song/types';
 import { fromSoundCloudPlaylistsDTO } from '@/dtos/playlist';
 import { fromSoundCloudCollectionDTO, fromSoundCloudTracksDTO } from '@/dtos/song';
 import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
-import { getQueryParam } from '@/util/soundcloud';
+import { getQueryParam } from '@/util/api';
 import { intoChunks } from '@/util/optimization';
 import { SoundCloud } from '@/constants/api';
 import { Platform } from '@/constants';
@@ -122,6 +124,16 @@ export async function getPlaylistSongs({
 
 		songs.push(...fromSoundCloudTracksDTO(tracks));
 	}
+
+	return { songs };
+}
+
+export async function getTracks({ ids }: GetSoundCloudTracksParams): Promise<GetSoundCloudTracksType> {
+	const songs: CreateSongDTO[] = [];
+
+	const tracks = await API.SoundCloud.getTracks(ids);
+
+	songs.push(...fromSoundCloudTracksDTO(tracks));
 
 	return { songs };
 }

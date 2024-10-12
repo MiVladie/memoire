@@ -25,3 +25,16 @@ export function validate<T>(schema: joi.StrictSchemaMap<T>, data: T) {
 
 	throw new APIError(Errors.VALIDATION, { meta: fields });
 }
+
+export function objectsMatch(a: object, b: object) {
+	const commonKeys = Object.keys(a).filter((key) => key in b);
+
+	for (const key of commonKeys) {
+		// @ts-ignore
+		if (a[key] !== b[key]) {
+			return false;
+		}
+	}
+
+	return true;
+}

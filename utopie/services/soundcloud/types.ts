@@ -42,3 +42,11 @@ export interface GetSoundCloudPlaylistSongsParams {
 export interface GetSoundCloudPlaylistSongsType {
 	songs: CreateSongDTO[];
 }
+
+export interface GetSoundCloudTracksParams {
+	ids: number[];
+}
+
+export interface GetSoundCloudTracksType {
+	songs: CreateSongDTO[];
+}

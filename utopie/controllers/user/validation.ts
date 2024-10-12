@@ -8,7 +8,8 @@ import {
 	PatchPasswordHandler,
 	PatchPasswordRequestBody,
 	PatchUpdateHandler,
-	PatchUpdateRequestBody
+	PatchUpdateRequestBody,
+	GetPlaylistSongsQueryParams
 } from './types';
 import { validate } from '@/util/validation';
 
@@ -31,6 +32,14 @@ export const playlistSongs: GetPlaylistSongsHandler = (req, res, next) => {
 			playlistId: joi.string().required()
 		},
 		req.params
+	);
+
+	validate<GetPlaylistSongsQueryParams>(
+		{
+			limit: joi.string().regex(/^[0-9]+$/),
+			cursor: joi.string().regex(/^[0-9]+$/)
+		},
+		req.query
 	);
 
 	next();

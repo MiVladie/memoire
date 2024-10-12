@@ -1,5 +1,6 @@
 import { CreatePlaylistDTO, PlaylistDTO } from '@/dtos/playlist/types';
 import { SongDTO } from '@/dtos/song/types';
+import { Playlist } from '@/interfaces/models';
 
 export interface GetParams {
 	userId: number;
@@ -12,6 +13,7 @@ export interface GetType {
 
 export interface GetSongsParams {
 	playlistId: number;
+	limit?: number;
 	cursor?: number;
 }
 
@@ -25,12 +27,17 @@ export interface AddPlaylistsParams {
 
 export type AddPlaylistsType = void;
 
-export interface AddSoundCloudPlaylistParams {
+export interface PopulatePlaylistParams {
 	playlistId: number;
-	playlist: Required<Pick<CreatePlaylistDTO, 'soundcloudId'>> & CreatePlaylistDTO;
 }
 
-export type AddSoundCloudPlaylistType = void;
+export type PopulatePlaylistType = void;
+
+export interface PopulateSoundCloudPlaylistParams {
+	playlist: Playlist;
+}
+
+export type PopulateSoundCloudPlaylistType = void;
 
 export interface RemovePlaylistsParams {
 	userId?: number;

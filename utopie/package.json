@@ -8,6 +8,11 @@
 	"prisma": {
 		"seed": "ts-node -r tsconfig-paths/register prisma/seeders"
 	},
+	"nodemonConfig": {
+		"ignore": [
+			"logs/*"
+		]
+	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "nodemon -r tsconfig-paths/register app.ts",

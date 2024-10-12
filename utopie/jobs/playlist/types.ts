@@ -1,16 +1,17 @@
-import { CreatePlaylistDTO } from '@/dtos/playlist/types';
-
 export const QUEUE_NAME = 'PLAYLIST';
 
-export const JOBS = {
-	ADD_SOUNDCLOUD_PLAYLIST: 'ADD_SOUNDCLOUD_PLAYLIST'
+export const SCHEDULERS = {
+	POPULATE_PLAYLIST: 'POPULATE_PLAYLIST'
 };
 
-export interface AddSoundCloudPlaylistPayload {
+export const JOBS = {
+	POPULATE_PLAYLIST: 'POPULATE_PLAYLIST'
+};
+
+export interface PopulatePlaylistPayload {
 	playlistId: number;
-	playlist: Required<Pick<CreatePlaylistDTO, 'soundcloudId'>> & CreatePlaylistDTO;
 }
 
-export type Payload = AddSoundCloudPlaylistPayload;
+export type Payload = PopulatePlaylistPayload;
 
 export type Jobs = (typeof JOBS)[keyof typeof JOBS];

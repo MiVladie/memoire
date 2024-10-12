@@ -1,3 +1,5 @@
+import { writeToFile } from '@/util/file';
+
 import axios, { AxiosRequestConfig } from 'axios';
 
 export default class Request {
@@ -9,6 +11,8 @@ export default class Request {
 
 			return data;
 		} catch (error: any) {
+			writeToFile(`${new Date().toISOString()}`, error);
+
 			throw new Error(error.response?.data?.message || error.message || 'Something went wrong!');
 		}
 	}

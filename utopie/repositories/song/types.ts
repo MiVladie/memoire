@@ -18,4 +18,13 @@ export interface FindOneParams extends Partial<Song> {
 
 export interface FindManyParams extends Partial<Song> {}
 
+export interface UpdateParams {
+	name?: string;
+	image?: string | null;
+	author?: string;
+	url?: string;
+	duration?: number;
+	isPresent?: boolean;
+}
+
 export interface RemoveParams extends Partial<Song> {}

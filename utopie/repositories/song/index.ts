@@ -1,5 +1,5 @@
 import { excludeKeys } from '@/util/optimization';
-import { CreateParams, FindOneParams, FindManyParams, RemoveParams } from './types';
+import { CreateParams, FindOneParams, FindManyParams, UpdateParams, RemoveParams } from './types';
 import { Platform } from '@/constants';
 
 import db from '@/config/db';
@@ -32,6 +32,10 @@ export function findOne(where: FindOneParams) {
 
 export function findMany(where?: FindManyParams) {
 	return db.song.findMany({ where });
+}
+
+export function update(id: number, data: UpdateParams) {
+	return db.song.update({ where: { id }, data });
 }
 
 export async function remove(where: RemoveParams) {

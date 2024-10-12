@@ -1,17 +1,20 @@
 import {
 	AddPlaylistsParams,
 	AddPlaylistsType,
-	AddSoundCloudPlaylistParams,
-	AddSoundCloudPlaylistType,
+	PopulateSoundCloudPlaylistParams,
+	PopulateSoundCloudPlaylistType,
 	GetParams,
 	GetSongsParams,
 	GetSongsType,
 	GetType,
+	PopulatePlaylistParams,
+	PopulatePlaylistType,
 	RemovePlaylistsParams,
 	RemovePlaylistsType
 } from './types';
 import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
 import { toPlaylistsDTO } from '@/dtos/playlist';
+import { objectsMatch } from '@/util/validation';
 import { toSongsDTO } from '@/dtos/song';
 import { Platform } from '@/constants';
 
@@ -24,6 +27,7 @@ import * as soundCloudService from '@/services/soundcloud';
 import * as playlistRepository from '@/repositories/playlist';
 import * as songRepository from '@/repositories/song';
 import * as userRepository from '@/repositories/user';
+import { excludeKeys } from '@/util/optimization';
 
 const PlaylistQueue = new PlaylistJob();
 
@@ -45,7 +49,7 @@ export async function getSongs(params: GetSongsParams): Promise<GetSongsType> {
 		throw new APIError(Errors.NOT_FOUND, { message: 'Request playlist does not exist!' });
 	}
 
-	const songs = await playlistRepository.findSongs({ id: params.playlistId }, params.cursor);
+	const songs = await playlistRepository.findSongs({ id: params.playlistId }, params.limit, params.cursor);
 
 	return {
 		songs: toSongsDTO(songs)
@@ -56,26 +60,40 @@ export async function addPlaylists(params: AddPlaylistsParams): Promise<AddPlayl
 	for (let rawPlaylist of params.playlists) {
 		const playlist = await playlistRepository.create(rawPlaylist);
 
-		switch (playlist.platformId) {
-			case Platform.SoundCloud.id:
-				await PlaylistQueue.addSoundCloudPlaylist({
-					playlistId: playlist.id,
-					playlist: rawPlaylist
-				} as AddSoundCloudPlaylistParams);
-				break;
+		// Populate playlists now & on schedule
+		await PlaylistQueue.populatePlaylist({ playlistId: playlist.id }, true);
 
-			default:
-				throw new APIError(Errors.INTERNAL_SERVER_ERROR);
-		}
+		await PlaylistQueue.populatePlaylist({ playlistId: playlist.id });
 	}
 }
 
-export async function addSoundCloudPlaylist(params: AddSoundCloudPlaylistParams): Promise<AddSoundCloudPlaylistType> {
-	const user = await userRepository.findOne({ id: params.playlist.userId });
+export async function populatePlaylist(params: PopulatePlaylistParams): Promise<PopulatePlaylistType> {
+	const { playlistId } = params;
+
+	const playlist = await playlistRepository.findOne({ id: playlistId });
+
+	if (!playlist) {
+		throw new APIError(Errors.INTERNAL_SERVER_ERROR);
+	}
+
+	switch (playlist.platformId) {
+		case Platform.SoundCloud.id:
+			await populateSoundCloudPlaylist({ playlist });
+			break;
+
+		default:
+			throw new APIError(Errors.INTERNAL_SERVER_ERROR);
+	}
+}
+
+export async function populateSoundCloudPlaylist({
+	playlist
+}: PopulateSoundCloudPlaylistParams): Promise<PopulateSoundCloudPlaylistType> {
+	const user = await userRepository.findOne({ id: playlist.userId });
 
 	let data;
 
-	switch (params.playlist.type!) {
+	switch (playlist.soundcloudPlaylist!.type) {
 		case SoundCloudPlaylistType.REPOSTS:
 			data = await soundCloudService.getReposts({ soundcloudUserId: user!.soundcloudId! });
 			break;
@@ -85,30 +103,92 @@ export async function addSoundCloudPlaylist(params: AddSoundCloudPlaylistParams)
 			break;
 
 		case SoundCloudPlaylistType.CUSTOM:
-			data = await soundCloudService.getPlaylistSongs({ soundcloudPlaylistId: params.playlist.soundcloudId });
+			data = await soundCloudService.getPlaylistSongs({
+				soundcloudPlaylistId: playlist.soundcloudPlaylist!.soundcloudPlaylistId!
+			});
 			break;
 
 		default:
 			throw new APIError(Errors.INTERNAL_SERVER_ERROR);
 	}
 
-	let order = await playlistRepository.getOrder(params.playlistId);
+	// SoundCloud songs
+	const soundCloudSongs = data.songs.reverse();
 
-	const reversedList = data.songs.reverse();
+	// Playlist songs
+	const playlistSongs = await playlistRepository.findSongs({ id: playlist.id });
 
-	for (let track of reversedList) {
-		let song = await songRepository.findOne({ soundcloudTrackId: track.soundcloudId });
+	// Existing songs
+	const existingSongs = playlistSongs.filter((p) =>
+		soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId)
+	);
+
+	// Update songs if any changed
+	for (let exisingSong of existingSongs) {
+		const matchingSoundCloudSong = soundCloudSongs.find(
+			(s) => s.soundcloudId! === exisingSong.soundcloudSong?.soundcloudTrackId
+		)!;
+
+		if (!objectsMatch(exisingSong, matchingSoundCloudSong)) {
+			await songRepository.update(
+				exisingSong.id,
+				excludeKeys(matchingSoundCloudSong, ['platformId', 'soundcloudId'])
+			);
+		}
+	}
+
+	// Missing songs
+	const missingSongs = playlistSongs.filter(
+		(p) => !soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId)
+	);
+
+	// New songs
+	const newSongs = soundCloudSongs.filter(
+		(s) => !playlistSongs.find((p) => p.soundcloudSong!.soundcloudTrackId === s.soundcloudId!)
+	);
+
+	let order = await playlistRepository.getOrder(playlist.id);
+
+	for (let newSong of newSongs) {
+		let song = await songRepository.findOne({ soundcloudTrackId: newSong.soundcloudId });
 
 		if (!song) {
-			song = await songRepository.create(track);
+			song = await songRepository.create(newSong);
 		}
 
 		order += 1;
 
-		await playlistRepository.addSong(params.playlistId, song.id, order);
+		await playlistRepository.associateSong(playlist.id, song.id, order);
+	}
+
+	if (missingSongs.length > 0) {
+		const missingSongIds = missingSongs.map((s) => s.soundcloudSong!.soundcloudTrackId);
+
+		const existingMissingSongs = await soundCloudService.getTracks({ ids: missingSongIds });
+
+		// Missing song can be either because: - user unliked/unreposted OR - song got deleted by author/SoundCloud
+		for (let missingSong of missingSongs) {
+			const userRemovedSong = existingMissingSongs.songs.find(
+				(e) => e.soundcloudId! === missingSong.soundcloudSong!.soundcloudTrackId
+			);
+
+			if (userRemovedSong) {
+				// unassociate songs from user's playlist
+				await playlistRepository.unassociateSong(playlist.id, missingSong.id);
+			} else {
+				// mark song as not present
+				await songRepository.update(missingSong.id, { isPresent: false });
+			}
+		}
 	}
 }
 
 export async function removePlaylists(params: RemovePlaylistsParams): Promise<RemovePlaylistsType> {
+	const playlists = await playlistRepository.findMany({ platformId: params.platformId, userId: params.userId });
+
+	for (let playlist of playlists) {
+		await PlaylistQueue.removePlaylist({ playlistId: playlist.id });
+	}
+
 	await playlistRepository.remove(params);
 }

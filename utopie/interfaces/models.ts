@@ -1,3 +1,5 @@
+import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
+
 export interface User {
 	id: number;
 	name: string;
@@ -24,6 +26,14 @@ export interface Platform {
 export interface Playlist {
 	id: number;
 	name: string;
+	platformId: number;
+	userId: number;
+
+	soundcloudPlaylist: {
+		soundcloudPlaylistId: number | null;
+		playlistId: number;
+		type: SoundCloudPlaylistType;
+	} | null;
 }
 
 export interface Song {
@@ -34,4 +44,5 @@ export interface Song {
 	url: string;
 	duration: number;
 	isPresent: boolean;
+	platformId: number;
 }

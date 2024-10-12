@@ -8,6 +8,7 @@ import {
 	DeleteImageHandler,
 	DeleteSoundCloudHandler
 } from './types';
+import { Pagination } from '@/config/app';
 
 import * as userService from '@/services/user';
 import * as playlistService from '@/services/playlist';
@@ -26,10 +27,11 @@ export const getPlaylists: GetPlaylistsHandler = async (req, res, next) => {
 
 export const getPlaylistSongs: GetPlaylistSongsHandler = async (req, res, next) => {
 	const { playlistId } = req.params;
-	const { cursor } = req.query;
+	const { limit, cursor } = req.query;
 
 	const { songs } = await playlistService.getSongs({
 		playlistId: parseInt(playlistId),
+		limit: limit ? parseInt(limit) : Pagination.SONGS_LIMIT,
 		cursor: cursor ? parseInt(cursor) : undefined
 	});
 

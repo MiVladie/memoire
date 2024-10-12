@@ -1,6 +1,6 @@
 import { excludeKeys } from '@/util/optimization';
 import { CreateParams, FindOneParams, FindManyParams, FindSongsParams, RemoveParams } from './types';
-import { Pagination } from '@/config/app';
+import { Playlist } from '@/interfaces/models';
 import { Platform } from '@/constants';
 
 import db from '@/config/db';
@@ -19,19 +19,22 @@ export function create(data: CreateParams) {
 		data: {
 			...excludeKeys(data, ['type', 'soundcloudId']),
 			...(data.platformId === Platform.SoundCloud.id ? soundcloudData : {})
+		},
+		include: {
+			soundcloudPlaylist: true
 		}
 	});
 }
 
 export function findOne(where: FindOneParams) {
-	return db.playlist.findFirst({ where });
+	return db.playlist.findFirst({ where, include: { soundcloudPlaylist: true } }) as Promise<Playlist>;
 }
 
 export function findMany(where?: FindManyParams) {
-	return db.playlist.findMany({ where });
+	return db.playlist.findMany({ where, include: { soundcloudPlaylist: true } }) as Promise<Playlist[]>;
 }
 
-export async function findSongs(where: FindSongsParams, cursor?: number) {
+export async function findSongs(where: FindSongsParams, limit?: number, cursor?: number) {
 	const pagination = cursor
 		? {
 				cursor: { playlistId_songId: { playlistId: where.id, songId: cursor! } },
@@ -43,9 +46,9 @@ export async function findSongs(where: FindSongsParams, cursor?: number) {
 		where,
 		include: {
 			songs: {
-				include: { song: true },
+				include: { song: { include: { soundcloudSong: true } } },
 				orderBy: { order: 'desc' },
-				take: Pagination.SONGS_LIMIT,
+				take: limit,
 				...pagination
 			}
 		}
@@ -54,7 +57,7 @@ export async function findSongs(where: FindSongsParams, cursor?: number) {
 	return songs.map((data) => data.song);
 }
 
-export async function addSong(id: number, songId: number, order?: number) {
+export async function associateSong(id: number, songId: number, order?: number) {
 	if (order == undefined) {
 		order = (await getOrder(id)) + 1;
 	}
@@ -64,6 +67,17 @@ export async function addSong(id: number, songId: number, order?: number) {
 			playlistId: id,
 			songId,
 			order
+		}
+	});
+}
+
+export async function unassociateSong(id: number, songId: number) {
+	return db.playlistsSongs.delete({
+		where: {
+			playlistId_songId: {
+				playlistId: id,
+				songId: songId
+			}
 		}
 	});
 }

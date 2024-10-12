@@ -25,6 +25,7 @@ export interface GetPlaylistSongsRequestParams {
 }
 
 export interface GetPlaylistSongsQueryParams {
+	limit?: string;
 	cursor?: string;
 }
 
