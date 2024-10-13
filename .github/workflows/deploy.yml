@@ -1,0 +1,95 @@
+name: Deploy Mémoire [Utopie] Server
+
+on:
+    push:
+        branches:
+            - master # Deploy only when code is pushed to the 'master' branch
+        paths:
+            - 'utopie/**' # Trigger workflow only when files in the 'utopie' folder change
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Step 1: Checkout the repository
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            # Step 2: Set up Node.js environment
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '21'
+
+            # Step 3: Install dependencies for backend
+            - name: Install Backend Dependencies
+              run: |
+                  cd utopie
+                  npm ci
+
+            # Step 4: Generate Prisma Client
+            - name: Generate Prisma Client
+              run: |
+                  cd utopie
+                  npx prisma generate
+
+            # Step 5: Copy files to the server (only backend)
+            - name: Copy Backend Files to Server
+              uses: appleboy/scp-action@v0.1.3
+              with:
+                  host: ${{ secrets.SERVER_IP }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  source: 'utopie/**'
+                  target: '~/memoire' # Target directory on the server
+
+            # Step 6: Set environment variables on the server
+            - name: Set up environment variables
+              run: |
+                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire
+                    echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
+
+                    echo "SERVER_PATH=${{ secrets.SERVER_PATH }}" >> .env
+                    echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+
+                    echo "SOUNDCLOUD_CLIENT_ID=${{ secrets.SOUNDCLOUD_CLIENT_ID }}" >> .env
+
+                    echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+                    echo "SALT_ROUNDS=${{ secrets.SALT_ROUNDS }}" >> .env
+
+                    echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
+                    echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> .env
+                    echo "SMTP_FROM=${{ secrets.SMTP_FROM }}" >> .env
+                    echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
+                    echo "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" >> .env
+
+                    echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+                    echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+
+                  EOF
+
+            # Step 7: Install dependencies on the server
+            - name: Install Dependencies on the Server
+              run: |
+                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire
+                    npm ci
+                  EOF
+
+            # Step 8: Run Prisma Migrations on the server
+            - name: Run Prisma Migrations
+              run: |
+                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire
+                    npx prisma migrate deploy
+                  EOF
+
+            # Step 9: Restart the memoire using PM2
+            - name: Restart Application with PM2
+              run: |
+                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire
+                    pm2 restart memoire || pm2 start npm --name "memoire" -- run start
+                  EOF
