@@ -1,6 +1,6 @@
 model Playlist {
     id                          Int                     @id @default(autoincrement())
-    name                        String                  @unique
+    name                        String
 
     platform                    Platform                @relation(fields: [platformId], references: [id], onDelete: Cascade)
     platformId                  Int
