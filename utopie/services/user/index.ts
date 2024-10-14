@@ -31,11 +31,9 @@ export async function update(userId: number, params: UpdateParams): Promise<Upda
 	if (params.image) {
 		const user = (await userRepository.findOne({ id: userId }))!;
 
-		if (!user.image) {
-			throw new APIError(Errors.NOT_FOUND, { message: 'Image does not exist!' });
+		if (user.image) {
+			deleteFile(path.join(Path.PUBLIC_DIR, Path.Shared.images, user.image));
 		}
-
-		deleteFile(path.join(Path.PUBLIC_DIR, Path.Shared.images, user.image));
 	}
 
 	const user = await userRepository.update(userId, {
