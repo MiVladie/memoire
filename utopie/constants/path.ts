@@ -1,8 +1,10 @@
+import path from 'path';
+
 export const BASE_URL = process.env.SERVER_PATH;
 
 export const Shared = {
-	public: 'public',
-	images: 'public/images'
+	shared: path.join(__dirname, 'shared'),
+	images: path.join(__dirname, 'shared/images')
 };
 
 export const Views = {
