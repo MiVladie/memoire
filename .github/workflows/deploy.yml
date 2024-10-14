@@ -50,7 +50,7 @@ jobs:
             # Step 6: Set environment variables on the server
             - name: Set up environment variables
               run: |
-                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                  ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     echo "Successfully connected to the server"
 
                     cd ~/memoire
