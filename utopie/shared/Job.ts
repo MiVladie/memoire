@@ -21,6 +21,15 @@ export default abstract class Job<Payload, Jobs extends string> {
 	protected abstract processJob(job: BullJob<Payload>): Promise<void>;
 
 	private async viewJobs(queueName: string) {
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-8');
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-9');
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-10');
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-11');
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-12');
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-13');
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-14');
+		await this.queue.removeJobScheduler('POPULATE_PLAYLIST-15');
+
 		const jobs = await this.queue.getJobSchedulers();
 
 		writeToFile(queueName, jobs);
