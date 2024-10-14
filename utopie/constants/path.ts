@@ -3,7 +3,7 @@ export const BASE_URL = process.env.BASE_URL!;
 export const SHARED_DIR = process.env.SHARED_DIR!;
 
 export const Shared = {
-	images: 'shared/images'
+	images: 'images'
 };
 
 export const Views = {
