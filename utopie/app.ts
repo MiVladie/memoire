@@ -22,7 +22,7 @@ app.use(express.json());
 app.use('/api', router);
 
 // Static files
-app.use('/public', uploads);
+app.use('/shared', uploads);
 
 // Error handing
 app.use(handleError);
