@@ -51,7 +51,7 @@ jobs:
             # Step 6: Set environment variables on the server
             - name: Set up environment variables
               run: |
-                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                  ssh -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
                     echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
 
@@ -77,7 +77,7 @@ jobs:
             # Step 7: Install dependencies on the server
             - name: Install Dependencies on the Server
               run: |
-                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                  ssh -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
                     npm ci
                   EOF
@@ -85,7 +85,7 @@ jobs:
             # Step 8: Run Prisma Migrations on the server
             - name: Run Prisma Migrations
               run: |
-                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                  ssh -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
                     npx prisma migrate deploy
                   EOF
@@ -93,7 +93,7 @@ jobs:
             # Step 9: Restart the memoire using PM2
             - name: Restart Application with PM2
               run: |
-                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                  ssh -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
                     pm2 restart memoire || pm2 start npm --name "memoire" -- run start
                   EOF
