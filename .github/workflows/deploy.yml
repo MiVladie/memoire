@@ -106,6 +106,9 @@ jobs:
                     npm ci
                   EOF
 
+                  # Stop the SSH agent
+                  eval $(ssh-agent -k)
+
             # Step 8: Run Prisma Migrations on the server
             - name: Run Prisma Migrations
               run: |
@@ -124,6 +127,9 @@ jobs:
                     npx prisma migrate deploy
                   EOF
 
+                  # Stop the SSH agent
+                  eval $(ssh-agent -k)
+
             # Step 9: Restart the memoire using PM2
             - name: Restart Application with PM2
               run: |
@@ -141,3 +147,6 @@ jobs:
                     cd ~/memoire
                     pm2 restart memoire || pm2 start npm --name "memoire" -- run start
                   EOF
+
+                  # Stop the SSH agent
+                  eval $(ssh-agent -k)
