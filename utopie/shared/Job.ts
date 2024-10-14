@@ -1,7 +1,6 @@
 import { Queue, Worker, Job as BullJob } from 'bullmq';
 import { connection } from '@/config/redis';
 import { writeToFile } from '@/util/file';
-import { JOBS } from '@/jobs/playlist/types';
 
 export default abstract class Job<Payload, Jobs extends string> {
 	protected queue: Queue<Payload, unknown, Jobs>;

@@ -1,6 +1,10 @@
 import fs from 'fs';
 
 export function writeToFile(filename: string, data: any) {
+	if (!fs.existsSync('logs')) {
+		fs.mkdirSync('logs');
+	}
+
 	fs.writeFile(`logs/${filename}.json`, JSON.stringify(data, null, 2), (err) => {
 		if (err) {
 			console.error('Error writing to file:', err);

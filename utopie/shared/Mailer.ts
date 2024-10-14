@@ -1,4 +1,5 @@
 import { transporter } from '@/config/mail';
+import { writeToFile } from '@/util/file';
 
 import nodemailer from 'nodemailer';
 
@@ -16,10 +17,9 @@ export default class Mailer {
 			}
 
 			if (error) {
-				console.log('Mail configuration error:');
-				console.log(error);
+				writeToFile('mailer', { message: 'Mail configuration error:', error: JSON.stringify(error) });
 			} else {
-				console.log('Mail transport is ready to send email');
+				writeToFile('mailer', { message: 'Mail transport is ready to send email' });
 			}
 		});
 	}
