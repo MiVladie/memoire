@@ -43,7 +43,7 @@ function withFile(type: FILE_TYPES, req: Request, res: Response, next: NextFunct
 
 	switch (type) {
 		case FILE_TYPES.IMAGE:
-			destination = Path.Shared.images;
+			destination = path.join(Path.SHARED_DIR, Path.Shared.images);
 			size = File.Image.MAX_SIZE;
 			extensions = File.Image.EXTENSIONS;
 			break;

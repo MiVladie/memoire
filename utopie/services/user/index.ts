@@ -81,7 +81,7 @@ export async function deleteImage(userId: number): Promise<UpdateType> {
 		throw new APIError(Errors.NOT_FOUND, { message: 'Image does not exist!' });
 	}
 
-	deleteFile(path.join(Path.Shared.images, user.image));
+	deleteFile(path.join(Path.SHARED_DIR, Path.Shared.images, user.image));
 
 	const updatedUser = (await userRepository.update(userId, { image: null }))!;
 
