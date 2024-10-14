@@ -79,7 +79,7 @@ jobs:
 
                   EOF
 
-                eval $(ssh-agent -k)
+                  eval $(ssh-agent -k)
 
             # Step 7: Install dependencies on the server
             - name: Install Dependencies on the Server
