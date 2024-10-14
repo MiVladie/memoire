@@ -52,7 +52,14 @@ jobs:
             - name: Set up environment variables
               run: |
                   eval $(ssh-agent -s)
-                  echo "${{ secrets.SSH_PRIVATE_KEY }}" | ssh-add -
+
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+                  chmod 600 id_rsa
+
+                  # Add the private key with the passphrase
+                  echo "${{ secrets.SSH_PASSPHRASE }}" | ssh-add id_rsa < <(cat)
+
+                  ssh-add id_rsa
 
                   ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     echo "Successfully connected to the server"
