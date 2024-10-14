@@ -48,18 +48,14 @@ jobs:
                   source: 'utopie/**'
                   target: '~/memoire' # Target directory on the server
 
-            # Step 6: Install dependencies on the server
-            - name: Install Dependencies on the Server
-              run: |
-                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
-                    cd ~/memoire
-                    npm ci
-                  EOF
-
-            # Step 7: Set environment variables on the server
+            # Step 6: Set environment variables on the server
             - name: Set up environment variables
               run: |
-                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                  eval $(ssh-agent -s)
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
+
+                  ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    echo "Successfully connected to the server"
 
                     cd ~/memoire
                     echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
@@ -81,6 +77,16 @@ jobs:
                     echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
                     echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
 
+                  EOF
+
+                eval $(ssh-agent -k)
+
+            # Step 7: Install dependencies on the server
+            - name: Install Dependencies on the Server
+              run: |
+                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire
+                    npm ci
                   EOF
 
             # Step 8: Run Prisma Migrations on the server
