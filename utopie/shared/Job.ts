@@ -31,8 +31,7 @@ export default abstract class Job<Payload, Jobs extends string> {
 	}
 
 	private onFailed(job: BullJob<Payload, unknown, Jobs> | undefined, error: Error) {
-		console.log('job failed: ' + job?.id);
-		console.log(error);
+		writeToFile(`JOBS [FAILED]`, { jobId: job?.id, error });
 	}
 
 	private handleShutdown() {

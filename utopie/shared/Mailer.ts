@@ -17,7 +17,7 @@ export default class Mailer {
 			}
 
 			if (error) {
-				writeToFile('mailer', { message: 'Mail configuration error:', error: JSON.stringify(error) });
+				writeToFile('mailer', { message: 'Mail configuration error:', error });
 			} else {
 				writeToFile('mailer', { message: 'Mail transport is ready to send email' });
 			}
