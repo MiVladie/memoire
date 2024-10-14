@@ -37,6 +37,8 @@ jobs:
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   source: 'utopie/**'
                   target: '~/memoire'
+                  recursive: true
+                  overwrite: true
 
             # Step 4: Set environment variables on the server
             - name: Set up environment variables
