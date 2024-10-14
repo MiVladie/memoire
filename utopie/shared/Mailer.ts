@@ -17,7 +17,20 @@ export default class Mailer {
 			}
 
 			if (error) {
-				writeToFile('mailer', { message: 'Mail configuration error:', error });
+				writeToFile('mailer', {
+					message: 'Mail configuration error:',
+					error,
+					config: {
+						host: process.env.SMTP_HOST!,
+						port: parseInt(process.env.SMTP_PORT!),
+						secure: false,
+						from: process.env.SMTP_FROM,
+						auth: {
+							user: process.env.SMTP_USER!,
+							pass: process.env.SMTP_PASSWORD!
+						}
+					}
+				});
 			} else {
 				writeToFile('mailer', { message: 'Mail transport is ready to send email' });
 			}
