@@ -1,9 +1,9 @@
 export const BASE_URL = process.env.BASE_URL!;
 
-export const SHARED_DIR = process.env.SHARED_DIR!;
+export const PUBLIC_DIR = process.env.PUBLIC_DIR!;
 
 export const Shared = {
-	images: 'images'
+	images: 'shared/images'
 };
 
 export const Views = {

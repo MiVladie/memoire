@@ -51,7 +51,7 @@ jobs:
                     
                     echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
                     echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
-                    echo "SHARED_DIR=${{ secrets.SHARED_DIR }}" >> .env
+                    echo "PUBLIC_DIR=${{ secrets.PUBLIC_DIR }}" >> .env
                     echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
                     echo "SOUNDCLOUD_CLIENT_ID=${{ secrets.SOUNDCLOUD_CLIENT_ID }}" >> .env
                     echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env

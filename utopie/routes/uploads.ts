@@ -5,6 +5,6 @@ import { Path } from '@/constants';
 
 const router = express.Router();
 
-router.use('/images', express.static(path.join(Path.SHARED_DIR, Path.Shared.images)));
+router.use('/images', express.static(path.join(Path.PUBLIC_DIR, Path.Shared.images)));
 
 export default router;
