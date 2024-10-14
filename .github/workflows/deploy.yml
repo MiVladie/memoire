@@ -44,23 +44,12 @@ jobs:
                   host: ${{ secrets.SERVER_IP }}
                   username: ${{ secrets.SERVER_USER }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
-                  passphrase: ${{ secrets.SSH_PASSPHRASE }}
                   source: 'utopie/**'
                   target: '~/memoire' # Target directory on the server
 
             # Step 6: Set environment variables on the server
             - name: Set up environment variables
               run: |
-                  eval $(ssh-agent -s)
-
-                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
-                  chmod 600 id_rsa
-
-                  # Add the private key with the passphrase
-                  echo "${{ secrets.SSH_PASSPHRASE }}" | ssh-add id_rsa < <(cat)
-
-                  ssh-add id_rsa
-
                   ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     echo "Successfully connected to the server"
 
@@ -85,8 +74,6 @@ jobs:
                     echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
 
                   EOF
-
-                  eval $(ssh-agent -k)
 
             # Step 7: Install dependencies on the server
             - name: Install Dependencies on the Server
