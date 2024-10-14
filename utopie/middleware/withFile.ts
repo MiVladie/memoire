@@ -12,7 +12,7 @@ import path from 'path';
 function getStorage(destination: string): multer.StorageEngine {
 	return multer.diskStorage({
 		destination: (req, file, cb) => {
-			cb(null, path.join(Path.BASE_DIR, destination));
+			cb(null, path.join(destination));
 		},
 		filename: (req, file, cb) => {
 			cb(null, `${generateUniqueString()}.${extractFileExtension(file.originalname)}`);

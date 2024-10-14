@@ -1,9 +1,11 @@
+import path from 'path';
+
 export const BASE_URL = process.env.BASE_URL!;
-export const BASE_DIR = process.env.BASE_DIR!;
+
+export const SHARED_DIR = process.env.SHARED_DIR!;
 
 export const Shared = {
-	shared: 'shared',
-	images: 'shared/images'
+	images: path.join(SHARED_DIR, '/images')
 };
 
 export const Views = {
