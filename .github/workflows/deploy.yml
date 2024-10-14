@@ -60,7 +60,7 @@ jobs:
                   # Add the private key to the SSH agent
                   ssh-add id_rsa
 
-                  ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                  ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     echo "Successfully connected to the server"
 
                     cd ~/memoire
@@ -91,6 +91,16 @@ jobs:
             # Step 7: Install dependencies on the server
             - name: Install Dependencies on the Server
               run: |
+                  # Start the SSH agent
+                  eval $(ssh-agent -s)
+
+                  # Write the private key to a temporary file
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+                  chmod 600 id_rsa
+
+                  # Add the private key to the SSH agent
+                  ssh-add id_rsa
+
                   ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
                     npm ci
@@ -99,6 +109,16 @@ jobs:
             # Step 8: Run Prisma Migrations on the server
             - name: Run Prisma Migrations
               run: |
+                  # Start the SSH agent
+                  eval $(ssh-agent -s)
+
+                  # Write the private key to a temporary file
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+                  chmod 600 id_rsa
+
+                  # Add the private key to the SSH agent
+                  ssh-add id_rsa
+
                   ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
                     npx prisma migrate deploy
@@ -107,6 +127,16 @@ jobs:
             # Step 9: Restart the memoire using PM2
             - name: Restart Application with PM2
               run: |
+                  # Start the SSH agent
+                  eval $(ssh-agent -s)
+
+                  # Write the private key to a temporary file
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+                  chmod 600 id_rsa
+
+                  # Add the private key to the SSH agent
+                  ssh-add id_rsa
+
                   ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
                     pm2 restart memoire || pm2 start npm --name "memoire" -- run start
