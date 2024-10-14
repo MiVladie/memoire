@@ -47,7 +47,7 @@ export async function findSongs(where: FindSongsParams, limit?: number, cursor?:
 		include: {
 			songs: {
 				include: { song: { include: { soundcloudSong: true } } },
-				orderBy: { order: 'desc' },
+				orderBy: { order: 'asc' },
 				take: limit,
 				...pagination
 			}
