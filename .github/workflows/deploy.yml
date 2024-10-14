@@ -40,18 +40,6 @@ jobs:
                   target: '~/memoire'
                   strip_components: 1
 
-            # Step 4: Copy backend files to the server
-            - name: Copy Backend Files to Server
-              uses: appleboy/scp-action@v0.1.3
-              with:
-                  host: ${{ secrets.SERVER_IP }}
-                  username: ${{ secrets.SERVER_USER }}
-                  key: ${{ secrets.SSH_PRIVATE_KEY }}
-                  source: 'utopie/**'
-                  target: '~/memoire'
-                  recursive: true
-                  overwrite: true
-
             # Step 4: Set environment variables on the server
             - name: Set up environment variables
               run: |
