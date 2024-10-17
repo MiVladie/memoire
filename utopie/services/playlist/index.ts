@@ -15,6 +15,7 @@ import {
 import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
 import { toPlaylistsDTO } from '@/dtos/playlist';
 import { objectsMatch } from '@/util/validation';
+import { excludeKeys } from '@/util/optimization';
 import { toSongsDTO } from '@/dtos/song';
 import { Platform } from '@/constants';
 
@@ -27,7 +28,6 @@ import * as soundCloudService from '@/services/soundcloud';
 import * as playlistRepository from '@/repositories/playlist';
 import * as songRepository from '@/repositories/song';
 import * as userRepository from '@/repositories/user';
-import { excludeKeys } from '@/util/optimization';
 
 const PlaylistQueue = new PlaylistJob();
 
@@ -139,7 +139,7 @@ export async function populateSoundCloudPlaylist({
 
 	// Missing songs
 	const missingSongs = playlistSongs.filter(
-		(p) => !soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId)
+		(p) => !soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId && p.isPresent)
 	);
 
 	// New songs
