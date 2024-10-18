@@ -109,7 +109,7 @@ const SoundCloud = () => {
 				</Form>
 			) : (
 				<div className={classes.Info}>
-					<p className={classes.Success}>your account is linked!</p>
+					<p className={classes.Success}>✅ your account is linked!</p>
 
 					<Checkbox
 						name='agree'
