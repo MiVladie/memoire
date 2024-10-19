@@ -1,12 +1,24 @@
-import { useBreakpoint } from 'gatsby-plugin-breakpoints';
+import { useEffect, useState } from 'react';
 
 const useScreen = () => {
-	const breakpoints = useBreakpoint();
+	const [width, setWidth] = useState<number>(window.innerWidth);
+
+	useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 
 	return {
-		isMobile: breakpoints.sm,
-		isTablet: breakpoints.md,
-		isDesktop: !breakpoints.sm && !breakpoints.md
+		isMobile: width < 720,
+		isTablet: width >= 720 && width < 1024,
+		isDesktop: width >= 1024
 	};
 };
 

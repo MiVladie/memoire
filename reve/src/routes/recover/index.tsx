@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { HeadFC, navigate } from 'gatsby';
+import { useNavigate } from 'react-router-dom';
 
 import Authentication from 'containers/Authentication/Authentication';
 import Form from 'containers/Form/Form';
@@ -11,7 +11,7 @@ import useForm from 'hooks/useForm';
 
 import * as API from 'apis';
 
-import * as classes from './Recover.module.scss';
+import classes from './Recover.module.scss';
 
 type StepOneFields = {
 	email: string;
@@ -33,6 +33,8 @@ const Recover = () => {
 
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
+
+	const navigate = useNavigate();
 
 	const stepOneForm = useForm<StepOneFields>({
 		initialValues: {
@@ -234,4 +236,4 @@ const Recover = () => {
 
 export default Recover;
 
-export const Head: HeadFC = () => <Seo>Recover</Seo>;
+export const Head = () => <Seo>Recover</Seo>;

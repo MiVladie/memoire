@@ -8,7 +8,7 @@ import Skeleton from 'components/Skeleton/Skeleton';
 import useScreen from 'hooks/useScreen';
 import useScroll from 'hooks/useScroll';
 
-import * as classes from './Platforms.module.scss';
+import classes from './Platforms.module.scss';
 
 const SKELETON_SIZE = 3;
 

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 
-import * as classes from './Container.module.scss';
+import classes from './Container.module.scss';
 
 interface Props {
 	className?: string;

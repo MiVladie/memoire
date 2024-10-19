@@ -2,7 +2,7 @@ import React from 'react';
 
 import Layout from 'hoc/Layout/Layout';
 
-import * as classes from './Authentication.module.scss';
+import classes from './Authentication.module.scss';
 
 interface Props {
 	name: string;

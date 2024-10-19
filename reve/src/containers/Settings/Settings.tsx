@@ -5,7 +5,7 @@ import { ISetting } from 'interfaces/data';
 import Container from 'hoc/Container/Container';
 import SnapScroll from 'containers/SnapScroll/SnapScroll';
 
-import * as classes from './Settings.module.scss';
+import classes from './Settings.module.scss';
 
 interface Props {
 	data: ISetting[];

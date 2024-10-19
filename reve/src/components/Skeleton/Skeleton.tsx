@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as classes from './Skeleton.module.scss';
+import classes from './Skeleton.module.scss';
 
 interface Props {
 	className?: string;

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Spinner from '../Spinner/Spinner';
 
-import * as classes from './Button.module.scss';
+import classes from './Button.module.scss';
 
 interface Props {
 	children: React.ReactNode;

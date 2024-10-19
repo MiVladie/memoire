@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import * as classes from './Circle.module.scss';
+import classes from './Circle.module.scss';
 
 interface Props {
 	pathname: string;
@@ -12,9 +12,9 @@ const Circle = ({ pathname }: Props) => {
 	}
 
 	function getClasses(path: string) {
+		if (includes(['profile'], path) || path === '/') return classes.Home;
 		if (includes(['signin', 'signup'], path)) return classes.Auth;
 		if (includes('recover', path)) return classes.Recover;
-		if (includes(['home', 'profile'], path)) return classes.Home;
 
 		return '';
 	}

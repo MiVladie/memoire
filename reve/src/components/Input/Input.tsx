@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as classes from './Input.module.scss';
+import classes from './Input.module.scss';
 
 interface Props {
 	icon?: React.ReactNode;

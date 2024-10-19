@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
 import { PROFILE_PICTURE } from 'config/data';
 import { AuthStorage, PlatformStorage } from 'interfaces/storage';
 import { AUTH_STORAGE_KEYS, PLATFORM_STORAGE_KEYS } from 'config/storage';
 import { User } from 'interfaces/models';
-import { navigate } from 'gatsby';
 
 import Form from 'containers/Form/Form';
 import Input from 'components/Input/Input';
@@ -13,15 +13,15 @@ import Button from 'components/Button/Button';
 import useForm from 'hooks/useForm';
 import useFile from 'hooks/useFile';
 
-import Upload from 'assets/icons/upload.svg';
-import Trash from 'assets/icons/trash.svg';
+import { ReactComponent as Upload } from 'assets/icons/upload.svg';
+import { ReactComponent as Trash } from 'assets/icons/trash.svg';
 
 import Storage from 'shared/Storage';
 
 import * as API from 'apis';
 import * as File from 'constants/file';
 
-import * as classes from './Account.module.scss';
+import classes from './Account.module.scss';
 
 type MetaFields = {
 	name: string;
@@ -50,6 +50,8 @@ const Account = () => {
 
 	const [errorMeta, setErrorMeta] = useState<string>();
 	const [errorCredentials, setErrorCredentials] = useState<string>();
+
+	const navigate = useNavigate();
 
 	const { handleUpload } = useFile({
 		types: File.IMAGE_TYPES,

@@ -2,9 +2,9 @@ import React from 'react';
 
 import Skeleton from 'components/Skeleton/Skeleton';
 
-import Url from 'assets/icons/url.svg';
+import { ReactComponent as Url } from 'assets/icons/url.svg';
 
-import * as classes from './Song.module.scss';
+import classes from './Song.module.scss';
 
 interface Props {
 	className?: string;

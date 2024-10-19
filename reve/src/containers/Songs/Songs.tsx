@@ -7,7 +7,7 @@ import SongSkeleton from 'components/Song/Skeleton';
 
 import placeholder from 'assets/images/song_placeholder.jpg';
 
-import * as classes from './Songs.module.scss';
+import classes from './Songs.module.scss';
 
 const SKELETON_SIZE = 12;
 

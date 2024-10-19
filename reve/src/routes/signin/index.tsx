@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
 import { PROJECT_NAME } from 'config/project';
 import { AuthStorage } from 'interfaces/storage';
-import { HeadFC, navigate } from 'gatsby';
 
 import Authentication from 'containers/Authentication/Authentication';
 import Form from 'containers/Form/Form';
@@ -15,58 +15,47 @@ import useForm from 'hooks/useForm';
 
 import * as API from 'apis';
 
-import * as classes from './SignUp.module.scss';
+import classes from './SignIn.module.scss';
 
-type SignUpFields = {
+type SignInFields = {
 	name: string;
-	email: string;
 	password: string;
-	repeatPassword: string;
 };
 
-const SignUp = () => {
+const SignIn = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
 
-	const { values, errors, handleChange, handleFocus, handleSubmit, handleErrors } = useForm<SignUpFields>({
+	const navigate = useNavigate();
+
+	const { values, errors, handleChange, handleFocus, handleSubmit, handleErrors } = useForm<SignInFields>({
 		initialValues: {
 			name: '',
-			email: '',
-			password: '',
-			repeatPassword: ''
+			password: ''
 		},
 		rules: {
 			name: {
 				required: true
 			},
-			email: {
-				required: true
-			},
 			password: {
-				required: true,
-				isPassword: true
-			},
-			repeatPassword: {
-				required: true,
-				matchField: 'password'
+				required: true
 			}
 		},
 		onSubmit: submitHandler,
 		onRefill: () => setError(undefined)
 	});
 
-	async function submitHandler({ name, email, password }: SignUpFields) {
+	async function submitHandler({ name, password }: SignInFields) {
 		setLoading(true);
 
 		try {
-			const { user, token } = await API.Auth.signUp({ name, email, password });
+			const { user, token } = await API.Auth.signIn({ name, password });
 
 			Storage.set<AuthStorage>({ user, token });
 
-			navigate('/home');
+			navigate('/');
 		} catch (error: any) {
 			handleChange('', 'password');
-			handleChange('', 'repeatPassword');
 
 			if (error.meta) {
 				handleErrors(error.meta);
@@ -78,8 +67,12 @@ const SignUp = () => {
 		}
 	}
 
-	function signInHandler() {
-		navigate('/signin');
+	function signUpHandler() {
+		navigate('/signup');
+	}
+
+	function recoverHandler() {
+		navigate('/recover');
 	}
 
 	return (
@@ -88,25 +81,13 @@ const SignUp = () => {
 				<Input
 					inputClassName={classes.Input}
 					name='name'
-					placeholder='John Doe'
+					placeholder='johndoe@example.com'
 					value={values.name}
 					disabled={loading}
 					onChange={handleChange}
 					onFocus={handleFocus}
 					autoComplete={false}
 					error={errors.name}
-				/>
-
-				<Input
-					inputClassName={classes.Input}
-					name='email'
-					placeholder='johndoe@example.com'
-					value={values.email}
-					disabled={loading}
-					onChange={handleChange}
-					onFocus={handleFocus}
-					autoComplete={false}
-					error={errors.email}
 				/>
 
 				<Input
@@ -122,35 +103,28 @@ const SignUp = () => {
 					secure
 				/>
 
-				<Input
-					inputClassName={classes.Input}
-					name='repeatPassword'
-					placeholder='repeat password'
-					value={values.repeatPassword}
-					disabled={loading}
-					onChange={handleChange}
-					onFocus={handleFocus}
-					autoComplete={false}
-					error={errors.repeatPassword}
-					secure
-				/>
-
 				{error && <p className={classes.Error}>{error}</p>}
 
 				<Button className={classes.Button} onClick={handleSubmit} loading={loading}>
-					Sign Up
+					Sign In
 				</Button>
 			</Form>
 
 			<div className={classes.Actions}>
-				<Button onClick={signInHandler} className={classes.Action} ghost>
-					i already have an account
+				<Button onClick={signUpHandler} className={classes.Action} ghost>
+					i don't have an account
+				</Button>
+
+				<div className={classes.Separation} />
+
+				<Button onClick={recoverHandler} className={classes.Action} ghost>
+					help me recover account
 				</Button>
 			</div>
 		</Authentication>
 	);
 };
 
-export default SignUp;
+export default SignIn;
 
-export const Head: HeadFC = () => <Seo>Sign Up</Seo>;
+export const Head = () => <Seo>Sign In</Seo>;

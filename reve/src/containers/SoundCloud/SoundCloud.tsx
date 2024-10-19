@@ -10,11 +10,11 @@ import Button from 'components/Button/Button';
 import Storage from 'shared/Storage';
 import useForm from 'hooks/useForm';
 
-import Code from 'assets/icons/code.svg';
+import { ReactComponent as Code } from 'assets/icons/code.svg';
 
 import * as API from 'apis';
 
-import * as classes from './SoundCloud.module.scss';
+import classes from './SoundCloud.module.scss';
 
 type ConfigFields = {
 	soundcloudName: string;

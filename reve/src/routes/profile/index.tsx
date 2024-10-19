@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 
-import { HeadFC, navigate } from 'gatsby';
+import { useNavigate } from 'react-router-dom';
 import { PLATFORM_STORAGE_KEYS } from 'config/storage';
 import { PlatformStorage } from 'interfaces/storage';
 import { ISetting } from 'interfaces/data';
@@ -11,14 +11,16 @@ import Storage from 'shared/Storage';
 import Settings from 'containers/Settings/Settings';
 import Seo from 'hoc/Seo/Seo';
 
-import X from 'assets/icons/close.svg';
+import { ReactComponent as X } from 'assets/icons/close.svg';
 
-import * as classes from './Profile.module.scss';
+import classes from './Profile.module.scss';
 
 const Profile = () => {
 	const [section, setSection] = useState<number>(0);
 
 	const settings = useMemo<ISetting[]>(initialSettings, []);
+
+	const navigate = useNavigate();
 
 	function initialSettings() {
 		const { platforms } = Storage.get<PlatformStorage>(PLATFORM_STORAGE_KEYS);
@@ -31,7 +33,7 @@ const Profile = () => {
 	}
 
 	function backHandler() {
-		navigate('/home');
+		navigate('/');
 	}
 
 	return (
@@ -48,4 +50,4 @@ const Profile = () => {
 
 export default Profile;
 
-export const Head: HeadFC = () => <Seo>Profile</Seo>;
+export const Head = () => <Seo>Profile</Seo>;

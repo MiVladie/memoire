@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 
-import * as classes from './SnapScroll.module.scss';
+import classes from './SnapScroll.module.scss';
 
 const STIFFNESS = 0;
 
@@ -14,7 +14,7 @@ interface Props {
 	children: React.ReactNode;
 }
 
-const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset, children }: Props) => {
+const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, children }: Props) => {
 	const [startPosition, setStartPosition] = useState<number>(0);
 	const [scrollDistance, setScrollDistance] = useState<number>(0);
 
@@ -207,12 +207,6 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset, childr
 			})}
 		</ul>
 	);
-};
-
-SnapScroll.defaultProps = {
-	vertical: false,
-	rtl: false,
-	offset: 0
 };
 
 export default SnapScroll;

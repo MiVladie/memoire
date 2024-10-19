@@ -12,7 +12,6 @@ The front-end codebase for mémoire project.
     -   [NodeJS](#nodejs)
 -   [:keyboard: Available Scripts](#keyboard-available-scripts)
 -   [:green_book: Learn More](#green_book-learn-more)
-    -   [GatsbyJS](#gatsbyjs)
     -   [Sass](#sass)
 
 # :rocket: Quick Start
@@ -62,12 +61,6 @@ Builds the app for production to the `/build` folder.
 # :green_book: Learn More
 
 References to the packages used in the project.
-
-## GatsbyJS
-
-Gatsby is a React-based open source framework for creating websites.
-
--   [Documentation](https://www.gatsbyjs.com/docs/)
 
 ## Sass
 

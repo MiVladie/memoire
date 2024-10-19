@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { HeadFC, navigate } from 'gatsby';
 import { Platform, Playlist, Song } from 'interfaces/models';
 import { AuthStorage, PlatformStorage } from 'interfaces/storage';
 import { AUTH_STORAGE_KEYS, PLATFORM_STORAGE_KEYS } from 'config/storage';
+import { useNavigate } from 'react-router-dom';
 import { isLinked } from 'utils/settings';
 import { delay } from 'utils/date';
 
@@ -13,11 +13,11 @@ import Songs from 'containers/Songs/Songs';
 import Storage from 'shared/Storage';
 import Seo from 'hoc/Seo/Seo';
 
-import Avatar from 'assets/icons/account.svg';
+import { ReactComponent as Avatar } from 'assets/icons/account.svg';
 
 import * as API from 'apis';
 
-import * as classes from './Home.module.scss';
+import classes from './Home.module.scss';
 
 const Home = () => {
 	const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -34,6 +34,8 @@ const Home = () => {
 	const [linked, setLinked] = useState<boolean>(true);
 
 	const [error, setError] = useState<string>();
+
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		fetchData();
@@ -223,4 +225,4 @@ const Home = () => {
 
 export default Home;
 
-export const Head: HeadFC = () => <Seo>Home</Seo>;
+export const Head = () => <Seo>Home</Seo>;
