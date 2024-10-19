@@ -42,6 +42,10 @@ const Layout = ({ children, className, style }: Props) => {
 			navigate('/signin');
 		}
 
+		if (user && isPath(pathname, AUTH_ROUTES)) {
+			navigate('/');
+		}
+
 		await delay(0.25);
 
 		setLoading(false);
