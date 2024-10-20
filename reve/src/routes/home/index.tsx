@@ -87,8 +87,10 @@ const Home = () => {
 			setPlatforms(platforms);
 			setPlaylists(playlists);
 		} catch (error: any) {
-			console.error(error);
-			setError('oh, something is off.. 🙁');
+			Storage.remove<AuthStorage>(AUTH_STORAGE_KEYS);
+			Storage.remove<PlatformStorage>(PLATFORM_STORAGE_KEYS);
+
+			navigate('/signin');
 		} finally {
 			setLoadingPlatforms(false);
 			setLoadingPlaylists(false);
