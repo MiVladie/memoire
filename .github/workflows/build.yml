@@ -40,3 +40,5 @@ jobs:
                   git add -f build
                   git commit -m "Deploy to gh-pages"
                   git push -f origin `git subtree split --prefix build HEAD`:gh-pages
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
