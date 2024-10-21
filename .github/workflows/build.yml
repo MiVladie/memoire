@@ -40,6 +40,6 @@ jobs:
                   git checkout -b gh-pages || git checkout gh-pages
                   git add -f build
                   git commit -m "Deploy to gh-pages"
-                  git subtree push --prefix build origin gh-pages
+                  git subtree push --prefix reve/build origin gh-pages
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
