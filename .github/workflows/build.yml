@@ -42,8 +42,9 @@ jobs:
                   git checkout -b gh-pages || git checkout gh-pages
 
                   git rm -rf .
+                  rm -rf reve
 
-                  cp -R reve/build/* .  # Copy contents from reve/build to the root of the branch
+                  cp -R reve/build/* .
                   git add .
 
                   git commit -m "Deploy to gh-pages"
