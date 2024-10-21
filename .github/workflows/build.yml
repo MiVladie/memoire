@@ -1,0 +1,42 @@
+name: Deploy Mémoire [Reve] Server
+
+on:
+    push:
+        branches:
+            - master
+        paths:
+            - 'reve/**'
+
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21' # Use your Node.js version
+
+            - name: Install dependencies
+              run: |
+                  cd reve
+                  npm install
+
+            - name: Build project
+              run: |
+                  cd reve
+                  npm run build
+
+            - name: Deploy to gh-pages
+              run: |
+                  cd reve
+                  git config user.name "${{ github.actor }}"
+                  git config user.email "${{ github.actor }}@users.noreply.github.com"
+                  git add build
+                  git commit -m "Deploy to gh-pages"
+                  git push -f origin `git subtree split --prefix build HEAD`:gh-pages
