@@ -42,11 +42,11 @@ jobs:
                   git checkout -b gh-pages || git checkout gh-pages
 
                   git rm -rf .
-                  rm -rf reve
 
                   cp -R reve/build/* .
-                  git add .
+                  rm -rf reve
 
+                  git add .
                   git commit -m "Deploy to gh-pages"
                   git push -f origin gh-pages
 
