@@ -7,16 +7,13 @@ $item_padding: 8px;
 
 .Container {
 	width: 100vw;
-	height: 100vh;
-
-	overflow: hidden;
 
 	position: relative;
 
 	.Platforms,
 	.Playlists {
 		width: 100vw;
-		position: absolute;
+		position: fixed;
 
 		display: flex;
 		align-items: center;
@@ -67,7 +64,7 @@ $item_padding: 8px;
 
 	.HorizontalShade,
 	.VerticalShade {
-		position: absolute;
+		position: fixed;
 		left: 0;
 
 		width: $container_spacing_mobile;
@@ -84,7 +81,7 @@ $item_padding: 8px;
 		align-items: center;
 		height: calc(#{$md} + #{$item_padding} * 2);
 
-		position: absolute;
+		position: fixed;
 		top: 2rem;
 		right: $container_spacing_mobile;
 
@@ -116,7 +113,7 @@ $item_padding: 8px;
 	}
 
 	.ActionsShade {
-		position: absolute;
+		position: fixed;
 		top: 2rem;
 		right: 0;
 
@@ -127,7 +124,7 @@ $item_padding: 8px;
 	}
 
 	.ListShade {
-		position: absolute;
+		position: fixed;
 		top: calc(7.5rem - 1px);
 		left: $container_spacing_mobile;
 		width: calc(100% - #{$container_spacing_mobile} * 2);
@@ -140,7 +137,7 @@ $item_padding: 8px;
 	}
 
 	.List {
-		position: absolute;
+		position: fixed;
 
 		top: 7.5rem;
 		left: $container_spacing_mobile;
