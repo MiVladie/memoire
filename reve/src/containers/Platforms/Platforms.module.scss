@@ -140,14 +140,11 @@ $item_padding: 8px;
 		position: fixed;
 
 		top: 7.5rem;
-		left: $container_spacing_mobile;
 		bottom: 0;
 
-		padding-top: 20px;
+		padding: 20px $container_spacing_mobile 0;
 
-		width: calc(100% - #{$container_spacing_mobile} * 2);
-
-		overflow: scroll;
+		overflow-y: scroll;
 
 		.Contents {
 			margin-top: 35px;
@@ -210,7 +207,7 @@ $item_padding: 8px;
 
 		.List {
 			top: 12rem;
-			left: $container_spacing_tablet;
+			padding: 20px $container_spacing_tablet 0;
 
 			width: calc(100% - #{$container_spacing_tablet} * 2);
 
@@ -298,6 +295,8 @@ $item_padding: 8px;
 		.List {
 			top: 11rem;
 			left: $container_spacing_desktop;
+
+			padding: 20px 0 0 0;
 
 			width: 70vw;
 
