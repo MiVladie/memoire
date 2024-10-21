@@ -218,7 +218,7 @@ const Account = () => {
 							error={mForm.errors.name}
 						/>
 
-						<Input placeholder='johndoe@example.com' value='justvladon@outlook.com' disabled={true} />
+						<Input placeholder='johndoe@example.com' value={mForm.values.email} disabled={true} />
 
 						{errorMeta && <p className={classes.Error}>{errorMeta}</p>}
 
