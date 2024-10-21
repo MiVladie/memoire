@@ -44,10 +44,14 @@ export async function authenticate({ token }: AuthenticateParams): Promise<AuthT
 }
 
 export async function signIn({ name, password }: SignInParams): Promise<AuthType> {
-	const user = await userRepository.findOne({ name });
+	let user = await userRepository.findOne({ name });
 
 	if (!user) {
-		throw new APIError(Errors.UNAUTHORIZED, { message: 'Incorrect email or password!' });
+		user = await userRepository.findOne({ email: name });
+
+		if (!user) {
+			throw new APIError(Errors.UNAUTHORIZED, { message: 'Incorrect email or password!' });
+		}
 	}
 
 	const match = await comparePasswords(password, user.password);
