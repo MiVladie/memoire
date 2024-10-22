@@ -118,8 +118,10 @@
 				align-items: center;
 
 				.Name {
-					width: 50%;
+					width: 47%;
 					height: calc(#{$sm} + 2px);
+
+					margin-right: 3%;
 
 					font-size: $sm;
 				}
