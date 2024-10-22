@@ -117,23 +117,53 @@ $item_padding: 8px;
 		top: 2rem;
 		right: 0;
 
-		width: 100px;
+		width: 140px;
 		height: 2.75rem;
 
 		background: linear-gradient(-90deg, rgba($primary-color, 1) 75%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.Header {
+		position: fixed;
+
+		top: 7.65rem;
+		left: $container_spacing_mobile;
+
+		width: calc(100% - #{$container_spacing_mobile} * 2);
+
+		z-index: 1000;
+
+		opacity: 0;
+
+		animation: fadeIn 0.1s ease-in forwards;
+
+		@keyframes fadeIn {
+			to {
+				opacity: 1;
+			}
+		}
 	}
 
 	.ListShade {
 		position: fixed;
 		top: calc(7.5rem - 1px);
 		left: $container_spacing_mobile;
-		width: calc(100% - #{$container_spacing_mobile} * 2);
 
+		width: calc(100% - #{$container_spacing_mobile} * 2);
 		height: 70px;
 
 		z-index: 500;
 
 		background: linear-gradient(180deg, rgba($primary-color, 1) 25%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.HeaderListShade {
+		background: linear-gradient(
+			180deg,
+			rgba($primary-color, 1) 25%,
+			rgba($primary-color, 0.85) 50%,
+			rgba($primary-color, 0) 100%
+		);
 	}
 
 	.List {
@@ -146,9 +176,15 @@ $item_padding: 8px;
 
 		overflow-y: scroll;
 
+		transition: all 0.1s;
+
 		.Contents {
 			margin-top: 35px;
 		}
+	}
+
+	.HeaderList {
+		top: 8rem;
 	}
 }
 
@@ -193,8 +229,15 @@ $item_padding: 8px;
 		.ActionsShade {
 			top: 4rem;
 
-			width: 175px;
+			width: 225px;
 			height: 2.75rem;
+		}
+
+		.Header {
+			top: 10.5rem;
+			left: $container_spacing_tablet;
+
+			width: calc(100% - #{$container_spacing_tablet} * 2);
 		}
 
 		.ListShade {
@@ -214,6 +257,10 @@ $item_padding: 8px;
 			.Contents {
 				margin-top: 25px;
 			}
+		}
+
+		.HeaderList {
+			top: inherit;
 		}
 	}
 }
@@ -282,6 +329,13 @@ $item_padding: 8px;
 
 			width: 425px;
 			height: 2.75rem;
+		}
+
+		.Header {
+			top: 11rem;
+			left: $container_spacing_desktop;
+
+			width: 70vw;
 		}
 
 		.ListShade {

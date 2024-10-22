@@ -2,15 +2,42 @@
 @import 'styles/colors.scss';
 @import 'styles/sizing.scss';
 
-$SIZE: 35px;
+$ACTION_SIZE: 35px;
+$FILTER_SIZE: 24px;
 
-.Avatar {
-	width: $SIZE;
-	height: $SIZE;
+.Avatar,
+.Search {
+	width: $ACTION_SIZE;
+	height: $ACTION_SIZE;
 
 	fill: $secondary-color;
 
 	cursor: pointer;
+}
+
+.Avatar {
+	margin-left: 8px;
+}
+
+.Header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.Input {
+		width: 75vw !important;
+
+		padding-left: 0 !important;
+	}
+
+	.Visibility {
+		width: $FILTER_SIZE;
+		height: $FILTER_SIZE;
+
+		fill: $secondary-color;
+
+		cursor: pointer;
+	}
 }
 
 .Linking {
@@ -33,8 +60,21 @@ $SIZE: 35px;
 	color: $secondary-color;
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 720px) {
 	.Avatar {
+		margin-left: 24px;
+	}
+}
+
+@media (min-width: 1025px) {
+	.Avatar,
+	.Search {
 		fill: $primary-color;
+	}
+
+	.Header {
+		.Input {
+			width: 65vw !important;
+		}
 	}
 }

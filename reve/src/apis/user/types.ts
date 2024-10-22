@@ -10,6 +10,8 @@ export interface GetPlaylistsResponse extends ResponseBody {
 }
 
 export interface GetPlaylistSongsPayload {
+	search?: string;
+	isPresent?: boolean;
 	cursor?: number;
 }
 

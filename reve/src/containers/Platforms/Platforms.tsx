@@ -20,6 +20,7 @@ interface Props {
 	onScrollEnd?: () => void;
 	className?: string;
 	actions?: React.ReactNode;
+	header?: React.ReactNode;
 	children: React.ReactNode;
 	loadingPlatforms?: boolean;
 	loadingPlaylists?: boolean;
@@ -33,6 +34,7 @@ const Platforms = ({
 	onScrollEnd,
 	className,
 	actions,
+	header,
 	children,
 	loadingPlatforms,
 	loadingPlaylists
@@ -133,9 +135,11 @@ const Platforms = ({
 
 			{actions && <div className={classes.ActionsShade} />}
 
-			<div className={classes.ListShade} />
+			{header && <div className={classes.Header}>{header}</div>}
 
-			<Container className={classes.List} ref={element}>
+			<div className={[classes.ListShade, header ? classes.HeaderListShade : ''].join(' ')} />
+
+			<Container className={[classes.List, header ? classes.HeaderList : ''].join(' ')} ref={element}>
 				<div className={classes.Contents}>{children}</div>
 			</Container>
 		</div>
