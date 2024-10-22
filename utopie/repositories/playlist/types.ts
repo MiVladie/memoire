@@ -16,6 +16,8 @@ export interface FindManyParams extends Partial<Playlist> {}
 
 export interface FindSongsParams extends Partial<Playlist> {
 	id: number;
+	search?: string;
+	isPresent?: boolean;
 }
 
 export interface RemoveParams extends Partial<Playlist> {}

@@ -36,6 +36,8 @@ export const playlistSongs: GetPlaylistSongsHandler = (req, res, next) => {
 
 	validate<GetPlaylistSongsQueryParams>(
 		{
+			search: joi.string(),
+			isPresent: joi.string().regex(/^[0-1]+$/),
 			limit: joi.string().regex(/^[0-9]+$/),
 			cursor: joi.string().regex(/^[0-9]+$/)
 		},

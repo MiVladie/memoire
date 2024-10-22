@@ -27,10 +27,12 @@ export const getPlaylists: GetPlaylistsHandler = async (req, res, next) => {
 
 export const getPlaylistSongs: GetPlaylistSongsHandler = async (req, res, next) => {
 	const { playlistId } = req.params;
-	const { limit, cursor } = req.query;
+	const { search, isPresent, limit, cursor } = req.query;
 
 	const { songs } = await playlistService.getSongs({
 		playlistId: parseInt(playlistId),
+		search,
+		isPresent: isPresent != undefined ? !!+isPresent : undefined,
 		limit: limit ? parseInt(limit) : Pagination.SONGS_LIMIT,
 		cursor: cursor ? parseInt(cursor) : undefined
 	});

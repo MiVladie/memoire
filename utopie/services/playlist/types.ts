@@ -13,6 +13,8 @@ export interface GetType {
 
 export interface GetSongsParams {
 	playlistId: number;
+	search?: string;
+	isPresent?: boolean;
 	limit?: number;
 	cursor?: number;
 }

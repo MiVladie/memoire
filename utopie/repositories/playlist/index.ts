@@ -43,9 +43,17 @@ export async function findSongs(where: FindSongsParams, limit?: number, cursor?:
 		: {};
 
 	const { songs } = await db.playlist.findUniqueOrThrow({
-		where,
+		where: excludeKeys(where, ['isPresent', 'search']),
 		include: {
 			songs: {
+				where: {
+					song: {
+						isPresent: where.isPresent,
+						OR: where.search
+							? [{ name: { contains: where.search } }, { author: { contains: where.search } }]
+							: undefined
+					}
+				},
 				include: { song: { include: { soundcloudSong: true } } },
 				orderBy: { order: 'desc' },
 				take: limit,

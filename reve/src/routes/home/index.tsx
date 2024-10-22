@@ -8,16 +8,30 @@ import { isLinked } from 'utils/settings';
 import { delay } from 'utils/date';
 
 import Platforms from 'containers/Platforms/Platforms';
+import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
 import Songs from 'containers/Songs/Songs';
 import Storage from 'shared/Storage';
+import useForm from 'hooks/useForm';
 import Seo from 'hoc/Seo/Seo';
 
 import { ReactComponent as Avatar } from 'assets/icons/account.svg';
+import { ReactComponent as Search } from 'assets/icons/search.svg';
+import { ReactComponent as Visibility } from 'assets/icons/visibility.svg';
+import { ReactComponent as VisibilityOff } from 'assets/icons/visibility_off.svg';
 
 import * as API from 'apis';
 
 import classes from './Home.module.scss';
+
+type SearchFields = {
+	search: string;
+};
+
+type SongsFilters = {
+	search?: string;
+	hidden?: boolean;
+};
 
 const Home = () => {
 	const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -31,15 +45,40 @@ const Home = () => {
 	const [loadingPlaylists, setLoadingPlaylists] = useState<boolean>(true);
 	const [loadingSongs, setLoadingSongs] = useState<boolean>(true);
 
+	const [filtering, setFiltering] = useState<boolean>(false);
+	const [hidden, setHidden] = useState<boolean>(false);
+
 	const [linked, setLinked] = useState<boolean>(true);
 
 	const [error, setError] = useState<string>();
 
 	const navigate = useNavigate();
 
+	const { values, handleChange } = useForm<SearchFields>({
+		initialValues: {
+			search: ''
+		}
+	});
+
 	useEffect(() => {
 		fetchData();
 	}, []);
+
+	useEffect(() => {
+		if (!filtering) {
+			return;
+		}
+
+		setSongs([]);
+
+		setLoadingSongs(true);
+
+		const debounceTimer = setTimeout(() => {
+			fetchSongs({ search: values.search, hidden });
+		}, 500);
+
+		return () => clearTimeout(debounceTimer);
+	}, [values.search]);
 
 	async function fetchPlatforms() {
 		const storage = Storage.get<PlatformStorage>(PLATFORM_STORAGE_KEYS);
@@ -98,8 +137,12 @@ const Home = () => {
 		}
 	}
 
-	async function fetchSongs() {
-		if (loadingSongs || !hasMoreSongs || playlist == undefined) {
+	async function fetchSongs(filters?: SongsFilters) {
+		if (playlist == undefined) {
+			return;
+		}
+
+		if (!filters && (!hasMoreSongs || loadingSongs)) {
 			return;
 		}
 
@@ -107,7 +150,9 @@ const Home = () => {
 
 		try {
 			const data = await API.User.getPlaylistSongs(playlist, {
-				cursor: songs[songs.length - 1].id
+				search: filters?.search || undefined,
+				isPresent: filters?.hidden ? false : undefined,
+				cursor: !filters ? songs[songs.length - 1].id : undefined
 			});
 
 			if (data.songs.length === 0) {
@@ -126,6 +171,11 @@ const Home = () => {
 	}
 
 	async function platformHandler(id: number) {
+		setFiltering(false);
+
+		handleChange('', 'search');
+		setHidden(false);
+
 		setPlaylist(undefined);
 		setPlaylists([]);
 		setSongs([]);
@@ -172,6 +222,11 @@ const Home = () => {
 	}
 
 	async function playlistHandler(id: number) {
+		setFiltering(false);
+
+		handleChange('', 'search');
+		setHidden(false);
+
 		setLoadingSongs(true);
 
 		setSongs([]);
@@ -192,8 +247,19 @@ const Home = () => {
 		}
 	}
 
+	function filterHandler() {
+		setFiltering((prevState) => !prevState);
+	}
+
 	function profileHandler() {
 		navigate('/profile');
+	}
+
+	function hiddenHandler() {
+		fetchSongs({ search: values.search, hidden: !hidden });
+
+		setHidden((prevState) => !prevState);
+		setSongs([]);
 	}
 
 	return (
@@ -203,7 +269,32 @@ const Home = () => {
 			onPlatform={platformHandler}
 			onPlaylist={playlistHandler}
 			onScrollEnd={fetchSongs}
-			actions={<Avatar className={classes.Avatar} onClick={profileHandler} />}
+			actions={
+				<>
+					{!error && linked && <Search className={classes.Search} onClick={filterHandler} />}
+
+					<Avatar className={classes.Avatar} onClick={profileHandler} />
+				</>
+			}
+			header={
+				filtering && (
+					<div className={classes.Header}>
+						<Input
+							inputClassName={classes.Input}
+							name='search'
+							placeholder="song's name or author"
+							value={values.search}
+							onChange={handleChange}
+						/>
+
+						{!hidden ? (
+							<Visibility className={classes.Visibility} onClick={hiddenHandler} />
+						) : (
+							<VisibilityOff className={classes.Visibility} onClick={hiddenHandler} />
+						)}
+					</div>
+				)
+			}
 			loadingPlatforms={loadingPlatforms}
 			loadingPlaylists={loadingPlaylists}>
 			{!error ? (
