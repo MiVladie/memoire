@@ -18,9 +18,9 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 	const [startPosition, setStartPosition] = useState<number>(0);
 	const [scrollDistance, setScrollDistance] = useState<number>(0);
 
-	const [isDragging, setIsDragging] = useState<boolean>(false);
+	const isDragging = useRef<boolean>(false);
+	const hasMoved = useRef<boolean>(false);
 
-	const wasDragging = useRef<boolean>(false);
 	const focused = useRef<number>(active);
 
 	const lastEndPosition = useRef<number>();
@@ -28,7 +28,8 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 	const container = useRef<HTMLUListElement>(null);
 
 	function startHandler(event: React.MouseEvent | React.TouchEvent) {
-		setIsDragging(true);
+		isDragging.current = true;
+		hasMoved.current = false;
 
 		// Getting cursor's X|Y position position on screen
 		const touchPoint =
@@ -43,9 +44,9 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 	}
 
 	function moveHandler(event: React.MouseEvent | React.TouchEvent) {
-		// Preventing dragging functionality [for elements' onClick functionality]
-		if (!isDragging) return;
-		if (!wasDragging.current) wasDragging.current = true;
+		if (!isDragging.current) {
+			return;
+		}
 
 		lastEndPosition.current = (event as React.TouchEvent).touches?.[0][!vertical ? 'pageX' : 'pageY'];
 
@@ -62,7 +63,7 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 	}
 
 	function endHandler(event: React.MouseEvent | React.TouchEvent) {
-		setIsDragging(false);
+		isDragging.current = false;
 
 		// Getting cursor's X|Y position position on screen
 		const touchPoint = (event as React.MouseEvent)[!vertical ? 'pageX' : 'pageY'] || lastEndPosition.current!;
@@ -82,6 +83,8 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 			const isNewElement = focused.current + 1 < container.current!.children.length;
 
 			if (isNewElement && draggedEnough) {
+				hasMoved.current = true;
+
 				snappedElement = container.current!.childNodes[focused.current + 1] as Element;
 
 				// Updating focused element
@@ -92,6 +95,8 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 			const isNewElement = focused.current > 0;
 
 			if (isNewElement && draggedEnough) {
+				hasMoved.current = true;
+
 				snappedElement = container.current!.childNodes[focused.current - 1] as Element;
 
 				// Updating focused element
@@ -126,9 +131,7 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 
 	function clickHandler(index: number) {
 		// Preventing dragging functionality [for elements' onClick functionality]
-		if (wasDragging.current) {
-			wasDragging.current = false;
-
+		if (hasMoved.current) {
 			return;
 		}
 
