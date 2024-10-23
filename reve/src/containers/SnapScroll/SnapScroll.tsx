@@ -36,6 +36,8 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 			(event as React.MouseEvent)[!vertical ? 'pageX' : 'pageY'] ||
 			(event as React.TouchEvent).touches[0][!vertical ? 'pageX' : 'pageY'];
 
+		lastEndPosition.current = touchPoint;
+
 		// Saving starting cursor's position
 		setStartPosition(touchPoint);
 
@@ -48,12 +50,12 @@ const SnapScroll = ({ active, vertical, rtl, onSelect, className, offset = 0, ch
 			return;
 		}
 
-		lastEndPosition.current = (event as React.TouchEvent).touches?.[0][!vertical ? 'pageX' : 'pageY'];
-
 		// Getting cursor's X|Y position position on screen
 		const touchPoint =
 			(event as React.MouseEvent)[!vertical ? 'pageX' : 'pageY'] ||
 			(event as React.TouchEvent).touches[0][!vertical ? 'pageX' : 'pageY'];
+
+		lastEndPosition.current = touchPoint;
 
 		// Calculating dragged distance
 		const difference = touchPoint - startPosition;
