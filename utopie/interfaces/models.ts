@@ -45,4 +45,8 @@ export interface Song {
 	duration: number;
 	isPresent: boolean;
 	platformId: number;
+
+	soundcloudSong: {
+		soundcloudTrackId: number;
+	} | null;
 }

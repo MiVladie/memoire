@@ -8,7 +8,9 @@ import {
 	GetLikesPayload,
 	GetLikesResponse,
 	GetPlaylistResponse,
-	GetTracksResponse
+	GetTrackResponse,
+	GetTracksResponse,
+	GetMediaResponse
 } from '@/api/soundcloud/types';
 import { paramify } from '@/util/api';
 import { API } from '@/constants';
@@ -49,6 +51,10 @@ export function getPlaylist(id: number): Promise<GetPlaylistResponse> {
 	return Request.get<GetPlaylistResponse>(API.SoundCloud.BASE_URL + `/playlists/${id}${paramify(defaultParams)}`);
 }
 
+export function getTrack(id: number): Promise<GetTrackResponse> {
+	return Request.get<GetTrackResponse>(API.SoundCloud.BASE_URL + `/tracks/${id}${paramify(defaultParams)}`);
+}
+
 export async function getTracks(ids: number[]): Promise<GetTracksResponse> {
 	const tracks = await Request.get<GetTracksResponse>(
 		API.SoundCloud.BASE_URL + `/tracks${paramify({ ids: ids.join(','), ...defaultParams })}`
@@ -63,4 +69,8 @@ export async function getTracks(ids: number[]): Promise<GetTracksResponse> {
 
 		return indexA - indexB;
 	});
+}
+
+export function getMedia(url: string): Promise<GetMediaResponse> {
+	return Request.get<GetMediaResponse>(`${url}${paramify(defaultParams)}`);
 }

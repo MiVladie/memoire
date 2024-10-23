@@ -42,4 +42,10 @@ export interface GetLikesResponse {
 
 export type GetPlaylistResponse = SoundCloudPlaylist;
 
+export type GetTrackResponse = SoundCloudTrack;
+
 export type GetTracksResponse = SoundCloudTrack[];
+
+export type GetMediaResponse = {
+	url: string;
+};

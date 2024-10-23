@@ -28,6 +28,7 @@ import * as soundCloudService from '@/services/soundcloud';
 import * as playlistRepository from '@/repositories/playlist';
 import * as songRepository from '@/repositories/song';
 import * as userRepository from '@/repositories/user';
+import { Song } from '@/interfaces/models';
 
 const PlaylistQueue = new PlaylistJob();
 
@@ -154,10 +155,10 @@ export async function populateSoundCloudPlaylist({
 	let order = await playlistRepository.getOrder(playlist.id);
 
 	for (let newSong of newSongs) {
-		let song = await songRepository.findOne({ soundcloudTrackId: newSong.soundcloudId });
+		let song: Song = await songRepository.findOne({ soundcloudTrackId: newSong.soundcloudId });
 
 		if (!song) {
-			song = await songRepository.create(newSong);
+			song = (await songRepository.create(newSong)) as Song;
 		}
 
 		order += 1;

@@ -9,13 +9,15 @@ import {
 	GetSoundCloudLikesType,
 	GetSoundCloudPlaylistSongsParams,
 	GetSoundCloudPlaylistSongsType,
+	GetSoundCloudTrackParams,
+	GetSoundCloudTrackType,
 	GetSoundCloudTracksParams,
 	GetSoundCloudTracksType
 } from '@/services/soundcloud/types';
 import { CreatePlaylistDTO } from '@/dtos/playlist/types';
 import { CreateSongDTO } from '@/dtos/song/types';
 import { fromSoundCloudPlaylistsDTO } from '@/dtos/playlist';
-import { fromSoundCloudCollectionDTO, fromSoundCloudTracksDTO } from '@/dtos/song';
+import { fromSoundCloudCollectionDTO, fromSoundCloudTrackDTO, fromSoundCloudTracksDTO } from '@/dtos/song';
 import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
 import { getQueryParam } from '@/util/api';
 import { intoChunks } from '@/util/optimization';
@@ -126,6 +128,18 @@ export async function getPlaylistSongs({
 	}
 
 	return { songs };
+}
+
+export async function getTrack({ id }: GetSoundCloudTrackParams): Promise<GetSoundCloudTrackType> {
+	const track = await API.SoundCloud.getTrack(id);
+
+	const song: CreateSongDTO = fromSoundCloudTrackDTO(track);
+
+	const transcodingUrl = track.media.transcodings.find((t) => t.format.protocol === 'hls')!.url;
+
+	const { url: media } = await API.SoundCloud.getMedia(transcodingUrl);
+
+	return { song: { ...song, media } };
 }
 
 export async function getTracks({ ids }: GetSoundCloudTracksParams): Promise<GetSoundCloudTracksType> {

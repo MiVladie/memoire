@@ -1,5 +1,6 @@
 import { excludeKeys } from '@/util/optimization';
 import { CreateParams, FindOneParams, FindManyParams, UpdateParams, RemoveParams } from './types';
+import { Song } from '@/interfaces/models';
 import { Platform } from '@/constants';
 
 import db from '@/config/db';
@@ -26,8 +27,11 @@ export function findOne(where: FindOneParams) {
 		where: {
 			...excludeKeys(where, ['soundcloudTrackId']),
 			...(where.soundcloudTrackId ? { soundcloudSong: { soundcloudTrackId: where.soundcloudTrackId } } : {})
+		},
+		include: {
+			soundcloudSong: true
 		}
-	});
+	}) as Promise<Song>;
 }
 
 export function findMany(where?: FindManyParams) {

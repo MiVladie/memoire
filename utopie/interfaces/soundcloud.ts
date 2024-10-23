@@ -41,4 +41,14 @@ export interface SoundCloudTrack {
 	artwork_url: string | null;
 	permalink_url: string;
 	user: SoundCloudUser;
+	media: {
+		transcodings: {
+			url: string;
+			duration: number;
+			format: {
+				protocol: 'hls' | 'progressive';
+				mime_type: 'audio/mpeg' | 'audio/ogg; codecs="opus"';
+			};
+		}[];
+	};
 }
