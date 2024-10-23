@@ -22,6 +22,7 @@ const Songs = ({ data, loading, className }: Props) => (
 		{data.length
 			? data.map((song) => (
 					<Song
+						id={song.id}
 						className={classes.Song}
 						image={song.image || placeholder}
 						name={song.name}

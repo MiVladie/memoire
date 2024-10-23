@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { convertSecondsToFormat } from 'utils/date';
 
 import { ReactComponent as Url } from 'assets/icons/url.svg';
+import { ReactComponent as Play } from 'assets/icons/play.svg';
+import { ReactComponent as Stop } from 'assets/icons/stop.svg';
+
+import * as API from 'apis';
 
 import classes from './Song.module.scss';
+import ReactPlayer from 'react-player';
 
 interface Props {
+	id: number;
 	className?: string;
 	image: string;
 	name: string;
@@ -16,7 +22,29 @@ interface Props {
 	is_present: boolean;
 }
 
-const Song = ({ className, image, name, author, url, duration, is_present }: Props) => {
+const Song = ({ id, className, image, name, author, url, duration, is_present }: Props) => {
+	const [playing, setPlaying] = useState<boolean>(false);
+	const [paused, setPaused] = useState<boolean>(false);
+
+	const [media, setMedia] = useState<string>();
+
+	async function playHandler() {
+		if (playing) {
+			setPaused((prevState) => !prevState);
+			return;
+		}
+
+		setPlaying(true);
+
+		try {
+			const { media } = await API.Song.getMedia(id);
+
+			setMedia(media);
+		} catch (error) {
+			setPlaying(false);
+		}
+	}
+
 	function openLink() {
 		if (typeof window != undefined) {
 			window.open(url, '_blank')!.focus();
@@ -26,7 +54,18 @@ const Song = ({ className, image, name, author, url, duration, is_present }: Pro
 	return (
 		<li className={[classes.Song, className].join(' ')}>
 			<div className={classes.Wrapper}>
-				<img className={classes.Image} src={image} alt={name} />
+				<div className={[classes.Media, playing ? classes.MediaActive : ''].join(' ')} onClick={playHandler}>
+					<img className={classes.Image} src={image} alt={name} />
+
+					<div className={classes.Circle}>{!playing || paused ? <Play /> : <Stop />}</div>
+
+					<ReactPlayer
+						url={media}
+						playing={!paused}
+						onEnded={() => setPlaying(false)}
+						style={{ display: 'none' }}
+					/>
+				</div>
 
 				<div className={classes.Info}>
 					<h2 className={[classes.Name, !is_present && classes.NameAbsent].join(' ')}>{name}</h2>

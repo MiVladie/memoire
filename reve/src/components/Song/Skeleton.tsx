@@ -13,7 +13,7 @@ interface Props {
 const SongSkeleton = ({ className }: Props) => (
 	<li className={[classes.Song, className].join(' ')}>
 		<div className={classes.Wrapper}>
-			<Skeleton className={classes.Image} />
+			<Skeleton className={classes.Media} />
 
 			<div className={classes.Info}>
 				<h2 className={classes.Name}>
