@@ -260,6 +260,7 @@ const Home = () => {
 	function hiddenHandler() {
 		fetchSongs({ search: values.search, hidden: !hidden });
 
+		setHasMoreSongs(true);
 		setHidden((prevState) => !prevState);
 		setSongs([]);
 	}
