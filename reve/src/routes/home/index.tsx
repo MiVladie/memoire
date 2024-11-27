@@ -31,6 +31,7 @@ type SearchFields = {
 type SongsFilters = {
 	search?: string;
 	hidden?: boolean;
+	cursor?: number;
 };
 
 const Home = () => {
@@ -71,9 +72,12 @@ const Home = () => {
 
 		setSongs([]);
 
+		setHasMoreSongs(true);
 		setLoadingSongs(true);
 
 		const debounceTimer = setTimeout(() => {
+			console.log(values.search);
+
 			fetchSongs({ search: values.search, hidden });
 		}, 500);
 
@@ -142,7 +146,11 @@ const Home = () => {
 			return;
 		}
 
-		if (!filters && (!hasMoreSongs || loadingSongs)) {
+		if (!hasMoreSongs) {
+			return;
+		}
+
+		if (filters && loadingSongs) {
 			return;
 		}
 
@@ -152,7 +160,7 @@ const Home = () => {
 			const data = await API.User.getPlaylistSongs(playlist, {
 				search: filters?.search || undefined,
 				isPresent: filters?.hidden ? false : undefined,
-				cursor: !filters ? songs[songs.length - 1].id : undefined
+				cursor: filters?.cursor || undefined
 			});
 
 			if (data.songs.length === 0) {
@@ -268,7 +276,7 @@ const Home = () => {
 			playlists={playlists}
 			onPlatform={platformHandler}
 			onPlaylist={playlistHandler}
-			onScrollEnd={fetchSongs}
+			onScrollEnd={() => fetchSongs({ search: values.search, cursor: songs[songs.length - 1]?.id, hidden })}
 			actions={
 				<>
 					{!error && linked && <Search className={classes.Search} onClick={filterHandler} />}

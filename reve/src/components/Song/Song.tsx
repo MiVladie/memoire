@@ -29,6 +29,10 @@ const Song = ({ id, className, image, name, author, url, duration, is_present }:
 	const [media, setMedia] = useState<string>();
 
 	async function playHandler() {
+		if (!is_present) {
+			return;
+		}
+
 		if (playing) {
 			setPaused((prevState) => !prevState);
 			return;
@@ -57,7 +61,7 @@ const Song = ({ id, className, image, name, author, url, duration, is_present }:
 				<div className={[classes.Media, playing ? classes.MediaActive : ''].join(' ')} onClick={playHandler}>
 					<img className={classes.Image} src={image} alt={name} />
 
-					<div className={classes.Circle}>{!playing || paused ? <Play /> : <Stop />}</div>
+					{is_present && <div className={classes.Circle}>{!playing || paused ? <Play /> : <Stop />}</div>}
 
 					<ReactPlayer
 						url={media}

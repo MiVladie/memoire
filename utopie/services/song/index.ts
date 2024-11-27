@@ -13,6 +13,10 @@ export async function getMedia(params: GetMediaParams): Promise<GetMediaType> {
 		throw new APIError(Errors.INTERNAL_SERVER_ERROR);
 	}
 
+	if (!song.isPresent) {
+		throw new APIError(Errors.NOT_FOUND, { message: 'Cannot listen to a song that is not present!' });
+	}
+
 	switch (song.platformId) {
 		case Platform.SoundCloud.id:
 			const {
