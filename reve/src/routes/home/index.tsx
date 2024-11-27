@@ -76,9 +76,7 @@ const Home = () => {
 		setLoadingSongs(true);
 
 		const debounceTimer = setTimeout(() => {
-			console.log(values.search);
-
-			fetchSongs({ search: values.search, hidden });
+			fetchSongs({ search: values.search, hidden }, true);
 		}, 500);
 
 		return () => clearTimeout(debounceTimer);
@@ -141,7 +139,7 @@ const Home = () => {
 		}
 	}
 
-	async function fetchSongs(filters?: SongsFilters) {
+	async function fetchSongs(filters?: SongsFilters, force?: boolean) {
 		if (playlist == undefined) {
 			return;
 		}
@@ -150,7 +148,8 @@ const Home = () => {
 			return;
 		}
 
-		if (filters && loadingSongs) {
+		if (filters && loadingSongs && !force) {
+			console.log();
 			return;
 		}
 
