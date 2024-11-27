@@ -144,12 +144,7 @@ const Home = () => {
 			return;
 		}
 
-		if (!hasMoreSongs) {
-			return;
-		}
-
-		if (filters && loadingSongs && !force) {
-			console.log();
+		if (loadingSongs && !force) {
 			return;
 		}
 
@@ -269,13 +264,21 @@ const Home = () => {
 		setSongs([]);
 	}
 
+	function scrollEndHandler() {
+		if (!hasMoreSongs) {
+			return;
+		}
+
+		fetchSongs({ search: values.search, cursor: songs[songs.length - 1]?.id, hidden });
+	}
+
 	return (
 		<Platforms
 			platforms={platforms}
 			playlists={playlists}
 			onPlatform={platformHandler}
 			onPlaylist={playlistHandler}
-			onScrollEnd={() => fetchSongs({ search: values.search, cursor: songs[songs.length - 1]?.id, hidden })}
+			onScrollEnd={scrollEndHandler}
 			actions={
 				<>
 					{!error && linked && <Search className={classes.Search} onClick={filterHandler} />}
