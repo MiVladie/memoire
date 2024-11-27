@@ -18,6 +18,7 @@ import { objectsMatch } from '@/util/validation';
 import { excludeKeys } from '@/util/optimization';
 import { toSongsDTO } from '@/dtos/song';
 import { Platform } from '@/constants';
+import { Song } from '@/interfaces/models';
 
 import PlaylistJob from '@/jobs/playlist';
 
@@ -28,7 +29,6 @@ import * as soundCloudService from '@/services/soundcloud';
 import * as playlistRepository from '@/repositories/playlist';
 import * as songRepository from '@/repositories/song';
 import * as userRepository from '@/repositories/user';
-import { Song } from '@/interfaces/models';
 
 const PlaylistQueue = new PlaylistJob();
 
@@ -124,19 +124,19 @@ export async function populateSoundCloudPlaylist({
 	const playlistSongs = await playlistRepository.findSongs({ id: playlist.id });
 
 	// Existing songs
-	const existingSongs = playlistSongs.filter((p) =>
-		soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId)
+	const existingSongs = playlistSongs.filter(
+		(p) => !!soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId)
 	);
 
 	// Update songs if any changed
-	for (let exisingSong of existingSongs) {
+	for (let existingSong of existingSongs) {
 		const matchingSoundCloudSong = soundCloudSongs.find(
-			(s) => s.soundcloudId! === exisingSong.soundcloudSong?.soundcloudTrackId
+			(s) => s.soundcloudId! === existingSong.soundcloudSong?.soundcloudTrackId
 		)!;
 
-		if (!objectsMatch(exisingSong, matchingSoundCloudSong)) {
+		if (!objectsMatch(existingSong, matchingSoundCloudSong)) {
 			await songRepository.update(
-				exisingSong.id,
+				existingSong.id,
 				excludeKeys(matchingSoundCloudSong, ['platformId', 'soundcloudId'])
 			);
 		}
@@ -144,7 +144,7 @@ export async function populateSoundCloudPlaylist({
 
 	// Missing songs
 	const missingSongs = playlistSongs.filter(
-		(p) => !soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId && p.isPresent)
+		(p) => p.isPresent && !soundCloudSongs.find((s) => s.soundcloudId! === p.soundcloudSong!.soundcloudTrackId)
 	);
 
 	// New songs
