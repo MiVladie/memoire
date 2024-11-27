@@ -58,7 +58,13 @@ const Song = ({ id, className, image, name, author, url, duration, is_present }:
 	return (
 		<li className={[classes.Song, className].join(' ')}>
 			<div className={classes.Wrapper}>
-				<div className={[classes.Media, playing ? classes.MediaActive : ''].join(' ')} onClick={playHandler}>
+				<div
+					className={[
+						classes.Media,
+						is_present ? classes.MediaPresent : '',
+						playing ? classes.MediaActive : ''
+					].join(' ')}
+					onClick={playHandler}>
 					<img className={classes.Image} src={image} alt={name} />
 
 					{is_present && <div className={classes.Circle}>{!playing || paused ? <Play /> : <Stop />}</div>}
