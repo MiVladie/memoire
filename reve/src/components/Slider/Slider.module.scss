@@ -1,0 +1,71 @@
+@import 'styles/fonts';
+@import 'styles/colors';
+@import 'styles/sizing';
+@import 'styles/spacing';
+
+.Slider {
+	height: 16px;
+
+	position: relative;
+
+	cursor: pointer;
+
+	&:hover {
+		.Handle {
+			opacity: 1;
+		}
+	}
+
+	.Bar {
+		position: absolute;
+
+		top: 50%;
+		left: 0;
+
+		transform: translateY(-50%);
+
+		width: 100%;
+		height: 2px;
+
+		border-radius: 2px;
+		background-color: $third-color;
+	}
+
+	.Progress {
+		position: absolute;
+
+		top: 50%;
+		left: 0;
+
+		transform: translateY(-50%);
+
+		height: 2px;
+
+		border-radius: 2px;
+		background-color: $secondary-color;
+
+		transition: width 0.1s;
+	}
+
+	.Handle {
+		position: absolute;
+
+		top: 50%;
+
+		transform: translateY(-50%);
+
+		width: 10px;
+		height: 10px;
+
+		border-radius: 5px;
+		background-color: $secondary-color;
+
+		opacity: 0;
+
+		transition: all 0.1s;
+	}
+
+	.HandleActive {
+		opacity: 1;
+	}
+}
