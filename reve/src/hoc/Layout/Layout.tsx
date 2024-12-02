@@ -7,12 +7,13 @@ import { AUTH_ROUTES, HOME_ROUTES } from 'constants/route';
 import { isPath } from 'utils/route';
 import { delay } from 'utils/date';
 
+import Circle from 'components/Circle/Circle';
+import Playbar from 'components/Playbar/Playbar';
 import Storage from 'shared/Storage';
 
 import classes from './Layout.module.scss';
 
 import './reset.css';
-import Circle from 'components/Circle/Circle';
 
 interface Props {
 	children: React.ReactNode;
@@ -56,6 +57,8 @@ const Layout = ({ children, className, style }: Props) => {
 			<Circle pathname={pathname} />
 
 			{!loading && children}
+
+			{!loading && <Playbar />}
 		</main>
 	);
 };

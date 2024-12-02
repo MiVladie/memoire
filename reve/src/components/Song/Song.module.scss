@@ -29,23 +29,10 @@
 				transition: opacity 0.1s;
 			}
 
-			.Circle {
-				opacity: 0;
-
-				display: flex;
-				justify-content: center;
-				align-items: center;
-
-				width: 30px;
-				height: 30px;
-
-				border-radius: 50%;
-				background-color: #ff7700;
-				box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-
+			.Play {
 				position: absolute;
 
-				transition: opacity 0.1s;
+				opacity: 0;
 			}
 		}
 
@@ -59,7 +46,7 @@
 					opacity: 0.75;
 				}
 
-				.Circle {
+				.Play {
 					opacity: 1;
 				}
 			}
@@ -70,7 +57,7 @@
 				opacity: 0.75;
 			}
 
-			.Circle {
+			.Play {
 				opacity: 1;
 			}
 		}

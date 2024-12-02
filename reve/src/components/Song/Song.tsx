@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 
 import { convertSecondsToFormat } from 'utils/date';
+import { QueueContext } from 'context/providers/queue';
+
+import Knob from 'components/Knob/Knob';
 
 import { ReactComponent as Url } from 'assets/icons/url.svg';
 import { ReactComponent as Play } from 'assets/icons/play.svg';
-import { ReactComponent as Stop } from 'assets/icons/stop.svg';
+import { ReactComponent as Pause } from 'assets/icons/pause.svg';
 
 import * as API from 'apis';
 
 import classes from './Song.module.scss';
-import ReactPlayer from 'react-player';
 
 interface Props {
 	id: number;
@@ -23,30 +25,28 @@ interface Props {
 }
 
 const Song = ({ id, className, image, name, author, url, duration, is_present }: Props) => {
-	const [playing, setPlaying] = useState<boolean>(false);
-	const [paused, setPaused] = useState<boolean>(false);
+	const { state, ...QueueStore } = useContext(QueueContext);
 
-	const [media, setMedia] = useState<string>();
+	const active = useMemo(() => state.currentId === id, [state.currentId]);
 
-	async function playHandler() {
+	function playHandler() {
 		if (!is_present) {
 			return;
 		}
 
-		if (playing) {
-			setPaused((prevState) => !prevState);
+		if (!active) {
+			QueueStore.load([{ id, image, name, author, url, duration, is_present }]);
+
 			return;
 		}
 
-		setPlaying(true);
+		if (state.playing) {
+			QueueStore.pause();
 
-		try {
-			const { media } = await API.Song.getMedia(id);
-
-			setMedia(media);
-		} catch (error) {
-			setPlaying(false);
+			return;
 		}
+
+		QueueStore.play();
 	}
 
 	function openLink() {
@@ -62,19 +62,14 @@ const Song = ({ id, className, image, name, author, url, duration, is_present }:
 					className={[
 						classes.Media,
 						is_present ? classes.MediaPresent : '',
-						playing ? classes.MediaActive : ''
+						active ? classes.MediaActive : ''
 					].join(' ')}
 					onClick={playHandler}>
 					<img className={classes.Image} src={image} alt={name} />
 
-					{is_present && <div className={classes.Circle}>{!playing || paused ? <Play /> : <Stop />}</div>}
-
-					<ReactPlayer
-						url={media}
-						playing={!paused}
-						onEnded={() => setPlaying(false)}
-						style={{ display: 'none' }}
-					/>
+					{is_present && (
+						<Knob icon={active && state.playing ? <Pause /> : <Play />} className={classes.Play} />
+					)}
 				</div>
 
 				<div className={classes.Info}>

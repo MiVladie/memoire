@@ -1,5 +1,5 @@
 export function convertSecondsToFormat(seconds: number) {
-	return new Date(seconds * 1000).toISOString().substring(14, 19);
+	return new Date(seconds * 1000).toISOString().substring(14, 19).replace('00:', '0:');
 }
 
 export async function delay(seconds: number): Promise<null> {

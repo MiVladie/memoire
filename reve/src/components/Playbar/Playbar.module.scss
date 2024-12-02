@@ -1,0 +1,247 @@
+@import 'styles/fonts';
+@import 'styles/colors';
+@import 'styles/sizing';
+@import 'styles/spacing';
+
+.Playbar {
+	width: calc(100% - #{$container_spacing_mobile} * 2);
+	height: 70px;
+
+	position: fixed;
+
+	left: $container_spacing_mobile;
+	right: $container_spacing_mobile;
+	bottom: $container_spacing_mobile;
+
+	z-index: 1000;
+
+	box-sizing: border-box;
+	border: 3px solid indigo;
+	border-radius: 35px;
+	background-color: #0c0c0c;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	animation: slideUp 0.2s ease-out;
+
+	@keyframes slideUp {
+		from {
+			opacity: 0;
+			transform: translateY(40px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.Info {
+		display: flex;
+		align-items: center;
+
+		margin-left: $container_spacing_mobile;
+
+		.Image {
+			width: 40px;
+			height: 40px;
+
+			border-radius: 4px;
+
+			object-fit: cover;
+		}
+
+		.Meta {
+			width: 45vw;
+
+			margin-left: 12px;
+
+			.Name,
+			.Author {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+
+			.Name {
+				font-family: $primary-font;
+				font-size: $xs;
+
+				color: $secondary-color;
+			}
+
+			.Author {
+				font-family: $primary-font;
+				font-size: $xs;
+
+				color: $third-color;
+
+				margin-top: 2px;
+			}
+		}
+	}
+
+	.Actions {
+		margin-right: $container_spacing_mobile;
+
+		.Buttons {
+			> * {
+				display: none;
+			}
+
+			> :nth-child(2) {
+				display: flex;
+			}
+		}
+
+		.Playback {
+			display: none;
+		}
+	}
+
+	.Controls {
+		display: none;
+	}
+}
+
+@media (min-width: 720px) {
+	.Playbar {
+		width: 100%;
+
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		border: none;
+		border-radius: 0;
+
+		justify-content: space-between;
+
+		.Info {
+			margin-left: $container_spacing_tablet;
+
+			.Meta {
+				width: 25vw;
+			}
+		}
+
+		.Actions {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+
+			transform: translate(-50%, -50%);
+
+			margin-right: 0;
+
+			.Buttons {
+				display: flex;
+
+				> * {
+					display: flex;
+				}
+
+				> :nth-child(2) {
+					margin: 0 6px;
+				}
+			}
+		}
+
+		.Controls {
+			display: flex;
+			align-items: center;
+
+			margin-right: $container_spacing_tablet;
+
+			> * {
+				display: none;
+
+				margin-left: 12px;
+			}
+
+			> :first-child {
+				margin-left: 0;
+			}
+
+			> :nth-child(1),
+			> :nth-child(2) {
+				display: flex;
+			}
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Playbar {
+		height: 80px;
+
+		.Info {
+			.Image {
+				width: 45px;
+				height: 45px;
+			}
+
+			.Meta {
+				width: 15vw;
+
+				margin-left: 20px;
+
+				.Author {
+					margin-top: 4px;
+				}
+			}
+		}
+
+		.Actions {
+			.Buttons {
+				justify-content: center;
+			}
+
+			.Playback {
+				display: flex;
+				align-items: center;
+
+				margin-top: 6px;
+
+				.Time {
+					font-family: $secondary-font;
+					font-size: 14px;
+
+					color: $third-color;
+
+					margin-left: 12px;
+
+					min-width: 40px;
+
+					&:first-of-type {
+						margin-left: 0px;
+						margin-right: 12px;
+
+						text-align: right;
+						color: $secondary-color;
+					}
+				}
+
+				.Timeline {
+					width: 33vw;
+
+					max-width: 600px;
+				}
+			}
+		}
+
+		.Controls {
+			> :nth-child(3) {
+				display: flex;
+			}
+
+			.Volume {
+				display: block;
+
+				width: 80px;
+			}
+		}
+	}
+}
