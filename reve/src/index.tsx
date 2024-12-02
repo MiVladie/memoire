@@ -7,6 +7,7 @@ import { PROD } from 'constants/config';
 
 import Layout from 'hoc/Layout/Layout';
 import Storage from './shared/Storage';
+import QueueProvider from 'context/providers/queue';
 import axios from 'axios';
 
 import SignIn, { Head as SignInHead } from 'routes/signin';
@@ -84,7 +85,9 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
-		<RouterProvider router={router} />
+		<QueueProvider>
+			<RouterProvider router={router} />
+		</QueueProvider>
 	</React.StrictMode>
 );
 
