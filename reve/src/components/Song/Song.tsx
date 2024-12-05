@@ -9,8 +9,6 @@ import { ReactComponent as Url } from 'assets/icons/url.svg';
 import { ReactComponent as Play } from 'assets/icons/play.svg';
 import { ReactComponent as Pause } from 'assets/icons/pause.svg';
 
-import * as API from 'apis';
-
 import classes from './Song.module.scss';
 
 interface Props {
@@ -78,9 +76,11 @@ const Song = ({ id, className, image, name, author, url, duration, is_present }:
 				</div>
 			</div>
 
-			<div className={classes.Link}>
+			<Knob icon={<Url />} className={classes.Link} />
+
+			{/* <div className={classes.Link}>
 				<Url onClick={openLink} />
-			</div>
+			</div> */}
 
 			<p className={classes.Duration}>{convertSecondsToFormat(duration)}</p>
 		</li>
