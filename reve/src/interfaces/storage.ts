@@ -1,10 +1,6 @@
-import { Platform, User } from './models';
+import { User } from './models';
 
 export interface AuthStorage {
-	user: User;
-	token: string;
-}
-
-export interface PlatformStorage {
-	platforms: Platform[];
+	user: User | null;
+	token: string | null;
 }

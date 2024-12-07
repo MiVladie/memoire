@@ -1,49 +1,44 @@
-import React, { CSSProperties, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { useNavigate, useLocation } from 'react-router-dom';
-import { AuthStorage } from 'interfaces/storage';
-import { AUTH_STORAGE_KEYS } from 'config/storage';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AUTH_ROUTES, HOME_ROUTES } from 'constants/route';
-import { isPath } from 'utils/route';
-import { delay } from 'utils/date';
+import { useAuth } from 'context/useAuth';
+import { isPath } from 'util/route';
+import { delay } from 'util/date';
 
 import Circle from 'components/Circle/Circle';
-import Playbar from 'components/Playbar/Playbar';
-import Storage from 'shared/Storage';
 
-import classes from './Layout.module.scss';
+import './Layout.module.scss';
 
 import './reset.css';
 
 interface Props {
 	children: React.ReactNode;
-	className?: string;
-	style?: CSSProperties;
 }
 
-const Layout = ({ children, className, style }: Props) => {
+const Layout = ({ children }: Props) => {
 	const [loading, setLoading] = useState<boolean>(true);
 
 	const { pathname } = useLocation();
 
 	const navigate = useNavigate();
 
+	const { state } = useAuth();
+
 	useEffect(() => {
 		validateRoute();
 	}, []);
 
 	async function validateRoute() {
-		const { user } = Storage.get<AuthStorage>(AUTH_STORAGE_KEYS);
-
-		if (!user && !isPath(pathname, AUTH_ROUTES)) {
+		if (!state.user && !isPath(pathname, AUTH_ROUTES)) {
 			navigate('/signin');
 		}
 
-		if (user && !isPath(pathname, HOME_ROUTES)) {
+		if (state.user && !isPath(pathname, HOME_ROUTES)) {
 			navigate('/signin');
 		}
 
-		if (user && isPath(pathname, AUTH_ROUTES)) {
+		if (state.user && isPath(pathname, AUTH_ROUTES)) {
 			navigate('/');
 		}
 
@@ -53,13 +48,11 @@ const Layout = ({ children, className, style }: Props) => {
 	}
 
 	return (
-		<main className={[classes.Layout, className].join(' ')} style={style}>
+		<div>
 			<Circle pathname={pathname} />
 
 			{!loading && children}
-
-			{!loading && <Playbar />}
-		</main>
+		</div>
 	);
 };
 

@@ -1,65 +1,90 @@
 @import 'styles/fonts.scss';
 @import 'styles/colors.scss';
+@import 'styles/spacing.scss';
 @import 'styles/sizing.scss';
 
-$SIZE: 33px;
+$WIDTH: 300px;
+$HEIGHT: $xxl-space;
+
+$ICON_SIZE: 26px;
 
 .Input {
-	margin: 4px 0;
+	width: $WIDTH;
 
-	.Holder {
+	.Wrapper {
+		width: calc(100% - #{$md-space});
+		height: $HEIGHT;
+
+		padding-left: $md-space;
+
 		display: flex;
-		justify-content: center;
 		align-items: center;
 
+		border: 2px solid transparent;
+		border-radius: calc(#{$HEIGHT} / 2);
+		background-color: $primary-color;
+
 		.Icon {
-			width: $SIZE;
-			height: $SIZE;
+			padding-right: $md-space;
 
-			display: flex;
-			justify-content: center;
-			align-items: center;
+			> * {
+				width: $ICON_SIZE;
+				height: $ICON_SIZE;
 
-			margin-right: 4px;
-
-			fill: $secondary-color;
+				fill: $third-color;
+			}
 		}
 
-		.Text {
+		input {
+			width: 100%;
+			padding: 0;
+			padding-right: $md-space;
+
 			font-family: $primary-font;
-			font-size: $sm;
+			font-size: $lg-size;
 
 			color: $secondary-color;
-		}
 
-		.Wrapper {
-			width: calc(100% - 32px);
-
-			border-color: transparent;
+			border: none;
 			background-color: transparent;
-			padding: 2px 16px;
-			border-width: 1px;
 		}
+	}
 
-		.IconWrapper {
-			padding-left: 0;
-		}
+	.WrapperDisabled {
+		opacity: 0.75;
 
-		.DisabledWrapper {
+		input {
 			color: $third-color;
-			opacity: 0.8;
 		}
+	}
 
-		.ErrorWrapper {
-			border-bottom-color: $danger-color;
-		}
+	.WrapperError {
+		border-bottom-color: $danger-color;
 	}
 
 	.Error {
 		font-family: $primary-font;
-		font-size: $xs;
+		font-size: $sm-size;
+		line-height: $md-size;
+
 		color: $danger-color;
 
-		margin: 4px 16px 0;
+		margin: 4px $md-space 0;
+	}
+}
+
+@media (min-width: 720px) {
+	$INPUT_WIDTH: 400px;
+
+	.Input {
+		width: $INPUT_WIDTH;
+	}
+}
+
+@media (min-width: 1025px) {
+	$INPUT_WIDTH: 350px;
+
+	.Input {
+		width: $INPUT_WIDTH;
 	}
 }

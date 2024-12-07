@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { TLongRuleExpression, TRules, IValues } from 'interfaces/validation';
-import { validateField } from 'utils/validation';
+import { validateField } from 'util/validation';
 
 type Error<X> = { [key in keyof X]: string };
 

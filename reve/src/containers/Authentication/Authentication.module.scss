@@ -1,5 +1,6 @@
 @import 'styles/fonts.scss';
 @import 'styles/colors.scss';
+@import 'styles/spacing.scss';
 @import 'styles/sizing.scss';
 
 .Authentication {
@@ -26,13 +27,13 @@
 
 		.Description {
 			font-family: $secondary-font;
-			font-size: $sm;
+			font-size: $lg-size;
 			text-align: center;
 			text-transform: lowercase;
 
 			color: $third-color;
 
-			margin-top: 8px;
+			margin-top: $sm-space;
 		}
 
 		* {
@@ -55,9 +56,9 @@
 			}
 
 			.Description {
-				font-size: $md;
+				font-size: $xl-size;
 
-				margin-top: 16px;
+				margin-top: $md-space;
 			}
 		}
 	}
@@ -79,10 +80,10 @@
 			}
 
 			.Description {
-				font-size: $lg;
+				font-size: $xxl-size;
 				text-align: left;
 
-				margin-top: 8px;
+				margin-top: $sm-space;
 			}
 		}
 	}

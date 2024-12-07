@@ -12,7 +12,6 @@ const Circle = ({ pathname }: Props) => {
 	}
 
 	function getClasses(path: string) {
-		if (includes(['profile'], path) || path === '/') return classes.Home;
 		if (includes(['signin', 'signup'], path)) return classes.Auth;
 		if (includes('recover', path)) return classes.Recover;
 

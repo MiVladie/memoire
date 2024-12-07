@@ -1,5 +1,6 @@
 @import 'styles/fonts.scss';
 @import 'styles/colors.scss';
+@import 'styles/spacing.scss';
 @import 'styles/sizing.scss';
 
 .Wrapper {
@@ -22,10 +23,10 @@
 
 	.Description {
 		font-family: $secondary-font;
-		font-size: $md; // 2.25em;
+		font-size: $md-size;
 
 		color: $third-color;
 
-		margin-top: 12px;
+		margin-top: $md-space;
 	}
 }

@@ -1,13 +1,17 @@
 @import 'styles/colors.scss';
+@import 'styles/spacing.scss';
+
+$SIZE: $xxxl-space;
+$COLOR: $fourth-color;
 
 .Spinner {
-	width: 64px;
-	height: 64px;
+	width: $SIZE;
+	height: $SIZE;
 
-	border-radius: 50%;
-	border: 6px solid $secondary-color;
+	border-radius: calc(#{$SIZE} / 2);
+	border: 6px solid $COLOR;
 
-	border-color: $secondary-color transparent $secondary-color transparent;
+	border-color: $COLOR transparent $COLOR transparent;
 	animation: spinning 1.2s linear infinite;
 }
 
@@ -15,6 +19,7 @@
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(360deg);
 	}

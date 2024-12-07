@@ -1,86 +1,89 @@
 @import 'styles/fonts.scss';
 @import 'styles/colors.scss';
+@import 'styles/spacing.scss';
 @import 'styles/sizing.scss';
 
+$WIDTH: 175px;
+$HEIGHT: $xxl-space;
+
 .Button {
-	height: 56px;
-	padding: 0 42px;
+	min-width: $WIDTH;
+	height: $HEIGHT;
+
+	padding: 0 $lg-space;
 
 	font-family: $secondary-font;
-	font-size: $sm;
-	color: $secondary-color;
+	font-size: $lg-size;
 
 	text-transform: lowercase;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	color: $primary-color;
+
+	background: $secondary-color;
+	border: none;
+
+	border-radius: calc(#{$HEIGHT} / 2);
 
 	position: relative;
-
-	transition: all 0.2s;
-
-	background: transparent;
-	border: 2px solid $secondary-color;
 
 	user-select: none;
 
 	&:hover:not([disabled]) {
-		background-color: $secondary-color;
+		background-color: rgba($secondary-color, 0.75);
+	}
 
-		color: $primary-color;
-
-		.Icon {
-			fill: $primary-color;
-		}
+	&:active,
+	&:active:hover {
+		background-color: rgba($secondary-color, 0.5);
 	}
 
 	&:disabled {
-		color: $third-color;
-		border-color: $third-color;
-
-		.Icon {
-			fill: transparent;
-		}
-	}
-
-	.Icon {
-		height: 25px;
-		margin-right: 8px;
-
-		fill: $secondary-color;
-
-		transition: all 0.2s;
+		background-color: $third-color;
 	}
 
 	.Spinner {
 		position: absolute;
 
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
+		top: 50%;
+		left: 50%;
 
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		transform: translate(-50%, -50%);
 	}
 }
 
-.Ghost {
-	height: inherit;
+.ButtonTransparent {
+	font-family: $primary-font;
+	font-size: $lg-size;
+	color: $third-color;
+
+	width: auto;
+	height: auto;
+
 	padding: 0;
 
-	border: none;
+	background-color: transparent !important;
 
-	&:hover:not([disabled]),
-	&:disabled {
-		background-color: inherit;
+	&:hover,
+	&:active,
+	&:active:hover {
+		color: $secondary-color;
 
-		color: $third-color;
+		background-color: transparent;
 	}
 }
 
-.Loading {
-	color: transparent !important;
+@media (min-width: 720px) {
+	$WIDTH: 225px;
+
+	.Button {
+		min-width: $WIDTH;
+	}
+}
+
+@media (min-width: 1025px) {
+	$WIDTH: 200px;
+
+	.Button {
+		min-width: $WIDTH;
+	}
 }

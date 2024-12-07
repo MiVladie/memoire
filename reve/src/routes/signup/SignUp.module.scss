@@ -1,5 +1,6 @@
 @import 'styles/fonts.scss';
 @import 'styles/colors.scss';
+@import 'styles/spacing.scss';
 @import 'styles/sizing.scss';
 
 .Form {
@@ -10,19 +11,16 @@
 	flex-direction: column;
 
 	.Input {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
+		margin-bottom: $md-space;
 	}
 
 	.Error {
 		font-family: $primary-font;
-		font-size: $sm;
+		font-size: $sm-size;
 
 		color: $danger-color;
 
-		margin-top: 16px;
+		margin-top: $md-space;
 	}
 
 	.Button {
@@ -37,18 +35,7 @@
 
 	flex-direction: column;
 
-	margin-bottom: 8px;
-
-	.Action {
-		font-family: $primary-font;
-		color: $third-color;
-
-		margin: 2px 0;
-
-		&:hover {
-			color: $secondary-color;
-		}
-	}
+	margin-bottom: $md-space;
 }
 
 @media (min-width: 720px) {
@@ -60,9 +47,9 @@
 		}
 
 		.Description {
-			font-size: $md;
+			font-size: $md-size;
 
-			margin-top: 16px;
+			margin-top: $md-space;
 		}
 	}
 
@@ -79,14 +66,5 @@
 
 	.Form {
 		align-items: flex-start;
-
-		.Input {
-			justify-content: flex-start;
-			align-items: flex-start;
-
-			text-align: left;
-
-			padding-left: 0;
-		}
 	}
 }

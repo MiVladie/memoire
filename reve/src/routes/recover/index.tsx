@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { ReactComponent as Email } from 'assets/icons/email.svg';
+import { ReactComponent as Code } from 'assets/icons/code.svg';
+import { ReactComponent as Lock } from 'assets/icons/lock.svg';
+
 import Authentication from 'containers/Authentication/Authentication';
 import Form from 'containers/Form/Form';
 import Input from 'components/Input/Input';
@@ -9,7 +13,7 @@ import Button from 'components/Button/Button';
 import Seo from 'hoc/Seo/Seo';
 import useForm from 'hooks/useForm';
 
-import * as API from 'apis';
+import * as API from 'api';
 
 import classes from './Recover.module.scss';
 
@@ -29,7 +33,7 @@ type StepThreeFields = {
 const Recover = () => {
 	const [token, setToken] = useState<string>();
 
-	const [step, setStep] = useState<number>(0);
+	const [step, setStep] = useState<number>(1);
 
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
@@ -158,14 +162,13 @@ const Recover = () => {
 			{step === 0 ? (
 				<Form className={classes.Form}>
 					<Input
-						inputClassName={classes.Input}
+						icon={<Email />}
 						name='email'
 						placeholder='johndoe@example.com'
 						value={stepOneForm.values.email}
 						disabled={loading}
 						onChange={stepOneForm.handleChange}
 						onFocus={stepOneForm.handleFocus}
-						autoComplete={false}
 						error={stepOneForm.errors.email}
 					/>
 
@@ -178,14 +181,13 @@ const Recover = () => {
 			) : step === 1 ? (
 				<Form className={classes.Form}>
 					<Input
-						inputClassName={classes.Input}
+						icon={<Code />}
 						name='code'
 						placeholder='e.g. 123456'
 						value={stepTwoForm.values.code}
 						disabled={loading}
 						onChange={stepTwoForm.handleChange}
 						onFocus={stepTwoForm.handleFocus}
-						autoComplete={false}
 						error={stepTwoForm.errors.code}
 					/>
 
@@ -198,27 +200,26 @@ const Recover = () => {
 			) : (
 				<Form className={classes.Form}>
 					<Input
-						inputClassName={classes.Input}
+						icon={<Lock />}
+						className={classes.Input}
 						name='password'
 						placeholder='password'
 						value={stepThreeForm.values.password}
 						disabled={loading}
 						onChange={stepThreeForm.handleChange}
 						onFocus={stepThreeForm.handleFocus}
-						autoComplete={false}
 						error={stepThreeForm.errors.password}
 						secure
 					/>
 
 					<Input
-						inputClassName={classes.Input}
+						icon={<Lock />}
 						name='repeatPassword'
 						placeholder='repeat password'
 						value={stepThreeForm.values.repeatPassword}
 						disabled={loading}
 						onChange={stepThreeForm.handleChange}
 						onFocus={stepThreeForm.handleFocus}
-						autoComplete={false}
 						error={stepThreeForm.errors.repeatPassword}
 						secure
 					/>
