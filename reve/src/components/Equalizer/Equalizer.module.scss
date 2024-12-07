@@ -1,0 +1,60 @@
+@import 'styles/colors.scss';
+
+.Equalizer {
+	height: 16px;
+
+	display: flex;
+	align-items: flex-end;
+
+	div {
+		width: 4px;
+		height: 16px;
+
+		background-color: $secondary-color;
+		border-radius: 2px;
+
+		animation: bounce 1.5s infinite ease-in-out alternate;
+
+		transform-origin: bottom;
+
+		&:nth-child(1) {
+			animation-delay: 0s;
+		}
+
+		&:nth-child(2) {
+			margin: 0 2px;
+
+			animation-delay: 0.2s;
+		}
+
+		&:nth-child(3) {
+			animation-delay: 0.4s;
+		}
+
+		@keyframes bounce {
+			0% {
+				transform: scaleY(0.3);
+			}
+
+			20% {
+				transform: scaleY(0.6);
+			}
+
+			40% {
+				transform: scaleY(0.9);
+			}
+
+			60% {
+				transform: scaleY(0.5);
+			}
+
+			80% {
+				transform: scaleY(0.7);
+			}
+
+			100% {
+				transform: scaleY(1);
+			}
+		}
+	}
+}
