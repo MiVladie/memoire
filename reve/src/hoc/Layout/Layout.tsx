@@ -7,8 +7,10 @@ import { isPath } from 'util/route';
 import { delay } from 'util/date';
 
 import Circle from 'components/Circle/Circle';
+import Navbar from 'hoc/Navbar/Navbar';
+import Playbar from 'hoc/Playbar/Playbar';
 
-import './Layout.module.scss';
+import classes from './Layout.module.scss';
 
 import './reset.css';
 
@@ -48,10 +50,14 @@ const Layout = ({ children }: Props) => {
 	}
 
 	return (
-		<div>
+		<div className={classes.Layout}>
 			<Circle pathname={pathname} />
 
-			{!loading && children}
+			<Navbar className={classes.Navbar} />
+
+			<main className={classes.Main}>{!loading && children}</main>
+
+			<Playbar />
 		</div>
 	);
 };

@@ -1,4 +1,5 @@
 @import 'styles/colors.scss';
+@import 'styles/spacing.scss';
 
 html {
 	background-color: $fourth-color !important;
@@ -18,12 +19,24 @@ html {
 }
 
 .Layout {
-	width: 100%;
-	margin: 0 auto;
+	width: 100vw;
+	height: 100vh;
 
 	position: relative;
-
 	overflow: hidden;
+
+	display: flex;
+	flex-direction: column;
+
+	.Navbar {
+		margin-top: $md-space;
+	}
+
+	.Main {
+		flex-grow: 1;
+
+		margin: $md-space 0;
+	}
 }
 
 @media (min-width: 1025px) {

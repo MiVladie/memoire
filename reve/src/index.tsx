@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { NavigationProvider } from 'context/useNavigation';
 import { AuthProvider } from 'context/useAuth';
 
 import Layout from 'hoc/Layout/Layout';
@@ -70,9 +71,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
-		<AuthProvider>
-			<RouterProvider router={router} />
-		</AuthProvider>
+		<NavigationProvider>
+			<AuthProvider>
+				<RouterProvider router={router} />
+			</AuthProvider>
+		</NavigationProvider>
 	</React.StrictMode>
 );
 
