@@ -2,6 +2,7 @@ import React from 'react';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { NavigationProvider } from 'context/useNavigation';
+import { QueueProvider } from 'context/useQueue';
 import { AuthProvider } from 'context/useAuth';
 
 import Layout from 'hoc/Layout/Layout';
@@ -20,6 +21,7 @@ import * as ReactDOM from 'react-dom/client';
 import '@fontsource/graduate';
 import '@fontsource/holtwood-one-sc';
 import '@fontsource/urbanist';
+import '@fontsource/urbanist/500.css';
 
 const router = createBrowserRouter([
 	{
@@ -72,9 +74,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<NavigationProvider>
-			<AuthProvider>
-				<RouterProvider router={router} />
-			</AuthProvider>
+			<QueueProvider>
+				<AuthProvider>
+					<RouterProvider router={router} />
+				</AuthProvider>
+			</QueueProvider>
 		</NavigationProvider>
 	</React.StrictMode>
 );
