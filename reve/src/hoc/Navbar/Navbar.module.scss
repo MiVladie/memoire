@@ -2,6 +2,7 @@
 @import 'styles/colors';
 @import 'styles/sizing';
 @import 'styles/spacing';
+@import 'styles/constants';
 
 .Navbar {
 	display: flex;
@@ -30,10 +31,10 @@
 	}
 
 	.Avatar {
-		width: 52px;
-		height: 52px;
+		width: $navbar-height;
+		height: $navbar-height;
 
-		border-radius: 26px;
+		border-radius: calc(#{$navbar-height} / 2);
 		overflow: hidden;
 
 		box-sizing: border-box;
@@ -109,12 +110,16 @@
 
 @media (min-width: 1025px) {
 	.Navbar {
-		.Toggle {
-			display: none;
-		}
-
 		.Input {
 			width: 550px;
+		}
+	}
+}
+
+@media (min-width: 1440px) {
+	.Navbar {
+		.Toggle {
+			display: none;
 		}
 	}
 }

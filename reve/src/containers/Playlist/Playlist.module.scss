@@ -1,0 +1,332 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/spacing.scss';
+@import 'styles/sizing.scss';
+
+// Styles
+.Playlist {
+	background-color: $primary-color;
+	border-radius: 12px;
+
+	overflow-y: scroll;
+
+	.Header {
+		padding: $xxl-space $md-space;
+
+		position: relative;
+
+		.Name {
+			font-family: $third-font;
+			font-size: 4em;
+
+			color: $secondary-color;
+
+			margin-bottom: $xl-space;
+		}
+
+		.Meta {
+			display: flex;
+			align-items: center;
+
+			.Stats {
+				display: flex;
+				align-items: center;
+
+				margin-left: $lg-space;
+
+				.Stat {
+					display: flex;
+					align-items: center;
+
+					margin-right: $xl-space;
+
+					&:last-child {
+						margin-right: 0;
+					}
+
+					.Icon {
+						width: 26px;
+						height: 26px;
+
+						> * {
+							fill: $secondary-color;
+						}
+					}
+
+					.Value,
+					.Label {
+						font-family: $primary-font;
+						font-size: $lg-size;
+						font-weight: 500;
+
+						color: $secondary-color;
+					}
+
+					.Value {
+						margin-left: $sm-space;
+					}
+
+					.Label {
+						display: none;
+					}
+				}
+			}
+		}
+
+		.Symbol {
+			position: absolute;
+
+			top: $md-space;
+			right: $md-space;
+
+			> * {
+				width: 30vw;
+				height: 30vw;
+
+				fill: rgba(255, 255, 255, 0.05);
+			}
+		}
+	}
+
+	.Songs {
+		padding: 0 $md-space $md-space;
+
+		.Song {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			margin-bottom: $md-space;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			.Wrapper {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+
+				overflow: hidden;
+
+				.Image {
+					min-width: 50px;
+					max-width: 50px;
+					height: 50px;
+
+					border-radius: 4px;
+
+					object-fit: cover;
+				}
+
+				.Info {
+					overflow: hidden;
+
+					.Title,
+					.Author {
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
+
+					.Title {
+						font-family: $primary-font;
+						font-size: $lg-size;
+						font-weight: 500;
+
+						line-height: $xl-size;
+
+						color: $secondary-color;
+
+						margin-bottom: $xxs-space;
+					}
+
+					.TitleMissing {
+						color: $danger-color;
+					}
+
+					.Author {
+						font-family: $primary-font;
+						font-size: $md-size;
+
+						line-height: $lg-size;
+
+						color: $third-color;
+					}
+				}
+			}
+
+			.Extra {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				.Actions {
+					display: flex;
+					justify-content: flex-end;
+					align-items: center;
+
+					.Url {
+						display: none;
+					}
+				}
+
+				.Duration {
+					font-family: $secondary-font;
+					font-size: $md-size;
+
+					text-align: right;
+
+					color: $third-color;
+				}
+			}
+		}
+	}
+}
+
+// Spacing
+.Playlist {
+	.Songs {
+		.Song {
+			.Wrapper {
+				width: 65%;
+
+				.Info {
+					margin-left: $md-space;
+				}
+			}
+
+			.Extra {
+				width: 25%;
+
+				min-width: 90px;
+			}
+		}
+	}
+}
+
+@media (min-width: 720px) {
+	// Styles
+	.Playlist {
+		.Header {
+			padding: $xxxl-space $xxl-space;
+
+			.Name {
+				font-size: 6em;
+
+				margin-bottom: $xl-space;
+			}
+
+			.Meta {
+				.Stats {
+					.Stat {
+						.Label {
+							display: block;
+
+							margin-left: $xs-space;
+						}
+					}
+				}
+			}
+
+			.Symbol {
+				top: $xxl-space;
+				right: $xxl-space;
+
+				> * {
+					width: 20vw;
+					height: 20vw;
+				}
+			}
+		}
+
+		.Songs {
+			padding: $md-space $xxl-space;
+
+			.Song {
+				.Wrapper {
+					.Image {
+						width: 44px;
+						height: 44px;
+					}
+
+					.Info {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+					}
+				}
+
+				.Extra {
+					.Actions {
+						.Url {
+							display: flex;
+
+							margin-left: $xs-space;
+						}
+
+						.QueueHidden {
+							visibility: hidden;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Spacing
+	.Playlist {
+		.Songs {
+			$block_spacing: $xl-space;
+
+			.Song {
+				.Wrapper {
+					width: 70%;
+
+					.Info {
+						width: 100%;
+
+						.Title {
+							width: 50%;
+						}
+
+						.Author {
+							width: 40%;
+
+							margin-left: $block_spacing;
+						}
+					}
+				}
+
+				.Extra {
+					width: 30%;
+
+					margin-left: $block_spacing;
+				}
+			}
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	// Styles
+	.Playlist {
+		.Header {
+			padding: $xxxl-space;
+
+			.Symbol {
+				top: $xxl-space;
+				right: $xxxl-space;
+
+				> * {
+					width: 200px;
+					height: 200px;
+				}
+			}
+		}
+
+		.Songs {
+			padding: 0 $xxxl-space $md-space;
+		}
+	}
+}

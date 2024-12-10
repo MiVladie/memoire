@@ -1,0 +1,160 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/spacing.scss';
+@import 'styles/sizing.scss';
+@import 'styles/constants.scss';
+
+.Home {
+	height: 100%;
+
+	display: flex;
+
+	position: relative;
+
+	.Menu,
+	.Playlist,
+	.Queue {
+		height: calc(100vh - #{$navbar-height} - #{$md-space} * 3);
+
+		transition: all $navigation_animation_duration;
+	}
+
+	.Menu {
+		width: calc(100vw - #{$md-space} * 4);
+
+		display: flex;
+		flex-direction: column;
+
+		margin-left: $md-space;
+
+		position: absolute;
+		left: calc(-100vw + #{$md-space} * 3);
+
+		> * {
+			width: 100%;
+
+			&:first-child {
+				margin-bottom: $md-space;
+			}
+
+			&:nth-child(2) {
+				height: 100%;
+			}
+		}
+	}
+
+	.Playlist {
+		width: 100%;
+
+		margin-left: $md-space;
+		margin-right: $md-space;
+	}
+
+	.Queue {
+		position: absolute;
+		right: calc(-#{$queue_width} - #{$md-space});
+
+		background-color: transparent;
+
+		width: $queue_width;
+
+		margin-right: $md-space;
+
+		background-color: $primary-color;
+		border-radius: 12px;
+	}
+}
+
+.HomeMenu {
+	.Menu {
+		left: 0;
+	}
+
+	.Playlist {
+		transform: translateX(calc(100vw - #{$md-space} * 3));
+	}
+}
+
+.HomeQueue {
+	.Menu,
+	.Playlist,
+	.Queue {
+		height: calc(100vh - #{$navbar-height} - #{$playbar-height} - #{$md-space} * 4);
+	}
+}
+
+@media (min-width: 720px) {
+	.Home {
+		.Menu {
+			width: $menu_width;
+
+			left: calc(-#{$queue_width} - #{$md-space});
+		}
+	}
+
+	.HomeMenu {
+		.Menu {
+			left: 0;
+		}
+
+		.Playlist {
+			transform: translateX(calc(#{$queue_width} + #{$md-space}));
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Home {
+		.Playlist {
+			width: calc(100vw - #{$md-space} * 2);
+		}
+	}
+
+	.HomeQueue {
+		.Menu,
+		.Playlist,
+		.Queue {
+			height: calc(100vh - #{$navbar-height} - #{$playbar-height-desktop} - #{$md-space} * 4);
+		}
+
+		.Playlist {
+			width: calc(100vw - #{$queue_width} - #{$md-space} * 3);
+		}
+
+		.Queue {
+			right: 0;
+		}
+	}
+
+	.HomeMenu {
+		.Queue {
+			transform: translateX(calc(#{$queue_width} + #{$md-space}));
+		}
+	}
+}
+
+@media (min-width: 1440px) {
+	.Home {
+		.Menu {
+			position: relative;
+
+			left: 0;
+		}
+
+		.Playlist {
+			width: calc(100vw - #{$menu_width} - #{$md-space} * 3);
+
+			transform: translateX(0);
+		}
+
+		.Queue {
+			transform: translateX(0);
+		}
+	}
+
+	.HomeQueue {
+		.Playlist {
+			width: calc(100vw - #{$menu_width} - #{$queue_width} - #{$md-space} * 4);
+		}
+	}
+}
