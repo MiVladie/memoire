@@ -14,7 +14,7 @@
 	justify-content: space-between;
 	align-items: center;
 
-	background-image: linear-gradient($fourth-color, $fourth-color);
+	background-color: $fourth-color;
 
 	transition: all $navigation_animation_duration;
 
@@ -26,6 +26,28 @@
 	bottom: 0;
 
 	overflow: hidden;
+
+	&:not(.PlaybarExpanded) {
+		.Info,
+		.Actions,
+		.Controls {
+			animation: appear forwards calc(#{$playbar_animation_duration} / 2);
+
+			@keyframes appear {
+				0% {
+					opacity: 0;
+				}
+
+				50% {
+					opacity: 0;
+				}
+
+				100% {
+					opacity: 1;
+				}
+			}
+		}
+	}
 
 	.Menu,
 	.Info,
@@ -165,7 +187,24 @@
 	flex-direction: column;
 	justify-content: flex-end;
 
-	transition: top $playbar_animation_duration;
+	transition: top $playbar_animation_duration, height $playbar_animation_duration;
+
+	&:not(.PlaybarView) {
+		.Actions,
+		.Controls {
+			animation: slide forwards $playbar_animation_duration;
+
+			@keyframes slide {
+				0% {
+					transform: translateY(100vh);
+				}
+
+				100% {
+					transform: translateY(0);
+				}
+			}
+		}
+	}
 
 	.Menu {
 		width: calc(100% - #{$md-space} * 2);
@@ -227,9 +266,16 @@
 		}
 	}
 
-	.Actions {
-		width: 100%;
+	.Actions,
+	.Controls {
+		width: calc(100vw - #{$md-space} * 2);
 
+		position: absolute;
+
+		bottom: 0;
+	}
+
+	.Actions {
 		display: flex;
 		flex-direction: column-reverse;
 
@@ -275,11 +321,11 @@
 		}
 
 		.Repeat {
-			left: $md-space;
+			left: 0;
 		}
 
 		.Shuffle {
-			right: $md-space;
+			right: 0;
 		}
 
 		.Volume,
@@ -290,6 +336,106 @@
 
 	.Gradient {
 		opacity: 1;
+	}
+}
+
+.PlaybarView {
+	height: $playbar-height;
+
+	padding: $md-space;
+
+	top: 0;
+
+	flex-direction: row;
+
+	justify-content: space-between;
+
+	transition: top $playbar_animation_duration, height $playbar_animation_duration;
+
+	.Actions,
+	.Controls {
+		display: none;
+	}
+
+	.Menu {
+		position: absolute;
+
+		justify-content: flex-end;
+
+		.Arrow {
+			display: none;
+		}
+	}
+
+	.Info {
+		position: relative;
+
+		top: auto;
+
+		flex-direction: row;
+
+		width: 80%;
+
+		display: flex;
+		align-items: center;
+
+		animation: appear forwards calc(#{$playbar_animation_duration} / 2);
+
+		@keyframes appear {
+			0% {
+				opacity: 0;
+			}
+
+			50% {
+				opacity: 0;
+			}
+
+			100% {
+				opacity: 1;
+			}
+		}
+
+		.Image {
+			max-width: $playbar-height;
+			max-height: none;
+
+			height: $playbar-height;
+
+			border-radius: 4px;
+
+			width: auto;
+		}
+
+		.Meta {
+			width: auto;
+
+			margin: auto;
+			margin-left: $md-space;
+
+			.Title,
+			.Author {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+
+				text-align: left;
+			}
+
+			.Title {
+				font-size: $lg-size;
+				line-height: $xl-size;
+
+				margin-bottom: $xxs-space;
+			}
+
+			.Author {
+				color: $third-color;
+			}
+		}
+	}
+
+	.Gradient {
+		opacity: 0;
 	}
 }
 
@@ -362,36 +508,34 @@
 		.Actions {
 			width: 65vw;
 
-			position: relative;
 			top: auto;
 			left: auto;
 
 			transform: none;
-
-			.Buttons {
-				margin-bottom: $xxl-space;
-			}
 		}
 
 		.Controls {
 			width: 65vw;
+		}
+	}
 
-			position: relative;
+	.PlaybarView {
+		.Info {
+			top: auto;
 
-			display: block;
-
-			.Repeat,
-			.Shuffle {
-				bottom: $xxl-space;
+			.Image {
+				max-width: $playbar-height;
+				max-height: none;
 			}
 
-			.Repeat {
-				left: 0;
+			.Meta {
+				width: auto;
 			}
+		}
 
-			.Shuffle {
-				right: 0;
-			}
+		.Actions,
+		.Controls {
+			display: none;
 		}
 	}
 }

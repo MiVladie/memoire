@@ -2,6 +2,7 @@ import React, { useContext, createContext, useMemo, useState } from 'react';
 
 interface State {
 	active: boolean;
+	viewing: boolean;
 	playing: boolean;
 }
 
@@ -9,10 +10,12 @@ interface Context {
 	state: State;
 	activate: () => void;
 	play: () => void;
+	view: () => void;
 }
 
 const defaultState: State = {
 	active: false,
+	viewing: false,
 	playing: false
 };
 
@@ -25,7 +28,8 @@ export const QueueProvider = ({ children }: any) => {
 		setState((prevState) => ({
 			...prevState,
 			active: !prevState.active,
-			playing: !prevState.active
+			playing: !prevState.active,
+			viewing: false
 		}));
 	}
 
@@ -33,7 +37,14 @@ export const QueueProvider = ({ children }: any) => {
 		setState((prevState) => ({ ...prevState, playing: !prevState.playing }));
 	}
 
-	const value = useMemo(() => ({ state, activate, play }), [state]);
+	function view() {
+		setState((prevState) => ({
+			...prevState,
+			viewing: !prevState.viewing
+		}));
+	}
+
+	const value = useMemo(() => ({ state, activate, play, view }), [state]);
 
 	return <QueueContext.Provider value={value}>{children}</QueueContext.Provider>;
 };

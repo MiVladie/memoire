@@ -48,7 +48,7 @@ const Playbar = () => {
 
 	const { isDesktop } = useScreen();
 
-	const { state, play } = useQueue();
+	const { state, play, view } = useQueue();
 
 	const imageRef = useRef<HTMLImageElement>(null);
 	const playerRef = useRef<ReactPlayer>(null);
@@ -164,7 +164,7 @@ const Playbar = () => {
 	}
 
 	function queueHandler() {
-		//
+		view();
 	}
 
 	return (
@@ -172,14 +172,17 @@ const Playbar = () => {
 			className={[
 				classes.Playbar,
 				state.active ? classes.PlaybarVisible : '',
-				expanded ? classes.PlaybarExpanded : ''
+				expanded ? classes.PlaybarExpanded : '',
+				state.viewing ? classes.PlaybarView : ''
 			].join(' ')}>
 			<div className={classes.Menu}>
-				<Knob icon={<ArrowDown />} onClick={hideHandler} size={48} />
+				<Knob icon={<ArrowDown />} className={classes.Arrow} onClick={hideHandler} size={48} />
 				<Knob icon={<Queue />} onClick={queueHandler} size={48} />
 			</div>
 
-			<div className={classes.Info} onClick={expandHandler}>
+			<div
+				className={classes.Info}
+				onClick={!expanded ? expandHandler : state.viewing ? queueHandler : undefined}>
 				<img
 					className={classes.Image}
 					src={song.image!}
