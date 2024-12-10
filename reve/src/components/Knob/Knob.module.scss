@@ -1,0 +1,77 @@
+@import 'styles/fonts';
+@import 'styles/colors';
+@import 'styles/sizing';
+@import 'styles/spacing';
+
+.Knob {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-radius: 50%;
+
+	cursor: pointer;
+
+	transition: background-color 0.1s;
+
+	&:hover {
+		user-select: none;
+	}
+
+	&:active {
+		background-color: rgba($secondary-color, 0.075);
+	}
+
+	> * {
+		width: 60%;
+		height: 60%;
+
+		fill: $third-color;
+
+		transition: fill 0.2s;
+	}
+}
+
+.KnobActive {
+	> * {
+		fill: $secondary-color;
+	}
+}
+
+.KnobFill {
+	background-color: $secondary-color;
+
+	> * {
+		fill: $fourth-color;
+	}
+
+	&:active {
+		background-color: rgba($secondary-color, 0.75);
+	}
+}
+
+@media (min-width: 1025px) {
+	.Knob {
+		&:hover {
+			background-color: rgba($secondary-color, 0.075);
+		}
+
+		&:active {
+			&:hover {
+				background-color: rgba($secondary-color, 0.05);
+			}
+		}
+	}
+
+	.KnobFill {
+		&:hover {
+			background-color: rgba($secondary-color, 0.85);
+		}
+
+		&:active {
+			&:hover {
+				background-color: rgba($secondary-color, 0.75);
+			}
+		}
+	}
+}
