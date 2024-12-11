@@ -6,6 +6,8 @@ import { useQueue } from 'context/useQueue';
 
 import Menu from 'containers/Menu/Menu';
 import Playlist from 'containers/Playlist/Playlist';
+import Queue from 'containers/Queue/Queue';
+
 import Equalizer from 'components/Equalizer/Equalizer';
 import Seo from 'hoc/Seo/Seo';
 
@@ -76,7 +78,9 @@ const Home = () => {
 				className={classes.Playlist}
 			/>
 
-			<div className={classes.Queue}>Queue</div>
+			<div className={classes.Queue}>
+				<Queue current={SONGS[0]} list={SONGS} visible={state.viewing} />
+			</div>
 		</div>
 	);
 };

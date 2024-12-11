@@ -1,0 +1,235 @@
+@import 'styles/fonts.scss';
+@import 'styles/colors.scss';
+@import 'styles/spacing.scss';
+@import 'styles/sizing.scss';
+@import 'styles/constants.scss';
+
+// Styles
+.Queue {
+	background-color: $primary-color;
+	border-radius: 12px 12px 0 0;
+
+	overflow-y: scroll;
+
+	position: absolute;
+
+	z-index: 1500;
+
+	top: 100vh;
+	left: $md-space;
+
+	width: calc(100vw - #{$md-space} * 2);
+	height: calc(100vh - #{$navbar-height} - #{$md-space} * 2);
+
+	transition: all $playbar_animation_duration;
+
+	.Title,
+	.Author {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.Title {
+		font-family: $primary-font;
+		font-size: $md-size;
+		font-weight: 500;
+
+		line-height: $lg-size;
+
+		color: $secondary-color;
+
+		margin-bottom: $xs-space;
+	}
+
+	.Author {
+		font-family: $primary-font;
+		font-size: $md-size;
+
+		line-height: $lg-size;
+
+		color: $third-color;
+	}
+
+	.Header {
+		$size: calc(100vw - #{$md-space} * 2);
+
+		width: $size;
+		height: $size;
+
+		position: relative;
+
+		.Background {
+			width: 100%;
+			height: 100%;
+
+			object-fit: cover;
+
+			position: absolute;
+		}
+
+		.Gradient {
+			width: 100%;
+			height: 100%;
+
+			position: absolute;
+
+			background: linear-gradient(transparent, $primary-color);
+			z-index: 500;
+		}
+
+		.Current {
+			width: calc(100% - #{$md-space} * 2);
+
+			position: absolute;
+
+			left: $md-space;
+			bottom: $md-space;
+
+			z-index: 1000;
+
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			.Wrapper {
+				width: 75%;
+				overflow: hidden;
+
+				z-index: 1000;
+
+				.Title {
+					font-size: $xl-size;
+					line-height: $xxl-size;
+					margin-bottom: $xxs-space;
+				}
+			}
+		}
+	}
+
+	.Songs {
+		padding: 0 $md-space $md-space;
+
+		.Song {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			margin-bottom: $md-space;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			.Info {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+
+				width: 70%;
+
+				overflow: hidden;
+
+				// background-color: red;
+
+				.Image {
+					min-width: 50px;
+					max-width: 50px;
+
+					min-height: 50px;
+					max-height: 50px;
+
+					border-radius: 4px;
+
+					object-fit: cover;
+				}
+
+				.Meta {
+					margin-left: $md-space;
+
+					overflow: hidden;
+				}
+			}
+
+			.Actions {
+				width: 10%;
+
+				margin-left: $md-space;
+
+				// background-color: lightcoral;
+			}
+
+			.Duration {
+				width: 15%;
+
+				// background-color: lightblue;
+
+				font-family: $secondary-font;
+				font-size: $md-size;
+
+				text-align: right;
+
+				color: $third-color;
+
+				margin-left: $md-space;
+			}
+		}
+	}
+}
+
+.QueueVisible {
+	top: calc(#{$navbar-height} + #{$md-space} * 2);
+}
+
+@media (min-width: 720px) {
+	.Queue {
+		.Header {
+			height: 40vh;
+		}
+	}
+}
+
+@media (min-width: 1025px) {
+	.Queue {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+
+		border-radius: 12px;
+
+		.Author {
+			font-size: $sm-size;
+		}
+
+		.Header {
+			width: $queue_width;
+			height: $queue_width;
+
+			.Current {
+				.Wrapper {
+					.Title {
+						font-size: calc(#{$xs-size} * 2.5);
+						line-height: $xl-size;
+						margin-bottom: $xs-space;
+					}
+
+					.Author {
+						font-size: $sm-size;
+					}
+				}
+			}
+		}
+
+		.Songs {
+			.Song {
+				.Duration {
+					font-size: calc(#{$sm-size} + 1px);
+				}
+			}
+		}
+	}
+}

@@ -51,17 +51,7 @@
 	}
 
 	.Queue {
-		position: absolute;
-		right: calc(-#{$queue_width} - #{$md-space});
-
-		background-color: transparent;
-
-		width: $queue_width;
-
-		margin-right: $md-space;
-
-		background-color: $primary-color;
-		border-radius: 12px;
+		display: none;
 	}
 }
 
@@ -90,6 +80,15 @@
 
 			left: calc(-#{$queue_width} - #{$md-space});
 		}
+
+		.Queue {
+			position: absolute;
+			right: calc(-#{$queue_width} - #{$md-space});
+
+			width: $queue_width;
+
+			margin-right: $md-space;
+		}
 	}
 
 	.HomeMenu {
@@ -101,12 +100,22 @@
 			transform: translateX(calc(#{$queue_width} + #{$md-space}));
 		}
 	}
+
+	.HomeQueue {
+		.Queue {
+			height: calc(100vh - #{$navbar-height} - #{$playbar-height} - #{$md-space} * 4);
+		}
+	}
 }
 
 @media (min-width: 1025px) {
 	.Home {
 		.Playlist {
 			width: calc(100vw - #{$md-space} * 2);
+		}
+
+		.Queue {
+			display: block;
 		}
 	}
 

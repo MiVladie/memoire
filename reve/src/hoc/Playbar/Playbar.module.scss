@@ -169,7 +169,7 @@
 
 		opacity: 0;
 
-		transition: all $playbar_animation_duration;
+		transition: all calc(#{$playbar_animation_duration} / 2);
 	}
 }
 
@@ -178,7 +178,7 @@
 }
 
 .PlaybarExpanded {
-	height: 100%;
+	height: 100vh;
 
 	padding: 0 $md-space;
 
@@ -187,24 +187,7 @@
 	flex-direction: column;
 	justify-content: flex-end;
 
-	transition: top $playbar_animation_duration, height $playbar_animation_duration;
-
-	&:not(.PlaybarView) {
-		.Actions,
-		.Controls {
-			animation: slide forwards $playbar_animation_duration;
-
-			@keyframes slide {
-				0% {
-					transform: translateY(100vh);
-				}
-
-				100% {
-					transform: translateY(0);
-				}
-			}
-		}
-	}
+	transition: top $playbar_animation_duration;
 
 	.Menu {
 		width: calc(100% - #{$md-space} * 2);
@@ -336,12 +319,12 @@
 
 	.Gradient {
 		opacity: 1;
+
+		transition: all $playbar_animation_duration;
 	}
 }
 
 .PlaybarView {
-	height: $playbar-height;
-
 	padding: $md-space;
 
 	top: 0;
@@ -368,9 +351,9 @@
 	}
 
 	.Info {
-		position: relative;
+		position: absolute;
 
-		top: auto;
+		top: $md-space;
 
 		flex-direction: row;
 
@@ -437,6 +420,10 @@
 	.Gradient {
 		opacity: 0;
 	}
+}
+
+.Queue {
+	display: block;
 }
 
 @media (min-width: 720px) {
@@ -521,7 +508,7 @@
 
 	.PlaybarView {
 		.Info {
-			top: auto;
+			top: $md-space;
 
 			.Image {
 				max-width: $playbar-height;
@@ -532,11 +519,6 @@
 				width: auto;
 			}
 		}
-
-		.Actions,
-		.Controls {
-			display: none;
-		}
 	}
 }
 
@@ -546,6 +528,8 @@
 		height: $playbar-height-desktop;
 
 		padding: $md-space $xl-space;
+
+		transition: all $navigation_animation_duration;
 
 		.Info {
 			height: $playbar-height-desktop;
@@ -586,5 +570,9 @@
 
 	.PlaybarVisible {
 		top: calc(100vh - #{$playbar-height-desktop} - #{$md-space} * 2);
+	}
+
+	.Queue {
+		display: none;
 	}
 }
