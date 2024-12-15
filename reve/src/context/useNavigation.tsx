@@ -6,7 +6,7 @@ interface State {
 
 interface Context {
 	state: State;
-	toggle: () => void;
+	toggle: (overwrite?: boolean) => void;
 }
 
 const defaultState: State = {
@@ -18,8 +18,8 @@ const NavigationContext = createContext<Context>({} as Context);
 export const NavigationProvider = ({ children }: any) => {
 	const [state, setState] = useState<State>(defaultState);
 
-	function toggle() {
-		setState((prevState) => ({ ...prevState, menuVisible: !prevState.menuVisible }));
+	function toggle(overwrite?: boolean) {
+		setState((prevState) => ({ ...prevState, menuVisible: overwrite ?? !prevState.menuVisible }));
 	}
 
 	const value = useMemo(() => ({ state, toggle }), [state]);

@@ -32,10 +32,16 @@ const Account = () => {
 	} = useQueue();
 	const { state, clear } = useAuth();
 
-	function onSelectHandler(id: number) {
+	function selectHandler(id: number) {
 		setSelected(id);
 
 		toggle();
+	}
+
+	function logoutHandler() {
+		toggle();
+
+		clear();
 	}
 
 	const content = useMemo(() => {
@@ -85,11 +91,11 @@ const Account = () => {
 							id: 5,
 							icon: <Logout />,
 							name: 'Log Out',
-							onClick: clear
+							onClick: logoutHandler
 						}
 					]}
 					highlighted={selected}
-					onClick={onSelectHandler}
+					onClick={selectHandler}
 				/>
 			</div>
 

@@ -44,12 +44,14 @@ const Navbar = ({ className }: Props) => {
 	});
 
 	function accountHandler() {
+		toggle(false);
+
 		navigate(!pathname.includes('account') ? '/account' : '/');
 	}
 
 	return (
 		<nav className={[classes.Navbar, className].join(' ')}>
-			<div className={classes.Toggle} onClick={toggle}>
+			<div className={classes.Toggle} onClick={() => toggle()}>
 				{!menuVisible ? <Menu /> : <X />}
 			</div>
 
