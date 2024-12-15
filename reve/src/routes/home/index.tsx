@@ -48,12 +48,7 @@ const Home = () => {
 				' '
 			)}>
 			<div className={classes.Menu}>
-				<Menu
-					data={PLATFORMS}
-					onClick={onPlatformHandler}
-					highlighted={selectedPlatform}
-					className={classes.Red}
-				/>
+				<Menu data={PLATFORMS} onClick={onPlatformHandler} highlighted={selectedPlatform} />
 
 				<Menu
 					data={PLAYLISTS}
@@ -61,7 +56,6 @@ const Home = () => {
 					highlighted={selectedPlaylist}
 					active={ACTIVE_PLAYLIST}
 					meta={<Equalizer />}
-					className={classes.Blue}
 				/>
 			</div>
 

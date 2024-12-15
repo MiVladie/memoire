@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { ISong } from 'interfaces/data';
-import { hexToRGBA } from 'util/style';
 import { convertSecondsToFormat } from 'util/date';
 
 import { ReactComponent as Play } from 'assets/icons/play.svg';
@@ -13,6 +12,7 @@ import { ReactComponent as Queue } from 'assets/icons/queue.svg';
 import { ReactComponent as Url } from 'assets/icons/url.svg';
 
 import Knob from 'components/Knob/Knob';
+import Content from 'containers/Content/Content';
 
 import classes from './Playlist.module.scss';
 
@@ -35,56 +35,38 @@ const Playlist = ({ name, icon, color, total, removed, date, onPlay, onQueue, pl
 		window.open(url, '_blank')!.focus();
 	}
 
+	const stats = (
+		<div className={classes.Meta}>
+			<Knob icon={!playing ? <Play /> : <Pause />} onClick={onPlay} size={48} className={classes.Play} fill />
+
+			<ul className={classes.Stats}>
+				<li className={classes.Stat}>
+					<Note className={classes.Icon} />
+
+					<p className={classes.Value}>{total}</p>
+					<p className={classes.Label}>songs</p>
+				</li>
+
+				<li className={classes.Stat}>
+					<Hide className={classes.Icon} />
+
+					<p className={classes.Value}>{removed}</p>
+					<p className={classes.Label}>removed</p>
+				</li>
+
+				<li className={classes.Stat}>
+					<Clock className={classes.Icon} />
+
+					<p className={classes.Value}>
+						{new Date(date).toLocaleTimeString('default', { timeStyle: 'short' })}
+					</p>
+				</li>
+			</ul>
+		</div>
+	);
+
 	return (
-		<div className={[classes.Playlist, className].join(' ')}>
-			<div
-				className={classes.Header}
-				style={{
-					backgroundImage: `linear-gradient(
-                    rgba(${hexToRGBA(color, 0.4).join(', ')}),
-                    rgba(${hexToRGBA(color, 0.15).join(', ')}),
-                    #121212
-                )`
-				}}>
-				<h1 className={classes.Name}>{name}</h1>
-
-				<div className={classes.Meta}>
-					<Knob
-						icon={!playing ? <Play /> : <Pause />}
-						onClick={onPlay}
-						size={48}
-						className={classes.Play}
-						fill
-					/>
-
-					<ul className={classes.Stats}>
-						<li className={classes.Stat}>
-							<Note className={classes.Icon} />
-
-							<p className={classes.Value}>{total}</p>
-							<p className={classes.Label}>songs</p>
-						</li>
-
-						<li className={classes.Stat}>
-							<Hide className={classes.Icon} />
-
-							<p className={classes.Value}>{removed}</p>
-							<p className={classes.Label}>removed</p>
-						</li>
-
-						<li className={classes.Stat}>
-							<Clock className={classes.Icon} />
-
-							<p className={classes.Value}>
-								{new Date(date).toLocaleTimeString('default', { timeStyle: 'short' })}
-							</p>
-						</li>
-					</ul>
-				</div>
-
-				<i className={classes.Symbol}>{icon}</i>
-			</div>
-
+		<Content title={name} icon={icon} color={color} meta={stats} className={className}>
 			<ul className={classes.Songs}>
 				{songs.map((song) => (
 					<li className={classes.Song} key={song.id}>
@@ -116,7 +98,7 @@ const Playlist = ({ name, icon, color, total, removed, date, onPlay, onQueue, pl
 					</li>
 				))}
 			</ul>
-		</div>
+		</Content>
 	);
 };
 

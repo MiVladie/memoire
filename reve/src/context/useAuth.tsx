@@ -9,6 +9,7 @@ import useStorage from 'hooks/useStorage';
 interface Context {
 	state: AuthStorage;
 	authenticate: (user: User, token: string) => void;
+	update: (user: Partial<User>) => void;
 	clear: () => void;
 }
 
@@ -26,11 +27,15 @@ export const AuthProvider = ({ children }: any) => {
 		setState({ user, token });
 	}
 
+	function update(user: Partial<User>) {
+		setState({ ...state, user: { ...state.user!, ...user } });
+	}
+
 	function clear() {
 		setState(defaultState);
 	}
 
-	const value = useMemo(() => ({ state, authenticate, clear }), [state]);
+	const value = useMemo(() => ({ state, authenticate, update, clear }), [state]);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

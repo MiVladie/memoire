@@ -7,6 +7,10 @@
 	background-color: $primary-color;
 	border-radius: 12px;
 
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
 	.Items {
 		padding: $lg-space;
 

@@ -14,6 +14,7 @@ interface Props {
 	autoComplete?: string | false;
 	secure?: boolean;
 	error?: string;
+	dark?: boolean;
 	className?: string;
 }
 
@@ -29,11 +30,17 @@ const Input = ({
 	autoComplete,
 	secure,
 	error,
+	dark,
 	className
 }: Props) => (
 	<div className={[classes.Input, className].join(' ')}>
 		<div
-			className={[classes.Wrapper, disabled && classes.WrapperDisabled, error && classes.WrapperError].join(' ')}>
+			className={[
+				classes.Wrapper,
+				dark && classes.WrapperDark,
+				disabled && classes.WrapperDisabled,
+				error && classes.WrapperError
+			].join(' ')}>
 			{icon && <i className={classes.Icon}>{icon}</i>}
 
 			<input

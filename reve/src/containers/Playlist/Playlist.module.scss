@@ -4,272 +4,208 @@
 @import 'styles/sizing.scss';
 
 // Styles
-.Playlist {
-	background-color: $primary-color;
-	border-radius: 12px;
+.Meta {
+	display: flex;
+	align-items: center;
 
-	overflow-y: scroll;
+	.Stats {
+		display: flex;
+		align-items: center;
 
-	.Header {
-		padding: $xxl-space $md-space;
+		margin-left: $lg-space;
 
-		position: relative;
-
-		.Name {
-			font-family: $third-font;
-			font-size: 4em;
-
-			color: $secondary-color;
-
-			margin-bottom: $xl-space;
-		}
-
-		.Meta {
+		.Stat {
 			display: flex;
 			align-items: center;
 
-			.Stats {
-				display: flex;
-				align-items: center;
+			margin-right: $xl-space;
 
-				margin-left: $lg-space;
+			&:last-child {
+				margin-right: 0;
+			}
 
-				.Stat {
-					display: flex;
-					align-items: center;
+			.Icon {
+				width: 26px;
+				height: 26px;
 
-					margin-right: $xl-space;
+				> * {
+					fill: $secondary-color;
+				}
+			}
 
-					&:last-child {
-						margin-right: 0;
-					}
+			.Value,
+			.Label {
+				font-family: $primary-font;
+				font-size: $lg-size;
+				font-weight: 500;
 
-					.Icon {
-						width: 26px;
-						height: 26px;
+				color: $secondary-color;
+			}
 
-						> * {
-							fill: $secondary-color;
-						}
-					}
+			.Value {
+				margin-left: $sm-space;
+			}
 
-					.Value,
-					.Label {
-						font-family: $primary-font;
-						font-size: $lg-size;
-						font-weight: 500;
+			.Label {
+				display: none;
+			}
+		}
+	}
+}
 
-						color: $secondary-color;
-					}
+.Songs {
+	.Song {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 
-					.Value {
-						margin-left: $sm-space;
-					}
+		margin-bottom: $md-space;
 
-					.Label {
-						display: none;
-					}
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		.Wrapper {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+
+			overflow: hidden;
+
+			.Image {
+				min-width: 50px;
+				max-width: 50px;
+
+				min-height: 50px;
+				max-height: 50px;
+
+				border-radius: 4px;
+
+				object-fit: cover;
+			}
+
+			.Info {
+				overflow: hidden;
+
+				.Title,
+				.Author {
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+				}
+
+				.Title {
+					font-family: $primary-font;
+					font-size: $lg-size;
+					font-weight: 500;
+
+					line-height: $xl-size;
+
+					color: $secondary-color;
+
+					margin-bottom: $xxs-space;
+				}
+
+				.TitleMissing {
+					color: $danger-color;
+				}
+
+				.Author {
+					font-family: $primary-font;
+					font-size: $md-size;
+
+					line-height: $lg-size;
+
+					color: $third-color;
 				}
 			}
 		}
 
-		.Symbol {
-			position: absolute;
-
-			top: $md-space;
-			right: $md-space;
-
-			> * {
-				width: 30vw;
-				height: 30vw;
-
-				fill: rgba(255, 255, 255, 0.05);
-			}
-		}
-	}
-
-	.Songs {
-		padding: 0 $md-space $md-space;
-
-		.Song {
+		.Extra {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 
-			margin-bottom: $md-space;
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-
-			.Wrapper {
+			.Actions {
 				display: flex;
-				justify-content: flex-start;
+				justify-content: flex-end;
 				align-items: center;
 
-				overflow: hidden;
-
-				.Image {
-					min-width: 50px;
-					max-width: 50px;
-
-					min-height: 50px;
-					max-height: 50px;
-
-					border-radius: 4px;
-
-					object-fit: cover;
-				}
-
-				.Info {
-					overflow: hidden;
-
-					.Title,
-					.Author {
-						overflow: hidden;
-						white-space: nowrap;
-						text-overflow: ellipsis;
-					}
-
-					.Title {
-						font-family: $primary-font;
-						font-size: $lg-size;
-						font-weight: 500;
-
-						line-height: $xl-size;
-
-						color: $secondary-color;
-
-						margin-bottom: $xxs-space;
-					}
-
-					.TitleMissing {
-						color: $danger-color;
-					}
-
-					.Author {
-						font-family: $primary-font;
-						font-size: $md-size;
-
-						line-height: $lg-size;
-
-						color: $third-color;
-					}
+				.Url {
+					display: none;
 				}
 			}
 
-			.Extra {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
+			.Duration {
+				font-family: $secondary-font;
+				font-size: $md-size;
 
-				.Actions {
-					display: flex;
-					justify-content: flex-end;
-					align-items: center;
+				text-align: right;
 
-					.Url {
-						display: none;
-					}
-				}
-
-				.Duration {
-					font-family: $secondary-font;
-					font-size: $md-size;
-
-					text-align: right;
-
-					color: $third-color;
-				}
+				color: $third-color;
 			}
 		}
 	}
 }
 
 // Spacing
-.Playlist {
-	.Songs {
-		.Song {
-			.Wrapper {
-				width: 65%;
+.Songs {
+	.Song {
+		.Wrapper {
+			width: 65%;
 
-				.Info {
-					margin-left: $md-space;
-				}
+			.Info {
+				margin-left: $md-space;
 			}
+		}
 
-			.Extra {
-				width: 25%;
+		.Extra {
+			width: 25%;
 
-				min-width: 90px;
-			}
+			min-width: 90px;
 		}
 	}
 }
 
 @media (min-width: 720px) {
 	// Styles
-	.Playlist {
-		.Header {
-			padding: $xxxl-space $xxl-space;
+	.Meta {
+		.Stats {
+			.Stat {
+				.Label {
+					display: block;
 
-			.Name {
-				font-size: 6em;
-
-				margin-bottom: $xl-space;
-			}
-
-			.Meta {
-				.Stats {
-					.Stat {
-						.Label {
-							display: block;
-
-							margin-left: $xs-space;
-						}
-					}
-				}
-			}
-
-			.Symbol {
-				top: $xxl-space;
-				right: $xxl-space;
-
-				> * {
-					width: 20vw;
-					height: 20vw;
+					margin-left: $xs-space;
 				}
 			}
 		}
+	}
 
-		.Songs {
-			padding: $md-space $xxl-space;
-
-			.Song {
-				.Wrapper {
-					.Image {
-						width: 44px;
-						height: 44px;
-					}
-
-					.Info {
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-					}
+	.Songs {
+		.Song {
+			.Wrapper {
+				.Image {
+					width: 44px;
+					height: 44px;
 				}
 
-				.Extra {
-					.Actions {
-						.Url {
-							display: flex;
+				.Info {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+				}
+			}
 
-							margin-left: $xs-space;
-						}
+			.Extra {
+				.Actions {
+					.Url {
+						display: flex;
 
-						.QueueHidden {
-							visibility: hidden;
-						}
+						margin-left: $xs-space;
+					}
+
+					.QueueHidden {
+						visibility: hidden;
 					}
 				}
 			}
@@ -277,58 +213,33 @@
 	}
 
 	// Spacing
-	.Playlist {
-		.Songs {
-			$block_spacing: $xl-space;
+	.Songs {
+		$block_spacing: $xl-space;
 
-			.Song {
-				.Wrapper {
-					width: 70%;
+		.Song {
+			.Wrapper {
+				width: 70%;
 
-					.Info {
-						width: 100%;
+				.Info {
+					width: 100%;
 
-						.Title {
-							width: 50%;
-						}
+					.Title {
+						width: 50%;
+					}
 
-						.Author {
-							width: 40%;
+					.Author {
+						width: 40%;
 
-							margin-left: $block_spacing;
-						}
+						margin-left: $block_spacing;
 					}
 				}
-
-				.Extra {
-					width: 30%;
-
-					margin-left: $block_spacing;
-				}
 			}
-		}
-	}
-}
 
-@media (min-width: 1025px) {
-	// Styles
-	.Playlist {
-		.Header {
-			padding: $xxxl-space;
+			.Extra {
+				width: 30%;
 
-			.Symbol {
-				top: $xxl-space;
-				right: $xxxl-space;
-
-				> * {
-					width: 200px;
-					height: 200px;
-				}
+				margin-left: $block_spacing;
 			}
-		}
-
-		.Songs {
-			padding: 0 $xxxl-space $md-space;
 		}
 	}
 }

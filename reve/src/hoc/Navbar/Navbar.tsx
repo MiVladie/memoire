@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useNavigation } from 'context/useNavigation';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/useAuth';
 
 import { ReactComponent as Menu } from 'assets/icons/menu.svg';
@@ -32,11 +33,19 @@ const Navbar = ({ className }: Props) => {
 		toggle
 	} = useNavigation();
 
+	const { pathname } = useLocation();
+
+	const navigate = useNavigate();
+
 	const { values, handleChange } = useForm<SearchFields>({
 		initialValues: {
 			query: ''
 		}
 	});
+
+	function accountHandler() {
+		navigate(!pathname.includes('account') ? '/account' : '/');
+	}
 
 	return (
 		<nav className={[classes.Navbar, className].join(' ')}>
@@ -54,7 +63,7 @@ const Navbar = ({ className }: Props) => {
 				className={classes.Input}
 			/>
 
-			<div className={classes.Avatar}>
+			<div className={classes.Avatar} onClick={accountHandler}>
 				{user!.image ? (
 					<img src={user!.image} alt='profile avatar' className={classes.Image} />
 				) : (

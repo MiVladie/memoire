@@ -14,6 +14,8 @@ import SignUp, { Head as SignUpHead } from 'routes/signup';
 import Recover, { Head as RecoverHead } from 'routes/recover';
 import NotFound, { Head as NotFoundHead } from 'routes/404';
 
+import Account, { Head as AccountHead } from 'routes/account';
+
 import Home, { Head as HomeHead } from 'routes/home';
 
 import * as ReactDOM from 'react-dom/client';
@@ -30,6 +32,15 @@ const router = createBrowserRouter([
 			<Layout>
 				<HomeHead />
 				<Home />
+			</Layout>
+		)
+	},
+	{
+		path: '/account',
+		element: (
+			<Layout>
+				<AccountHead />
+				<Account />
 			</Layout>
 		)
 	},

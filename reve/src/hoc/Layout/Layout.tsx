@@ -29,7 +29,7 @@ const Layout = ({ children }: Props) => {
 
 	useEffect(() => {
 		validateRoute();
-	}, []);
+	}, [state]);
 
 	async function validateRoute() {
 		if (!state.user && !isPath(pathname, AUTH_ROUTES)) {
@@ -49,13 +49,21 @@ const Layout = ({ children }: Props) => {
 		setLoading(false);
 	}
 
+	if (!state.user) {
+		return (
+			<div className={classes.Layout}>
+				<Circle pathname={pathname} />
+
+				<main>{!loading && children}</main>
+			</div>
+		);
+	}
+
 	return (
 		<div className={classes.Layout}>
-			<Circle pathname={pathname} />
-
 			<Navbar className={classes.Navbar} />
 
-			<main className={classes.Main}>{!loading && children}</main>
+			<main>{!loading && children}</main>
 
 			<Playbar />
 		</div>
