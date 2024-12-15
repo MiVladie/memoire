@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Skeleton from 'components/Skeleton/Skeleton';
+
 import classes from './Menu.module.scss';
 
 interface Item {
@@ -18,9 +20,10 @@ interface Props {
 	onClick?: (id: number) => void;
 	meta?: React.ReactNode;
 	className?: string;
+	loading?: boolean;
 }
 
-const Menu = ({ data, bottom, highlighted, active, onClick, meta, className }: Props) => {
+const Menu = ({ data, bottom, highlighted, active, onClick, meta, className, loading }: Props) => {
 	function renderItems(items: Item[]) {
 		return items.map((item) => {
 			const isHighlighted = highlighted === item.id;
@@ -43,6 +46,10 @@ const Menu = ({ data, bottom, highlighted, active, onClick, meta, className }: P
 				</li>
 			);
 		});
+	}
+
+	if (loading) {
+		return <Skeleton className={[classes.Menu, className].join(' ')} />;
 	}
 
 	return (

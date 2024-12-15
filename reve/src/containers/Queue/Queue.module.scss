@@ -45,6 +45,7 @@ $info_height: 56px;
 
 		color: $secondary-color;
 
+		min-width: 30vw;
 		margin-bottom: $xs-space;
 	}
 
@@ -141,6 +142,9 @@ $info_height: 56px;
 				overflow: hidden;
 
 				.Image {
+					width: 50px;
+					height: 50px;
+
 					min-width: 50px;
 					max-width: 50px;
 
@@ -208,6 +212,10 @@ $info_height: 56px;
 		border-radius: 12px;
 
 		$header_size: $queue_width;
+
+		.Title {
+			min-width: 100px;
+		}
 
 		.Author {
 			font-size: $sm-size;

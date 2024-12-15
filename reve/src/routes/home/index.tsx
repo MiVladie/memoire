@@ -17,6 +17,9 @@ const Home = () => {
 	const [selectedPlatform, setSelectedPlatform] = useState<number>(1);
 	const [selectedPlaylist, setSelectedPlaylist] = useState<number>(2);
 
+	const [loading, setLoading] = useState<boolean>(false);
+	const [fetching, setFetching] = useState<boolean>(false);
+
 	const {
 		state: { menuVisible },
 		toggle
@@ -48,7 +51,7 @@ const Home = () => {
 				' '
 			)}>
 			<div className={classes.Menu}>
-				<Menu data={PLATFORMS} onClick={onPlatformHandler} highlighted={selectedPlatform} />
+				<Menu data={PLATFORMS} onClick={onPlatformHandler} highlighted={selectedPlatform} loading={loading} />
 
 				<Menu
 					data={PLAYLISTS}
@@ -56,6 +59,7 @@ const Home = () => {
 					highlighted={selectedPlaylist}
 					active={ACTIVE_PLAYLIST}
 					meta={<Equalizer />}
+					loading={loading}
 				/>
 			</div>
 
@@ -70,10 +74,12 @@ const Home = () => {
 				playing={false}
 				songs={SONGS}
 				className={classes.Playlist}
+				loading={loading}
+				fetching={fetching}
 			/>
 
 			<div className={classes.Queue}>
-				<Queue current={SONGS[0]} list={SONGS} visible={state.viewing} />
+				<Queue current={SONGS[0]} list={SONGS} visible={state.viewing} loading={loading} />
 			</div>
 		</div>
 	);

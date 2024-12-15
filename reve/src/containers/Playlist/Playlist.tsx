@@ -11,10 +11,13 @@ import { ReactComponent as Clock } from 'assets/icons/clock.svg';
 import { ReactComponent as Queue } from 'assets/icons/queue.svg';
 import { ReactComponent as Url } from 'assets/icons/url.svg';
 
+import Skeleton from 'components/Skeleton/Skeleton';
 import Knob from 'components/Knob/Knob';
 import Content from 'containers/Content/Content';
 
 import classes from './Playlist.module.scss';
+
+const SKELETON_SIZE = 10;
 
 interface Props {
 	name: string;
@@ -28,9 +31,25 @@ interface Props {
 	playing: boolean;
 	songs: ISong[];
 	className?: string;
+	loading?: boolean;
+	fetching?: boolean;
 }
 
-const Playlist = ({ name, icon, color, total, removed, date, onPlay, onQueue, playing, songs, className }: Props) => {
+const Playlist = ({
+	name,
+	icon,
+	color,
+	total,
+	removed,
+	date,
+	onPlay,
+	onQueue,
+	playing,
+	songs,
+	className,
+	loading,
+	fetching
+}: Props) => {
 	function linkHandler(url: string) {
 		window.open(url, '_blank')!.focus();
 	}
@@ -65,38 +84,77 @@ const Playlist = ({ name, icon, color, total, removed, date, onPlay, onQueue, pl
 		</div>
 	);
 
+	if (loading) {
+		return <Skeleton className={className} />;
+	}
+
+	const skeleton = new Array(SKELETON_SIZE).fill(null).map((_, i) => (
+		<li className={classes.Song} key={i}>
+			<div className={classes.Wrapper}>
+				<Skeleton className={classes.Image} light />
+
+				<div className={classes.Info}>
+					<Skeleton className={classes.Title} light />
+
+					<Skeleton className={classes.Author} light />
+				</div>
+			</div>
+
+			<div className={classes.Extra}>
+				<div />
+
+				<Skeleton className={classes.Duration} width={60} light />
+			</div>
+		</li>
+	));
+
 	return (
 		<Content title={name} icon={icon} color={color} meta={stats} className={className}>
 			<ul className={classes.Songs}>
-				{songs.map((song) => (
-					<li className={classes.Song} key={song.id}>
-						<div className={classes.Wrapper}>
-							<img src={song.image!} alt={song.name} className={classes.Image} />
+				{!fetching || songs.length ? (
+					<>
+						{songs.map((song) => (
+							<li className={classes.Song} key={song.id}>
+								<div className={classes.Wrapper}>
+									<img src={song.image!} alt={song.name} className={classes.Image} />
 
-							<div className={classes.Info}>
-								<p className={[classes.Title, !song.is_present && classes.TitleMissing].join(' ')}>
-									{song.name}
-								</p>
+									<div className={classes.Info}>
+										<p
+											className={[classes.Title, !song.is_present && classes.TitleMissing].join(
+												' '
+											)}>
+											{song.name}
+										</p>
 
-								<p className={classes.Author}>{song.author}</p>
-							</div>
-						</div>
+										<p className={classes.Author}>{song.author}</p>
+									</div>
+								</div>
 
-						<div className={classes.Extra}>
-							<div className={classes.Actions}>
-								<Knob
-									icon={<Queue />}
-									onClick={() => onQueue?.(song.id)}
-									className={!song.is_present ? classes.QueueHidden : ''}
-								/>
+								<div className={classes.Extra}>
+									<div className={classes.Actions}>
+										<Knob
+											icon={<Queue />}
+											onClick={() => onQueue?.(song.id)}
+											className={!song.is_present ? classes.QueueHidden : ''}
+										/>
 
-								<Knob icon={<Url />} onClick={() => linkHandler(song.url)} className={classes.Url} />
-							</div>
+										<Knob
+											icon={<Url />}
+											onClick={() => linkHandler(song.url)}
+											className={classes.Url}
+										/>
+									</div>
 
-							<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
-						</div>
-					</li>
-				))}
+									<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
+								</div>
+							</li>
+						))}
+
+						{fetching && skeleton}
+					</>
+				) : (
+					skeleton
+				)}
 			</ul>
 		</Content>
 	);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { ISong } from 'interfaces/data';
 import { useQueue } from 'context/useQueue';
@@ -10,9 +10,12 @@ import { ReactComponent as Play } from 'assets/icons/play.svg';
 import { ReactComponent as Pause } from 'assets/icons/pause.svg';
 import { ReactComponent as MusicQueue } from 'assets/icons/queue.svg';
 
+import Skeleton from 'components/Skeleton/Skeleton';
 import Knob from 'components/Knob/Knob';
 
 import classes from './Queue.module.scss';
+
+const SKELETON_SIZE = 10;
 
 const PADDING_SPACE = 16;
 const QUEUE_WIDTH = 350;
@@ -22,9 +25,12 @@ interface Props {
 	list: ISong[];
 	visible?: boolean;
 	className?: string;
+	loading?: boolean;
 }
 
-const Queue = ({ current, list, visible, className }: Props) => {
+const Queue = ({ current, list, visible, className, loading }: Props) => {
+	const [fetching, setFetching] = useState<boolean>(false);
+
 	const { state, play } = useQueue();
 
 	const { isMobile, isTablet, isDesktop } = useScreen();
@@ -54,16 +60,36 @@ const Queue = ({ current, list, visible, className }: Props) => {
 			songRef.current!.style.paddingTop = `${padding}px`;
 		}
 
-		songsRef.current!.addEventListener('scroll', resize);
+		songsRef.current?.addEventListener('scroll', resize);
 
 		return () => {
-			songsRef.current!.removeEventListener('scroll', resize);
+			songsRef.current?.removeEventListener('scroll', resize);
 		};
 	}, [visible, isDesktop]);
 
 	function queueHandler(id: number) {
 		//
 	}
+
+	if (loading) {
+		return <Skeleton className={[classes.Queue, visible ? classes.QueueVisible : '', className].join(' ')} />;
+	}
+
+	const skeleton = new Array(SKELETON_SIZE).fill(null).map((_, i) => (
+		<li className={classes.Song} key={i}>
+			<div className={classes.Info}>
+				<Skeleton className={classes.Image} light />
+
+				<div className={classes.Meta}>
+					<Skeleton className={classes.Title} light />
+
+					<Skeleton className={classes.Author} light />
+				</div>
+			</div>
+
+			<Skeleton className={classes.Duration} light />
+		</li>
+	));
 
 	return (
 		<div className={[classes.Queue, visible ? classes.QueueVisible : '', className].join(' ')}>
@@ -112,6 +138,8 @@ const Queue = ({ current, list, visible, className }: Props) => {
 						<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
 					</li>
 				))}
+
+				{fetching && skeleton}
 			</ul>
 		</div>
 	);
