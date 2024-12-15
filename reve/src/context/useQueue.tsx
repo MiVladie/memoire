@@ -44,6 +44,10 @@ export const QueueProvider = ({ children }: any) => {
 		}));
 	}
 
+	// function reset() {
+	// 	setState({ active: false, viewing: false })
+	// }
+
 	const value = useMemo(() => ({ state, activate, play, view }), [state]);
 
 	return <QueueContext.Provider value={value}>{children}</QueueContext.Provider>;

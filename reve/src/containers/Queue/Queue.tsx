@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { ISong } from 'interfaces/data';
 import { useQueue } from 'context/useQueue';
@@ -14,6 +14,9 @@ import Knob from 'components/Knob/Knob';
 
 import classes from './Queue.module.scss';
 
+const PADDING_SPACE = 16;
+const QUEUE_WIDTH = 350;
+
 interface Props {
 	current: ISong;
 	list: ISong[];
@@ -24,7 +27,39 @@ interface Props {
 const Queue = ({ current, list, visible, className }: Props) => {
 	const { state, play } = useQueue();
 
-	const { isDesktop } = useScreen();
+	const { isMobile, isTablet, isDesktop } = useScreen();
+
+	const headerRef = useRef<HTMLDivElement>(null);
+	const infoRef = useRef<HTMLDivElement>(null);
+	const songsRef = useRef<HTMLUListElement>(null);
+	const songRef = useRef<HTMLLIElement>(null);
+
+	useEffect(() => {
+		if (!visible && !isDesktop) {
+			return;
+		}
+
+		function resize() {
+			const scrollTop = songsRef.current!.scrollTop;
+			const infoHeight = infoRef.current!.clientHeight;
+
+			const initialHeight =
+				(isMobile ? window.innerWidth : isTablet ? window.innerHeight * 0.4 : QUEUE_WIDTH) - PADDING_SPACE * 2;
+			const minHeight = infoHeight + PADDING_SPACE * 2;
+
+			const newHeight = Math.max(initialHeight - scrollTop, minHeight);
+			const padding = Math.min(scrollTop, initialHeight - minHeight);
+
+			headerRef.current!.style.height = `${newHeight}px`;
+			songRef.current!.style.paddingTop = `${padding}px`;
+		}
+
+		songsRef.current!.addEventListener('scroll', resize);
+
+		return () => {
+			songsRef.current!.removeEventListener('scroll', resize);
+		};
+	}, [visible, isDesktop]);
 
 	function queueHandler(id: number) {
 		//
@@ -32,12 +67,12 @@ const Queue = ({ current, list, visible, className }: Props) => {
 
 	return (
 		<div className={[classes.Queue, visible ? classes.QueueVisible : '', className].join(' ')}>
-			<div className={classes.Header}>
+			<div className={classes.Header} ref={headerRef}>
 				<img src={current.image!} alt={current.name} className={classes.Background} />
 
 				<div className={classes.Gradient} />
 
-				<div className={classes.Current}>
+				<div className={classes.Current} ref={infoRef}>
 					<div className={classes.Wrapper}>
 						<h2 className={classes.Title}>{current.name}</h2>
 						<h3 className={classes.Author}>{current.author}</h3>
@@ -53,9 +88,9 @@ const Queue = ({ current, list, visible, className }: Props) => {
 				</div>
 			</div>
 
-			<ul className={classes.Songs}>
-				{list.map((song) => (
-					<li className={classes.Song} key={song.id}>
+			<ul className={classes.Songs} ref={songsRef}>
+				{list.map((song, i) => (
+					<li className={classes.Song} key={song.id} ref={i === 0 ? songRef : undefined}>
 						<div className={classes.Info}>
 							<img src={song.image!} alt={song.name} className={classes.Image} />
 

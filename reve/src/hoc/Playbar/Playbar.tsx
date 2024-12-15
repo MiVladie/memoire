@@ -64,6 +64,12 @@ const Playbar = () => {
 		}
 	}, [isDesktop]);
 
+	useEffect(() => {
+		if (isDesktop && state.viewing) {
+			view();
+		}
+	}, [state.viewing, isDesktop]);
+
 	async function fetchSong() {
 		playerRef.current?.seekTo(0, 'fraction');
 
