@@ -55,7 +55,7 @@
 			padding: $xxxl-space $xxl-space;
 
 			.Title {
-				font-size: 6em;
+				font-size: 5rem;
 
 				margin-bottom: $xl-space;
 			}
@@ -89,6 +89,10 @@
 	.Content {
 		.Header {
 			padding: $xxxl-space;
+
+			.Title {
+				font-size: 6em;
+			}
 
 			.Icon {
 				top: $xxl-space;
