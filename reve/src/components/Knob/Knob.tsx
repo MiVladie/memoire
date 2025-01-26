@@ -22,7 +22,7 @@ const Knob = ({ icon, fill, active, size = DEFAULT_SIZE, onClick, className }: P
 			className
 		].join(' ')}
 		style={{ minWidth: size, minHeight: size, maxWidth: size, maxHeight: size }}
-		onClick={onClick}>
+		onClick={() => onClick?.()}>
 		{icon}
 	</div>
 );
