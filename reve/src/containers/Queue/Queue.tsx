@@ -78,7 +78,7 @@ const Queue = ({ visible, className, loading }: Props) => {
 		return () => {
 			songsRef.current?.removeEventListener('scroll', resize);
 		};
-	}, [visible, isDesktop]);
+	}, [visible, isDesktop, loading]);
 
 	function queueHandler(id: number) {
 		//
