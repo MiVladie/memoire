@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 
 import { ACCOUNT } from 'assets/data/sample';
 import { useNavigation } from 'context/useNavigation';
-import { useQueue } from 'context/useQueue';
 import { useAuth } from 'context/useAuth';
 
 import { ReactComponent as Person } from 'assets/icons/person.svg';
@@ -23,13 +22,10 @@ const Account = () => {
 	const [selected, setSelected] = useState<number>(ACCOUNT[0].id);
 
 	const {
-		state: { menuVisible },
+		state: { menuVisible, queueActive },
 		toggleMenu
 	} = useNavigation();
 
-	const {
-		state: { active }
-	} = useQueue();
 	const { state, clear } = useAuth();
 
 	function selectHandler(id: number) {
@@ -81,7 +77,7 @@ const Account = () => {
 			className={[
 				classes.Account,
 				menuVisible ? classes.AccountMenu : '',
-				active ? classes.AccountQueue : ''
+				queueActive ? classes.AccountQueue : ''
 			].join(' ')}>
 			<div className={classes.Menu}>
 				<Menu

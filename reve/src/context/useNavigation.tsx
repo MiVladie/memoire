@@ -3,17 +3,20 @@ import React, { useContext, createContext, useMemo, useState } from 'react';
 interface State {
 	menuVisible: boolean;
 	queueVisible: boolean;
+	queueActive: boolean;
 }
 
 interface Context {
 	state: State;
 	toggleMenu: (overwrite?: boolean) => void;
 	toggleQueue: (overwrite?: boolean) => void;
+	activateQueue: (overwrite?: boolean) => void;
 }
 
 const defaultState: State = {
 	menuVisible: false,
-	queueVisible: false
+	queueVisible: false,
+	queueActive: false
 };
 
 const NavigationContext = createContext<Context>({} as Context);
@@ -29,7 +32,11 @@ export const NavigationProvider = ({ children }: any) => {
 		setState((prevState) => ({ ...prevState, queueVisible: overwrite ?? !prevState.queueVisible }));
 	}
 
-	const value = useMemo(() => ({ state, toggleMenu, toggleQueue }), [state]);
+	function activateQueue(overwrite?: boolean) {
+		setState((prevState) => ({ ...prevState, queueActive: overwrite ?? !prevState.queueActive }));
+	}
+
+	const value = useMemo(() => ({ state, toggleMenu, toggleQueue, activateQueue }), [state]);
 
 	return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>;
 };

@@ -25,11 +25,12 @@ const Home = () => {
 	const [fetching, setFetching] = useState<boolean>(false);
 
 	const {
-		state: { menuVisible, queueVisible },
-		toggleMenu
+		state: { menuVisible, queueVisible, queueActive },
+		toggleMenu,
+		activateQueue
 	} = useNavigation();
 
-	const { state, enlist } = useQueue();
+	const { state, play, stop } = useQueue();
 
 	const playlist = useMemo(() => {
 		return PLAYLISTS.find((p) => p.id === selectedPlaylist)!;
@@ -78,12 +79,20 @@ const Home = () => {
 	}
 
 	function onPlayHandler() {
-		enlist(SONGS);
+		play({ playlistId: ACTIVE_PLAYLIST }); // TODO: playlistId
+
+		activateQueue();
+	}
+
+	function onStopHandler() {
+		stop();
+
+		activateQueue(false);
 	}
 
 	return (
 		<div
-			className={[classes.Home, menuVisible ? classes.HomeMenu : '', state.active ? classes.HomeQueue : ''].join(
+			className={[classes.Home, menuVisible ? classes.HomeMenu : '', queueActive ? classes.HomeQueue : ''].join(
 				' '
 			)}>
 			<div className={classes.Menu}>
@@ -107,8 +116,9 @@ const Home = () => {
 				removed={24}
 				date={new Date()}
 				onPlay={onPlayHandler}
+				onStop={onStopHandler}
 				onScrollEnd={onFetchHandler}
-				playing={false}
+				playing={selectedPlaylist === state.playlistId}
 				songs={songs}
 				className={classes.Playlist}
 				loading={loading}

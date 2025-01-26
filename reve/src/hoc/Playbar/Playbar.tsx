@@ -60,7 +60,7 @@ const Playbar = () => {
 
 	const { state, play, previous, next } = useQueue();
 	const {
-		state: { queueVisible },
+		state: { queueVisible, queueActive },
 		toggleQueue
 	} = useNavigation();
 
@@ -75,6 +75,14 @@ const Playbar = () => {
 	useEffect(() => {
 		fetchSong();
 	}, [song]);
+
+	useEffect(() => {
+		if (state.playlistId) {
+			playerRef.current!.seekTo(0, 'fraction');
+
+			setPlayed(0);
+		}
+	}, [state.playlistId]);
 
 	useEffect(() => {
 		if (isDesktop && expanded) {
@@ -179,7 +187,7 @@ const Playbar = () => {
 			<footer
 				className={[
 					classes.Playbar,
-					state.active ? classes.PlaybarVisible : '',
+					queueActive ? classes.PlaybarVisible : '',
 					expanded ? classes.PlaybarExpanded : '',
 					queueVisible ? classes.PlaybarView : ''
 				].join(' ')}>

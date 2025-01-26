@@ -1,9 +1,15 @@
 import React, { useContext, createContext, useMemo, useState } from 'react';
 
 import { ISong } from 'interfaces/data';
+import { SONGS } from 'assets/data/sample';
+
+interface PlayOptions {
+	playlistId: number;
+	songId?: number;
+}
 
 interface State {
-	active: boolean;
+	playlistId: number | null;
 	list: ISong[];
 	playingIndex: number | null;
 	playing: boolean;
@@ -11,14 +17,14 @@ interface State {
 
 interface Context {
 	state: State;
-	enlist: (list: ISong[]) => void;
-	play: (index?: number) => void;
+	play: (playOptions?: PlayOptions) => void;
+	stop: () => void;
 	previous: () => void;
 	next: () => void;
 }
 
 const defaultState: State = {
-	active: false,
+	playlistId: null,
 	list: [],
 	playingIndex: null,
 	playing: false
@@ -29,21 +35,59 @@ const QueueContext = createContext<Context>({} as Context);
 export const QueueProvider = ({ children }: any) => {
 	const [state, setState] = useState<State>(defaultState);
 
-	function activate() {
-		setState((prevState) => ({ ...prevState, active: !prevState.active }));
-	}
+	function play(options?: PlayOptions) {
+		// Resume playing current song
+		if (!options) {
+			setState((prevState) => ({ ...prevState, playing: !prevState.playing }));
 
-	function enlist(list: ISong[], index?: number) {
-		setState((prevState) => ({ ...prevState, active: true, list, playingIndex: index ?? 0, playing: true }));
-	}
-
-	function play(index?: number) {
-		if (index !== undefined) {
-			setState((prevState) => ({ ...prevState, playingIndex: index, playing: true }));
 			return;
 		}
 
-		setState((prevState) => ({ ...prevState, playing: !prevState.playing }));
+		// Play a song from current playlist
+		if (options.songId && options.playlistId === state.playlistId) {
+			const songIndex = state.list.findIndex((s) => s.id === options.songId);
+
+			setState((prevState) => ({ ...prevState, playingIndex: songIndex, playing: true }));
+
+			return;
+		}
+
+		// Play first song from another playlist
+		if (options.playlistId && !options.songId) {
+			// TODO: fetch new playlist songs
+			const list: ISong[] = SONGS;
+
+			setState((prevState) => ({
+				...prevState,
+				playlistId: options.playlistId!,
+				playingIndex: 0,
+				list: list,
+				playing: true
+			}));
+
+			return;
+		}
+
+		// Play a song from another playlist
+		if (options.playlistId && options.songId) {
+			// TODO: fetch new playlist songs
+			const list: ISong[] = SONGS;
+			const songIndex: number = 0;
+
+			setState((prevState) => ({
+				...prevState,
+				playlistId: options.playlistId!,
+				playingIndex: songIndex,
+				list: list,
+				playing: true
+			}));
+
+			return;
+		}
+	}
+
+	function stop() {
+		setState((prevState) => ({ ...prevState, playlistId: null, playing: false }));
 	}
 
 	function previous() {
@@ -70,7 +114,7 @@ export const QueueProvider = ({ children }: any) => {
 		}));
 	}
 
-	const value = useMemo(() => ({ state, activate, enlist, play, previous, next }), [state]);
+	const value = useMemo(() => ({ state, play, stop, previous, next }), [state]);
 
 	return <QueueContext.Provider value={value}>{children}</QueueContext.Provider>;
 };

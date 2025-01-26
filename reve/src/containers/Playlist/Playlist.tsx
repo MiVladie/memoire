@@ -4,7 +4,7 @@ import { ISong } from 'interfaces/data';
 import { convertSecondsToFormat } from 'util/date';
 
 import { ReactComponent as Play } from 'assets/icons/play.svg';
-import { ReactComponent as Pause } from 'assets/icons/pause.svg';
+import { ReactComponent as Stop } from 'assets/icons/stop.svg';
 import { ReactComponent as Note } from 'assets/icons/note.svg';
 import { ReactComponent as Hide } from 'assets/icons/hide.svg';
 import { ReactComponent as Clock } from 'assets/icons/clock.svg';
@@ -28,6 +28,7 @@ interface Props {
 	removed: number;
 	date: Date;
 	onPlay?: () => void;
+	onStop?: () => void;
 	onQueue?: (id: number) => void;
 	onScrollEnd?: () => void;
 	playing: boolean;
@@ -45,6 +46,7 @@ const Playlist = ({
 	removed,
 	date,
 	onPlay,
+	onStop,
 	onQueue,
 	onScrollEnd,
 	playing,
@@ -61,7 +63,13 @@ const Playlist = ({
 
 	const stats = (
 		<div className={classes.Meta}>
-			<Knob icon={!playing ? <Play /> : <Pause />} onClick={onPlay} size={48} className={classes.Play} fill />
+			<Knob
+				icon={!playing ? <Play /> : <Stop />}
+				onClick={!playing ? onPlay : onStop}
+				size={48}
+				className={classes.Play}
+				fill
+			/>
 
 			<ul className={classes.Stats}>
 				<li className={classes.Stat}>
