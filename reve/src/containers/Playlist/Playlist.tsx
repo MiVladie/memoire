@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ISong } from 'interfaces/data';
 import { convertSecondsToFormat } from 'util/date';
@@ -14,6 +14,7 @@ import { ReactComponent as Url } from 'assets/icons/url.svg';
 import Skeleton from 'components/Skeleton/Skeleton';
 import Knob from 'components/Knob/Knob';
 import Content from 'containers/Content/Content';
+import useScroll from 'hooks/useScroll';
 
 import classes from './Playlist.module.scss';
 
@@ -28,6 +29,7 @@ interface Props {
 	date: Date;
 	onPlay?: () => void;
 	onQueue?: (id: number) => void;
+	onScrollEnd?: () => void;
 	playing: boolean;
 	songs: ISong[];
 	className?: string;
@@ -44,12 +46,15 @@ const Playlist = ({
 	date,
 	onPlay,
 	onQueue,
+	onScrollEnd,
 	playing,
 	songs,
 	className,
 	loading,
 	fetching
 }: Props) => {
+	const { crossed, element, resetHandler } = useScroll({ offset: 300 });
+
 	function linkHandler(url: string) {
 		window.open(url, '_blank')!.focus();
 	}
@@ -84,10 +89,6 @@ const Playlist = ({
 		</div>
 	);
 
-	if (loading) {
-		return <Skeleton className={className} />;
-	}
-
 	const skeleton = new Array(SKELETON_SIZE).fill(null).map((_, i) => (
 		<li className={classes.Song} key={i}>
 			<div className={classes.Wrapper}>
@@ -108,55 +109,79 @@ const Playlist = ({
 		</li>
 	));
 
+	useEffect(() => {
+		if (crossed) {
+			onScrollEnd?.();
+		}
+	}, [crossed]);
+
+	useEffect(() => {
+		if (crossed && !fetching) {
+			resetHandler();
+		}
+	}, [songs]);
+
 	return (
-		<Content title={name} icon={icon} color={color} meta={stats} className={className}>
-			<ul className={classes.Songs}>
-				{!fetching || songs.length ? (
-					<>
-						{songs.map((song) => (
-							<li className={classes.Song} key={song.id}>
-								<div className={classes.Wrapper}>
-									<img src={song.image!} alt={song.name} className={classes.Image} />
+		<>
+			<Content
+				title={name}
+				icon={icon}
+				color={color}
+				meta={stats}
+				className={className}
+				style={loading ? { display: 'none' } : undefined}
+				scrollRef={element}>
+				<ul className={classes.Songs}>
+					{!fetching || songs.length ? (
+						<>
+							{songs.map((song) => (
+								<li className={classes.Song} key={song.id}>
+									<div className={classes.Wrapper}>
+										<img src={song.image!} alt={song.name} className={classes.Image} />
 
-									<div className={classes.Info}>
-										<p
-											className={[classes.Title, !song.is_present && classes.TitleMissing].join(
-												' '
-											)}>
-											{song.name}
-										</p>
+										<div className={classes.Info}>
+											<p
+												className={[
+													classes.Title,
+													!song.is_present && classes.TitleMissing
+												].join(' ')}>
+												{song.name}
+											</p>
 
-										<p className={classes.Author}>{song.author}</p>
-									</div>
-								</div>
-
-								<div className={classes.Extra}>
-									<div className={classes.Actions}>
-										<Knob
-											icon={<Queue />}
-											onClick={() => onQueue?.(song.id)}
-											className={!song.is_present ? classes.QueueHidden : ''}
-										/>
-
-										<Knob
-											icon={<Url />}
-											onClick={() => linkHandler(song.url)}
-											className={classes.Url}
-										/>
+											<p className={classes.Author}>{song.author}</p>
+										</div>
 									</div>
 
-									<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
-								</div>
-							</li>
-						))}
+									<div className={classes.Extra}>
+										<div className={classes.Actions}>
+											<Knob
+												icon={<Queue />}
+												onClick={() => onQueue?.(song.id)}
+												className={!song.is_present ? classes.QueueHidden : ''}
+											/>
 
-						{fetching && skeleton}
-					</>
-				) : (
-					skeleton
-				)}
-			</ul>
-		</Content>
+											<Knob
+												icon={<Url />}
+												onClick={() => linkHandler(song.url)}
+												className={classes.Url}
+											/>
+										</div>
+
+										<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
+									</div>
+								</li>
+							))}
+
+							{fetching && skeleton}
+						</>
+					) : (
+						skeleton
+					)}
+				</ul>
+			</Content>
+
+			{loading && <Skeleton className={className} />}
+		</>
 	);
 };
 

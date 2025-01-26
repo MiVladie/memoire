@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import { hexToRGBA } from 'util/style';
 
@@ -11,10 +11,12 @@ interface Props {
 	meta?: React.ReactNode;
 	children: React.ReactNode;
 	className?: string;
+	style?: CSSProperties;
+	scrollRef?: React.RefObject<HTMLDivElement>;
 }
 
-const Content = ({ title, icon, color, meta, children, className }: Props) => (
-	<div className={[classes.Content, className].join(' ')}>
+const Content = ({ title, icon, color, meta, children, className, style, scrollRef }: Props) => (
+	<div className={[classes.Content, className].join(' ')} style={style} ref={scrollRef}>
 		<div
 			className={classes.Header}
 			style={{

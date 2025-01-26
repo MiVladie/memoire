@@ -1,8 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { ACTIVE_PLAYLIST, PLATFORMS, PLAYLISTS, SONGS } from 'assets/data/sample';
 import { useNavigation } from 'context/useNavigation';
 import { useQueue } from 'context/useQueue';
+import { ISong } from 'interfaces/data';
+import { delay } from 'util/date';
 
 import Menu from 'containers/Menu/Menu';
 import Playlist from 'containers/Playlist/Playlist';
@@ -17,7 +19,9 @@ const Home = () => {
 	const [selectedPlatform, setSelectedPlatform] = useState<number>(1);
 	const [selectedPlaylist, setSelectedPlaylist] = useState<number>(2);
 
-	const [loading, setLoading] = useState<boolean>(false);
+	const [songs, setSongs] = useState<ISong[]>([]);
+
+	const [loading, setLoading] = useState<boolean>(true);
 	const [fetching, setFetching] = useState<boolean>(false);
 
 	const {
@@ -26,6 +30,40 @@ const Home = () => {
 	} = useNavigation();
 
 	const { state, activate } = useQueue();
+
+	const playlist = useMemo(() => {
+		return PLAYLISTS.find((p) => p.id === selectedPlaylist)!;
+	}, [selectedPlaylist]);
+
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	async function fetchData() {
+		try {
+			await delay(2);
+
+			setSongs(SONGS);
+		} catch (error: any) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	}
+
+	async function onFetchHandler() {
+		setFetching(true);
+
+		try {
+			await delay(2);
+
+			setSongs((prevState) => [...prevState, ...SONGS.map((s) => ({ ...s, id: Math.random() }))]);
+		} catch (error: any) {
+			console.log(error);
+		} finally {
+			setFetching(false);
+		}
+	}
 
 	function onPlatformHandler(id: number) {
 		setSelectedPlatform(id);
@@ -42,8 +80,6 @@ const Home = () => {
 	function onPlayHandler() {
 		activate();
 	}
-
-	const playlist = useMemo(() => PLAYLISTS.find((p) => p.id === selectedPlaylist)!, [selectedPlaylist]);
 
 	return (
 		<div
@@ -71,8 +107,9 @@ const Home = () => {
 				removed={24}
 				date={new Date()}
 				onPlay={onPlayHandler}
+				onScrollEnd={onFetchHandler}
 				playing={false}
-				songs={SONGS}
+				songs={songs}
 				className={classes.Playlist}
 				loading={loading}
 				fetching={fetching}
