@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 import { OnProgressProps } from 'react-player/base';
 import { convertSecondsToFormat } from 'util/date';
-import { SONGS } from 'assets/data/sample';
+import { useNavigation } from 'context/useNavigation';
+import { ISong } from 'interfaces/data';
 import { useQueue } from 'context/useQueue';
 import { rgbToHEX } from 'util/style';
 
@@ -30,7 +31,15 @@ import * as API from 'api';
 
 import classes from './Playbar.module.scss';
 
-const song = SONGS[0];
+const SAMPLE_SONG: ISong = {
+	id: 1,
+	image: null,
+	name: 'Sample Song',
+	author: 'Sample Author',
+	url: '',
+	duration: 0,
+	is_present: true
+};
 
 const REPEAT_SONG_THRESHOLD = 3;
 
@@ -49,10 +58,19 @@ const Playbar = () => {
 
 	const { isDesktop } = useScreen();
 
-	const { state, play, view } = useQueue();
+	const { state, play, previous, next } = useQueue();
+	const {
+		state: { queueVisible },
+		toggleQueue
+	} = useNavigation();
 
 	const imageRef = useRef<HTMLImageElement>(null);
 	const playerRef = useRef<ReactPlayer>(null);
+
+	const song = useMemo(
+		() => (state.playingIndex !== null ? state.list[state.playingIndex] : SAMPLE_SONG),
+		[state.list, state.playingIndex]
+	);
 
 	useEffect(() => {
 		fetchSong();
@@ -65,10 +83,10 @@ const Playbar = () => {
 	}, [isDesktop]);
 
 	useEffect(() => {
-		if (isDesktop && state.viewing) {
-			view();
+		if (isDesktop && queueVisible) {
+			toggleQueue();
 		}
-	}, [state.viewing, isDesktop]);
+	}, [queueVisible, isDesktop]);
 
 	async function fetchSong() {
 		playerRef.current?.seekTo(0, 'fraction');
@@ -77,15 +95,13 @@ const Playbar = () => {
 			const { media } = await API.Song.getMedia(song.id);
 
 			setMedia(media);
-
-			play();
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
 	function previousHandler() {
-		if (played * song.duration > REPEAT_SONG_THRESHOLD) {
+		if (played * song.duration > REPEAT_SONG_THRESHOLD || state.playingIndex === 0) {
 			playerRef.current!.seekTo(0, 'fraction');
 
 			setPlayed(0);
@@ -93,23 +109,11 @@ const Playbar = () => {
 			return;
 		}
 
-		// previous();
-	}
-
-	function playHandler() {
-		play();
-	}
-
-	function nextHandler() {
-		// next();
+		previous();
 	}
 
 	function seekHandler(value: number) {
 		playerRef.current!.seekTo(value, 'fraction');
-
-		// if (!state.playing) {
-		// 	play();
-		// }
 	}
 
 	function volumeHandler(value: number) {
@@ -170,10 +174,6 @@ const Playbar = () => {
 		setExpanded(false);
 	}
 
-	function queueHandler() {
-		view();
-	}
-
 	return (
 		<>
 			<footer
@@ -181,16 +181,16 @@ const Playbar = () => {
 					classes.Playbar,
 					state.active ? classes.PlaybarVisible : '',
 					expanded ? classes.PlaybarExpanded : '',
-					state.viewing ? classes.PlaybarView : ''
+					queueVisible ? classes.PlaybarView : ''
 				].join(' ')}>
 				<div className={classes.Menu}>
 					<Knob icon={<ArrowDown />} className={classes.Arrow} onClick={hideHandler} size={48} />
-					<Knob icon={<MusicQueue />} onClick={queueHandler} size={48} />
+					<Knob icon={<MusicQueue />} onClick={toggleQueue} size={48} />
 				</div>
 
 				<div
 					className={classes.Info}
-					onClick={!expanded ? expandHandler : state.viewing ? queueHandler : undefined}>
+					onClick={!expanded ? expandHandler : queueVisible ? () => toggleQueue() : undefined}>
 					<img
 						className={classes.Image}
 						src={song.image!}
@@ -211,13 +211,13 @@ const Playbar = () => {
 
 						<Knob
 							icon={state.playing ? <Pause /> : <Play />}
-							onClick={playHandler}
+							onClick={play}
 							className={classes.Play}
 							size={expanded ? 48 : undefined}
 							fill
 						/>
 
-						<Knob icon={<Next />} onClick={nextHandler} size={expanded ? 48 : undefined} />
+						<Knob icon={<Next />} onClick={next} size={expanded ? 48 : undefined} />
 					</div>
 
 					<div className={classes.Playback}>
@@ -272,7 +272,7 @@ const Playbar = () => {
 				/>
 			</footer>
 
-			<Queue current={SONGS[0]} list={SONGS} visible={state.viewing} className={classes.Queue} />
+			<Queue visible={queueVisible} className={classes.Queue} />
 		</>
 	);
 };

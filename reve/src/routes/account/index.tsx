@@ -12,19 +12,19 @@ import { ReactComponent as Logout } from 'assets/icons/logout.svg';
 
 import Menu from 'containers/Menu/Menu';
 import Profile from 'containers/Profile/Profile';
+import Content from 'containers/Content/Content';
 import SoundCloud from 'containers/SoundCloud/SoundCloud';
 import Password from 'containers/Password/Password';
 import Seo from 'hoc/Seo/Seo';
 
 import classes from './Account.module.scss';
-import Content from 'containers/Content/Content';
 
 const Account = () => {
 	const [selected, setSelected] = useState<number>(ACCOUNT[0].id);
 
 	const {
 		state: { menuVisible },
-		toggle
+		toggleMenu
 	} = useNavigation();
 
 	const {
@@ -35,11 +35,11 @@ const Account = () => {
 	function selectHandler(id: number) {
 		setSelected(id);
 
-		toggle();
+		toggleMenu();
 	}
 
 	function logoutHandler() {
-		toggle();
+		toggleMenu();
 
 		clear();
 	}

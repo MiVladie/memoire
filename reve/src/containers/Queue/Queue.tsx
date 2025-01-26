@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { ISong } from 'interfaces/data';
 import { useQueue } from 'context/useQueue';
 import { convertSecondsToFormat } from 'util/date';
+import { ISong } from 'interfaces/data';
 
 import useScreen from 'hooks/useScreen';
 
@@ -20,15 +20,23 @@ const SKELETON_SIZE = 10;
 const PADDING_SPACE = 16;
 const QUEUE_WIDTH = 350;
 
+const SAMPLE_SONG: ISong = {
+	id: 1,
+	image: null,
+	name: 'Sample Song',
+	author: 'Sample Author',
+	url: '',
+	duration: 0,
+	is_present: true
+};
+
 interface Props {
-	current: ISong;
-	list: ISong[];
 	visible?: boolean;
 	className?: string;
 	loading?: boolean;
 }
 
-const Queue = ({ current, list, visible, className, loading }: Props) => {
+const Queue = ({ visible, className, loading }: Props) => {
 	const [fetching, setFetching] = useState<boolean>(false);
 
 	const { state, play } = useQueue();
@@ -39,6 +47,11 @@ const Queue = ({ current, list, visible, className, loading }: Props) => {
 	const infoRef = useRef<HTMLDivElement>(null);
 	const songsRef = useRef<HTMLUListElement>(null);
 	const songRef = useRef<HTMLLIElement>(null);
+
+	const song = useMemo(
+		() => (state.playingIndex !== null ? state.list[state.playingIndex] : SAMPLE_SONG),
+		[state.list, state.playingIndex]
+	);
 
 	useEffect(() => {
 		if (!visible && !isDesktop) {
@@ -94,14 +107,14 @@ const Queue = ({ current, list, visible, className, loading }: Props) => {
 	return (
 		<div className={[classes.Queue, visible ? classes.QueueVisible : '', className].join(' ')}>
 			<div className={classes.Header} ref={headerRef}>
-				<img src={current.image!} alt={current.name} className={classes.Background} />
+				<img src={song.image!} alt={song.name} className={classes.Background} />
 
 				<div className={classes.Gradient} />
 
 				<div className={classes.Current} ref={infoRef}>
 					<div className={classes.Wrapper}>
-						<h2 className={classes.Title}>{current.name}</h2>
-						<h3 className={classes.Author}>{current.author}</h3>
+						<h2 className={classes.Title}>{song.name}</h2>
+						<h3 className={classes.Author}>{song.author}</h3>
 					</div>
 
 					<Knob
@@ -115,7 +128,7 @@ const Queue = ({ current, list, visible, className, loading }: Props) => {
 			</div>
 
 			<ul className={classes.Songs} ref={songsRef}>
-				{list.map((song, i) => (
+				{state.list.map((song, i) => (
 					<li className={classes.Song} key={song.id} ref={i === 0 ? songRef : undefined}>
 						<div className={classes.Info}>
 							<img src={song.image!} alt={song.name} className={classes.Image} />

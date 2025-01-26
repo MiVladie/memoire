@@ -25,11 +25,11 @@ const Home = () => {
 	const [fetching, setFetching] = useState<boolean>(false);
 
 	const {
-		state: { menuVisible },
-		toggle
+		state: { menuVisible, queueVisible },
+		toggleMenu
 	} = useNavigation();
 
-	const { state, activate } = useQueue();
+	const { state, enlist } = useQueue();
 
 	const playlist = useMemo(() => {
 		return PLAYLISTS.find((p) => p.id === selectedPlaylist)!;
@@ -68,17 +68,17 @@ const Home = () => {
 	function onPlatformHandler(id: number) {
 		setSelectedPlatform(id);
 
-		toggle();
+		toggleMenu();
 	}
 
 	function onPlaylistHandler(id: number) {
 		setSelectedPlaylist(id);
 
-		toggle();
+		toggleMenu();
 	}
 
 	function onPlayHandler() {
-		activate();
+		enlist(SONGS);
 	}
 
 	return (
@@ -116,7 +116,7 @@ const Home = () => {
 			/>
 
 			<div className={classes.Queue}>
-				<Queue current={SONGS[0]} list={SONGS} visible={state.viewing} loading={loading} />
+				<Queue visible={queueVisible} loading={loading} />
 			</div>
 		</div>
 	);

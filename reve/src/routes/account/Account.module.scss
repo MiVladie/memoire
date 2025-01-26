@@ -108,10 +108,4 @@
 			transform: translateX(0);
 		}
 	}
-
-	.AccountQueue {
-		.Content {
-			width: calc(100vw - #{$menu_width} - #{$md-space} * 4);
-		}
-	}
 }

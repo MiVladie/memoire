@@ -30,7 +30,7 @@ const Navbar = ({ className }: Props) => {
 	} = useAuth();
 	const {
 		state: { menuVisible },
-		toggle
+		toggleMenu
 	} = useNavigation();
 
 	const { pathname } = useLocation();
@@ -44,14 +44,14 @@ const Navbar = ({ className }: Props) => {
 	});
 
 	function accountHandler() {
-		toggle(false);
+		toggleMenu(false);
 
 		navigate(!pathname.includes('account') ? '/account' : '/');
 	}
 
 	return (
 		<nav className={[classes.Navbar, className].join(' ')}>
-			<div className={classes.Toggle} onClick={() => toggle()}>
+			<div className={classes.Toggle} onClick={() => toggleMenu()}>
 				{!menuVisible ? <Menu /> : <X />}
 			</div>
 
