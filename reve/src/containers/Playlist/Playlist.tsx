@@ -55,7 +55,7 @@ const Playlist = ({
 	loading,
 	fetching
 }: Props) => {
-	const { crossed, element, resetHandler } = useScroll({ offset: 300 });
+	const { element, resetHandler } = useScroll({ offset: 300, onCross: onScrollEnd });
 
 	function linkHandler(url: string) {
 		window.open(url, '_blank')!.focus();
@@ -118,16 +118,12 @@ const Playlist = ({
 	));
 
 	useEffect(() => {
-		if (crossed) {
-			onScrollEnd?.();
+		if (fetching) {
+			return;
 		}
-	}, [crossed]);
 
-	useEffect(() => {
-		if (crossed && !fetching) {
-			resetHandler();
-		}
-	}, [songs]);
+		resetHandler();
+	}, [fetching]);
 
 	return (
 		<>

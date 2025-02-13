@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Props {
 	offset?: number;
+	onCross?: () => void;
 }
 
-const useScroll = ({ offset = 0 }: Props) => {
-	const [crossed, setCrossed] = useState<boolean>(false);
+const useScroll = ({ offset = 0, onCross }: Props) => {
+	const crossed = useRef<boolean>(false);
 
 	const element = useRef<any>(null);
 
@@ -15,7 +16,7 @@ const useScroll = ({ offset = 0 }: Props) => {
 		}
 
 		function handleScroll() {
-			if (!element.current || crossed) {
+			if (crossed.current) {
 				return;
 			}
 
@@ -23,7 +24,11 @@ const useScroll = ({ offset = 0 }: Props) => {
 
 			const passedThreshold = scrollTop + clientHeight >= scrollHeight - offset;
 
-			setCrossed(passedThreshold);
+			if (passedThreshold) {
+				crossed.current = true;
+
+				onCross?.();
+			}
 		}
 
 		element.current.addEventListener('scroll', handleScroll);
@@ -34,10 +39,10 @@ const useScroll = ({ offset = 0 }: Props) => {
 	}, [element.current, offset]);
 
 	function resetHandler() {
-		setCrossed(false);
+		crossed.current = false;
 	}
 
-	return { element, crossed, resetHandler };
+	return { element, resetHandler };
 };
 
 export default useScroll;
