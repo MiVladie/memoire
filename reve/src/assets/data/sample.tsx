@@ -1,12 +1,12 @@
 import React from 'react';
 
+import { ReactComponent as SoundCloud } from 'assets/icons/soundcloud.svg';
+// import { ReactComponent as YouTube } from 'assets/icons/youtube.svg';
+
 import { ReactComponent as Person } from 'assets/icons/person.svg';
 import { ReactComponent as Lock } from 'assets/icons/lock.svg';
-import { ReactComponent as SoundCloud } from 'assets/icons/soundcloud.svg';
-import { ReactComponent as YouTube } from 'assets/icons/youtube.svg';
-import { ReactComponent as Repeat } from 'assets/icons/repeat.svg';
-import { ReactComponent as Heart } from 'assets/icons/heart.svg';
-import { ReactComponent as Note } from 'assets/icons/note.svg';
+
+import { EPlaylistType, IPlaylist } from 'interfaces/data';
 
 export const ACCOUNT = [
 	{
@@ -38,40 +38,47 @@ export const ACCOUNT = [
 export const PLATFORMS = [
 	{
 		id: 1,
-		icon: <SoundCloud />,
-		color: '#FF7500',
 		name: 'SoundCloud'
 	},
 	{
 		id: 2,
-		icon: <YouTube />,
-		color: '#FF0000',
 		name: 'YouTube'
 	}
 ];
 
-export const PLAYLISTS = [
+// @ts-ignore
+export const PLAYLISTS: IPlaylist[] = [
 	{
 		id: 1,
-		icon: <Repeat />,
 		name: 'Reposts',
-		color: '#88E788'
+		type: EPlaylistType.REPOST,
+		total: 478,
+		removed: 12,
+		date: new Date()
 	},
 	{
 		id: 2,
-		icon: <Heart />,
 		name: 'Likes',
-		color: '#966FD6'
+		type: EPlaylistType.LIKE,
+		total: 1273,
+		removed: 24,
+		date: new Date()
 	},
 	{
 		id: 3,
-		icon: <Note />,
-		name: 'Lo-Fi'
+		name: 'Lo-Fi',
+		type: EPlaylistType.CUSTOM,
+		total: 74,
+		removed: 3,
+		date: new Date()
 	},
 	{
 		id: 4,
-		icon: <Note />,
-		name: '4reDng.'
+		name: '4reDng.',
+		type: EPlaylistType.CUSTOM,
+		total: 128,
+		removed: 15,
+		date: new Date()
 	}
 ];
 

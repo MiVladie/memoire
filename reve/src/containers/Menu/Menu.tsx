@@ -13,7 +13,7 @@ interface Item {
 }
 
 interface Props {
-	data: Item[];
+	data?: Item[];
 	bottom?: Item[];
 	highlighted?: number;
 	active?: number;
@@ -54,7 +54,7 @@ const Menu = ({ data, bottom, highlighted, active, onClick, meta, className, loa
 
 	return (
 		<div className={[classes.Menu, className].join(' ')}>
-			<ul className={classes.Items}>{renderItems(data)}</ul>
+			{data && <ul className={classes.Items}>{renderItems(data)}</ul>}
 
 			{bottom && <ul className={classes.Items}>{renderItems(bottom)}</ul>}
 		</div>

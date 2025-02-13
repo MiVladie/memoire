@@ -1,13 +1,21 @@
 export interface IPlatform {
 	id: number;
 	name: string;
-	theme_color: string;
-	playlists: IPlaylist[];
 }
 
 export interface IPlaylist {
 	id: number;
 	name: string;
+	type: EPlaylistType;
+	total: number;
+	removed: number;
+	date: string | Date;
+}
+
+export enum EPlaylistType {
+	REPOST,
+	LIKE,
+	CUSTOM
 }
 
 export interface ISong {

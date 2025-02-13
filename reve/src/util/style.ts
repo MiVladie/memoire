@@ -26,3 +26,15 @@ export function rgbToHEX(r: number, g: number, b: number): string {
 			.toUpperCase()
 	);
 }
+
+export function clsx(...classes: (string | Record<string, boolean> | null | false)[]): string {
+	return classes
+		.flatMap((cls) =>
+			typeof cls === 'string'
+				? cls
+				: typeof cls === 'object' && cls !== null
+				? Object.keys(cls).filter((key) => cls[key])
+				: []
+		)
+		.join(' ');
+}

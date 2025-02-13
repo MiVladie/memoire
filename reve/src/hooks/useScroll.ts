@@ -31,10 +31,11 @@ const useScroll = ({ offset = 0, onCross }: Props) => {
 			}
 		}
 
-		element.current.addEventListener('scroll', handleScroll);
+		const currentElement = element.current;
+		currentElement.addEventListener('scroll', handleScroll);
 
 		return () => {
-			element.current?.removeEventListener('scroll', handleScroll);
+			currentElement?.removeEventListener('scroll', handleScroll);
 		};
 	}, [element.current, offset]);
 

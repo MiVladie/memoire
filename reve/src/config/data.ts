@@ -1,6 +1,4 @@
-import { IPlatform, ISetting } from 'interfaces/data';
-
-export const PLATFORMS_DATA: IPlatform[] = [
+export const PLATFORMS_DATA = [
 	{
 		id: 1,
 		name: 'SoundCloud',
@@ -154,7 +152,7 @@ export const PLAYLIST_DATA = {
 	total: 40
 };
 
-export const SETTINGS_DATA: ISetting[] = [
+export const SETTINGS_DATA = [
 	{
 		id: 1,
 		name: 'Account'

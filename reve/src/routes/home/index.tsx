@@ -3,8 +3,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ACTIVE_PLAYLIST, PLATFORMS, PLAYLISTS, SONGS } from 'assets/data/sample';
 import { useNavigation } from 'context/useNavigation';
 import { useQueue } from 'context/useQueue';
-import { ISong } from 'interfaces/data';
+import { IPlatform, IPlaylist, ISong } from 'interfaces/data';
+import { themePlatform, themePlaylist } from 'util/visuals';
 import { delay } from 'util/date';
+import { clsx } from 'util/style';
 
 import Menu from 'containers/Menu/Menu';
 import Playlist from 'containers/Playlist/Playlist';
@@ -16,6 +18,9 @@ import Seo from 'hoc/Seo/Seo';
 import classes from './Home.module.scss';
 
 const Home = () => {
+	const [platforms, setPlatforms] = useState<IPlatform[]>();
+	const [playlists, setPlaylists] = useState<IPlaylist[]>();
+
 	const [selectedPlatform, setSelectedPlatform] = useState<number>(1);
 	const [selectedPlaylist, setSelectedPlaylist] = useState<number>(2);
 
@@ -32,9 +37,17 @@ const Home = () => {
 
 	const { state, play, stop } = useQueue();
 
+	const menuPlatforms = useMemo(() => {
+		return platforms?.map((platform) => ({ ...platform, ...themePlatform(platform.id) })) || [];
+	}, [platforms]);
+
+	const menuPlaylists = useMemo(() => {
+		return playlists?.map((playlist) => ({ ...playlist, ...themePlaylist(playlist.type) })) || [];
+	}, [platforms]);
+
 	const playlist = useMemo(() => {
-		return PLAYLISTS.find((p) => p.id === selectedPlaylist)!;
-	}, [selectedPlaylist]);
+		return playlists?.find((p) => p.id === selectedPlaylist);
+	}, [playlists, selectedPlaylist]);
 
 	useEffect(() => {
 		fetchData();
@@ -43,6 +56,12 @@ const Home = () => {
 	async function fetchData() {
 		try {
 			await delay(2);
+
+			setPlatforms(PLATFORMS.map((platform) => ({ ...platform, ...themePlatform(platform.id) })));
+			setPlaylists(PLAYLISTS.map((playlist) => ({ ...playlist, ...themePlaylist(playlist.type) })));
+
+			setSelectedPlatform(1);
+			setSelectedPlaylist(2);
 
 			setSongs(SONGS);
 		} catch (error: any) {
@@ -79,9 +98,9 @@ const Home = () => {
 	}
 
 	function onPlayHandler() {
-		play({ playlistId: ACTIVE_PLAYLIST }); // TODO: playlistId
+		play({ playlistId: selectedPlaylist });
 
-		activateQueue();
+		activateQueue(true);
 	}
 
 	function onStopHandler() {
@@ -91,30 +110,27 @@ const Home = () => {
 	}
 
 	return (
-		<div
-			className={[classes.Home, menuVisible ? classes.HomeMenu : '', queueActive ? classes.HomeQueue : ''].join(
-				' '
-			)}>
+		<div className={clsx(classes.Home, { [classes.HomeMenu]: menuVisible, [classes.HomeQueue]: queueActive })}>
 			<div className={classes.Menu}>
-				<Menu data={PLATFORMS} onClick={onPlatformHandler} highlighted={selectedPlatform} loading={loading} />
+				<Menu
+					data={menuPlatforms}
+					onClick={onPlatformHandler}
+					highlighted={selectedPlatform}
+					loading={loading}
+				/>
 
 				<Menu
-					data={PLAYLISTS}
+					data={menuPlaylists}
 					onClick={onPlaylistHandler}
 					highlighted={selectedPlaylist}
-					active={ACTIVE_PLAYLIST}
+					active={state.playlistId!}
 					meta={<Equalizer />}
 					loading={loading}
 				/>
 			</div>
 
 			<Playlist
-				name={playlist.name}
-				icon={playlist.icon}
-				color={playlist.color || '#FEC9A7'}
-				total={1284}
-				removed={24}
-				date={new Date()}
+				data={playlist}
 				onPlay={onPlayHandler}
 				onStop={onStopHandler}
 				onScrollEnd={onFetchHandler}
