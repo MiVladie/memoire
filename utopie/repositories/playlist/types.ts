@@ -1,12 +1,13 @@
 import { Playlist } from '@prisma/client';
-import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
+import { PlaylistType } from '@/interfaces/models';
 
 export interface CreateParams {
 	name: string;
+	type: PlaylistType;
+
 	platformId: number;
 	userId: number;
 
-	type?: SoundCloudPlaylistType;
 	soundcloudId?: number;
 }
 

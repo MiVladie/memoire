@@ -1,5 +1,3 @@
-import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
-
 export interface User {
 	id: number;
 	name: string;
@@ -20,20 +18,26 @@ export interface Recovery {
 export interface Platform {
 	id: number;
 	name: string;
-	theme: string;
 }
 
 export interface Playlist {
 	id: number;
 	name: string;
+	type: PlaylistType;
+
 	platformId: number;
 	userId: number;
 
 	soundcloudPlaylist: {
 		soundcloudPlaylistId: number | null;
 		playlistId: number;
-		type: SoundCloudPlaylistType;
 	} | null;
+}
+
+export enum PlaylistType {
+	REPOSTS = 'REPOSTS',
+	LIKES = 'LIKES',
+	CUSTOM = 'CUSTOM'
 }
 
 export interface Song {

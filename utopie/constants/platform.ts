@@ -1,23 +1,21 @@
-import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
+import { PlaylistType } from '@/interfaces/models';
 
 export const SoundCloud = {
 	id: 1,
 	name: 'SoundCloud',
-	theme: '#FF7700',
 	playlists: [
 		{
 			name: 'Reposts',
-			type: SoundCloudPlaylistType.REPOSTS
+			type: PlaylistType.REPOSTS
 		},
 		{
 			name: 'Likes',
-			type: SoundCloudPlaylistType.LIKES
+			type: PlaylistType.LIKES
 		}
 	]
 };
 
 export const YouTube = {
 	id: 2,
-	name: 'YouTube',
-	theme: '#FF0000'
+	name: 'YouTube'
 };

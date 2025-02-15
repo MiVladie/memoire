@@ -1,6 +1,7 @@
 model Playlist {
     id                          Int                     @id @default(autoincrement())
     name                        String
+    type                        PlaylistType            @default(CUSTOM)
 
     platform                    Platform                @relation(fields: [platformId], references: [id], onDelete: Cascade)
     platformId                  Int
@@ -9,10 +10,17 @@ model Playlist {
     userId                      Int
 
     soundcloudPlaylist          SoundCloudPlaylist?
+    
 
     songs                       PlaylistsSongs[]
 
     @@map("playlists")
+}
+
+enum PlaylistType {
+    REPOSTS
+    LIKES
+    CUSTOM
 }
 
 model PlaylistsSongs {
@@ -29,18 +37,10 @@ model PlaylistsSongs {
 }
 
 model SoundCloudPlaylist {
-    type                        SoundCloudPlaylistType   @default(CUSTOM)
-
     soundcloudPlaylistId        Int?                     @unique
 
     playlist                    Playlist                 @relation(fields: [playlistId], references: [id], onDelete: Cascade)
     playlistId                  Int                      @unique
 
     @@map("soundcloud_playlists")
-}
-
-enum SoundCloudPlaylistType {
-    REPOSTS
-    LIKES
-    CUSTOM
 }

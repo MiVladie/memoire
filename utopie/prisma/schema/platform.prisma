@@ -1,7 +1,6 @@
 model Platform {
     id          Int         @id @default(autoincrement())
     name        String      @unique
-    theme       String      @default("#fff")
 
     playlist    Playlist[]
     song        Song[]

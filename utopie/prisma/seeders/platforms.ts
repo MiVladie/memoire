@@ -8,12 +8,12 @@ export async function seed() {
 	const keys = Object.keys(Platform) as Array<keyof typeof Platform>;
 
 	for (let key of keys) {
-		const { id, name, theme } = Platform[key];
+		const { id, name } = Platform[key];
 
 		await prisma.platform.upsert({
 			where: { id },
-			update: { name, theme },
-			create: { id, name, theme }
+			update: { name },
+			create: { id, name }
 		});
 	}
 }

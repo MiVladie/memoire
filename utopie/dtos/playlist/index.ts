@@ -7,7 +7,9 @@ export function toPlaylistsDTO(playlists: Playlist[]): PlaylistDTO[] {
 	return playlists;
 }
 
-export function fromSoundCloudPlaylistsDTO(playlists: SoundCloudPlaylist[]): Omit<CreatePlaylistDTO, 'userId'>[] {
+export function fromSoundCloudPlaylistsDTO(
+	playlists: SoundCloudPlaylist[]
+): Omit<CreatePlaylistDTO, 'userId' | 'type'>[] {
 	return playlists.map((playlist) => ({
 		name: playlist.title,
 		platformId: Platform.SoundCloud.id,

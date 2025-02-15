@@ -18,7 +18,7 @@ import { CreatePlaylistDTO } from '@/dtos/playlist/types';
 import { CreateSongDTO } from '@/dtos/song/types';
 import { fromSoundCloudPlaylistsDTO } from '@/dtos/playlist';
 import { fromSoundCloudCollectionDTO, fromSoundCloudTrackDTO, fromSoundCloudTracksDTO } from '@/dtos/song';
-import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
+import { PlaylistType } from '@/interfaces/models';
 import { getQueryParam } from '@/util/api';
 import { intoChunks } from '@/util/optimization';
 import { SoundCloud } from '@/constants/api';
@@ -50,7 +50,7 @@ export async function getPlaylists({
 
 	const customPlaylists: CreatePlaylistDTO[] = fromSoundCloudPlaylistsDTO(collection).map((p) => ({
 		...p,
-		type: SoundCloudPlaylistType.CUSTOM,
+		type: PlaylistType.CUSTOM,
 		userId
 	}));
 

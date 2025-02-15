@@ -23,12 +23,6 @@ export interface SoundCloudPlaylist {
 	track_count: number;
 }
 
-export enum SoundCloudPlaylistType {
-	REPOSTS = 'REPOSTS',
-	LIKES = 'LIKES',
-	CUSTOM = 'CUSTOM'
-}
-
 export type SoundCloudCollection = {
 	created_at: string;
 	track: SoundCloudTrack;

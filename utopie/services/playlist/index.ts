@@ -12,13 +12,12 @@ import {
 	RemovePlaylistsParams,
 	RemovePlaylistsType
 } from './types';
-import { SoundCloudPlaylistType } from '@/interfaces/soundcloud';
 import { toPlaylistsDTO } from '@/dtos/playlist';
 import { objectsMatch } from '@/util/validation';
 import { excludeKeys } from '@/util/optimization';
 import { toSongsDTO } from '@/dtos/song';
 import { Platform } from '@/constants';
-import { Song } from '@/interfaces/models';
+import { PlaylistType, Song } from '@/interfaces/models';
 
 import PlaylistJob from '@/jobs/playlist';
 
@@ -98,16 +97,16 @@ export async function populateSoundCloudPlaylist({
 
 	let data;
 
-	switch (playlist.soundcloudPlaylist!.type) {
-		case SoundCloudPlaylistType.REPOSTS:
+	switch (playlist.type) {
+		case PlaylistType.REPOSTS:
 			data = await soundCloudService.getReposts({ soundcloudUserId: user!.soundcloudId! });
 			break;
 
-		case SoundCloudPlaylistType.LIKES:
+		case PlaylistType.LIKES:
 			data = await soundCloudService.getLikes({ soundcloudUserId: user!.soundcloudId! });
 			break;
 
-		case SoundCloudPlaylistType.CUSTOM:
+		case PlaylistType.CUSTOM:
 			data = await soundCloudService.getPlaylistSongs({
 				soundcloudPlaylistId: playlist.soundcloudPlaylist!.soundcloudPlaylistId!
 			});
