@@ -2,16 +2,17 @@ import { useEffect, useRef } from 'react';
 
 interface Props {
 	offset?: number;
+	active?: boolean;
 	onCross?: () => void;
 }
 
-const useScroll = ({ offset = 0, onCross }: Props) => {
+const useScroll = ({ offset = 0, active = true, onCross }: Props) => {
 	const crossed = useRef<boolean>(false);
 
 	const element = useRef<any>(null);
 
 	useEffect(() => {
-		if (!element.current) {
+		if (!element.current || !active) {
 			return;
 		}
 
@@ -31,13 +32,12 @@ const useScroll = ({ offset = 0, onCross }: Props) => {
 			}
 		}
 
-		const currentElement = element.current;
-		currentElement.addEventListener('scroll', handleScroll);
+		element.current.addEventListener('scroll', handleScroll);
 
 		return () => {
-			currentElement?.removeEventListener('scroll', handleScroll);
+			element.current?.removeEventListener('scroll', handleScroll);
 		};
-	}, [element.current, offset]);
+	}, [element, offset, active]);
 
 	function resetHandler() {
 		crossed.current = false;

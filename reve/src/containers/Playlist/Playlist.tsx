@@ -46,7 +46,7 @@ const Playlist = ({
 	loading,
 	fetching
 }: Props) => {
-	const { element, resetHandler } = useScroll({ offset: 300, onCross: onScrollEnd });
+	const { element, resetHandler } = useScroll({ offset: 300, onCross: onScrollEnd, active: !loading });
 
 	useEffect(() => {
 		if (fetching) {
