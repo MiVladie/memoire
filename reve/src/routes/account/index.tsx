@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react';
 
-import { ACCOUNT } from 'assets/data/sample';
+import { SETTINGS_MENU } from 'config/project';
 import { useNavigation } from 'context/useNavigation';
 import { useAuth } from 'context/useAuth';
 
 import { ReactComponent as Person } from 'assets/icons/person.svg';
 import { ReactComponent as Lock } from 'assets/icons/lock.svg';
 import { ReactComponent as SoundCloudIcon } from 'assets/icons/soundcloud.svg';
+import { ReactComponent as YouTubeIcon } from 'assets/icons/youtube.svg';
 import { ReactComponent as Logout } from 'assets/icons/logout.svg';
 
 import Menu from 'containers/Menu/Menu';
@@ -19,7 +20,7 @@ import Seo from 'hoc/Seo/Seo';
 import classes from './Account.module.scss';
 
 const Account = () => {
-	const [selected, setSelected] = useState<number>(ACCOUNT[0].id);
+	const [selected, setSelected] = useState<number>(1);
 
 	const {
 		state: { menuVisible, queueActive },
@@ -63,6 +64,13 @@ const Account = () => {
 					color: '#FF7500'
 				};
 
+			case 4:
+				return {
+					title: 'YouTube',
+					icon: <YouTubeIcon />,
+					color: '#FF0000'
+				};
+
 			default:
 				return {
 					title: '',
@@ -81,7 +89,7 @@ const Account = () => {
 			].join(' ')}>
 			<div className={classes.Menu}>
 				<Menu
-					data={ACCOUNT}
+					data={SETTINGS_MENU}
 					bottom={[
 						{
 							id: 5,
@@ -100,9 +108,9 @@ const Account = () => {
 					<Profile className={classes.Content} />
 				) : selected === 2 ? (
 					<Password className={classes.Content} />
-				) : (
+				) : selected === 3 ? (
 					<SoundCloud className={classes.Content} />
-				)}
+				) : null}
 			</Content>
 		</div>
 	);
