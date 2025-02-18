@@ -41,7 +41,7 @@ const Queue = ({ className, loading }: Props) => {
 		crossOffset: 300,
 		onCross: fetchData,
 		onScroll: resizeHandler,
-		active: !loading && isDesktop
+		active: !loading
 	});
 
 	const headerRef = useRef<HTMLDivElement>(null);

@@ -34,6 +34,9 @@
 		width: $navbar-height;
 		height: $navbar-height;
 
+		min-width: $navbar-height;
+		min-height: $navbar-height;
+
 		border-radius: calc(#{$navbar-height} / 2);
 		overflow: hidden;
 
