@@ -1,5 +1,5 @@
 import { excludeKeys } from '@/util/optimization';
-import { CreateParams, FindOneParams, FindManyParams, FindSongsParams, RemoveParams } from './types';
+import { CreateParams, FindOneParams, FindManyParams, FindSongsParams, UpdateParams, RemoveParams } from './types';
 import { Playlist } from '@/interfaces/models';
 import { Platform } from '@/constants';
 
@@ -65,6 +65,30 @@ export async function findSongs(where: FindSongsParams, limit?: number, cursor?:
 	return songs.map((data) => data.song);
 }
 
+export async function countSongs(where: FindSongsParams) {
+	const { _count } = await db.playlist.findUniqueOrThrow({
+		where: excludeKeys(where, ['isPresent', 'search']),
+		include: {
+			_count: {
+				select: {
+					songs: {
+						where: {
+							song: {
+								isPresent: where.isPresent,
+								OR: where.search
+									? [{ name: { contains: where.search } }, { author: { contains: where.search } }]
+									: undefined
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+
+	return _count.songs;
+}
+
 export async function associateSong(id: number, songId: number, order?: number) {
 	if (order == undefined) {
 		order = (await getOrder(id)) + 1;
@@ -97,6 +121,10 @@ export async function getOrder(id: number) {
 	});
 
 	return lastRelation?.order ?? 0;
+}
+
+export function update(id: number, data: UpdateParams) {
+	return db.playlist.update({ where: { id }, data });
 }
 
 export async function remove(where: RemoveParams) {

@@ -185,6 +185,12 @@ export async function populateSoundCloudPlaylist({
 			}
 		}
 	}
+
+	// Update playlist info
+	const total_songs = await playlistRepository.countSongs({ id: playlist.id });
+	const removed_songs = await playlistRepository.countSongs({ id: playlist.id, isPresent: false });
+
+	await playlistRepository.update(playlist.id, { total_songs, removed_songs, date_updated: new Date() });
 }
 
 export async function removePlaylists(params: RemovePlaylistsParams): Promise<RemovePlaylistsType> {

@@ -24,6 +24,9 @@ export interface Playlist {
 	id: number;
 	name: string;
 	type: PlaylistType;
+	total_songs: number;
+	removed_songs: number;
+	date_updated: Date;
 
 	platformId: number;
 	userId: number;

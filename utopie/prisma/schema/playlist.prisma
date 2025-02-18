@@ -2,6 +2,9 @@ model Playlist {
     id                          Int                     @id @default(autoincrement())
     name                        String
     type                        PlaylistType            @default(CUSTOM)
+    total_songs                 Int                     @default(0)
+    removed_songs               Int                     @default(0)
+    date_updated                DateTime                @default(now())
 
     platform                    Platform                @relation(fields: [platformId], references: [id], onDelete: Cascade)
     platformId                  Int
@@ -10,7 +13,6 @@ model Playlist {
     userId                      Int
 
     soundcloudPlaylist          SoundCloudPlaylist?
-    
 
     songs                       PlaylistsSongs[]
 
