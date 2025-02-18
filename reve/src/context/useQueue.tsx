@@ -109,7 +109,7 @@ export const QueueProvider = ({ children }: any) => {
 	}
 
 	async function play(options?: PlayOptions) {
-		// Resume playing current song
+		// Scenario 1: Resume playing current song
 		if (
 			!options ||
 			(state.playingIndex !== null &&
@@ -121,18 +121,21 @@ export const QueueProvider = ({ children }: any) => {
 			return;
 		}
 
-		// Play a song from current playlist
+		// Scenario 2: Play a song from current playlist
 		if (options.songId && options.playlistId === state.playlistId) {
 			const songIndex = state.list.findIndex((s) => s.id === options.songId);
 
-			setState((prevState) => ({ ...prevState, playingIndex: songIndex, playing: true }));
+			// If song not found (was deleted), skip to Scenario 4
+			if (songIndex !== -1) {
+				setState((prevState) => ({ ...prevState, playingIndex: songIndex, playing: true }));
 
-			setAction(QueueActions.PLAY_SONG);
+				setAction(QueueActions.PLAY_SONG);
 
-			return;
+				return;
+			}
 		}
 
-		// Play first song from another playlist
+		// Scenario 3: Play first song from another playlist
 		if (options.playlistId && !options.songId) {
 			setState((prevState) => ({ ...prevState, retrieving: true }));
 
@@ -153,7 +156,7 @@ export const QueueProvider = ({ children }: any) => {
 			return;
 		}
 
-		// Play a song from another playlist
+		// Scenario 4: Play a song from another playlist
 		if (options.playlistId && options.songId) {
 			setState((prevState) => ({ ...prevState, retrieving: true }));
 
