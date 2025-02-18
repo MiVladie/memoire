@@ -96,6 +96,17 @@ const Queue = ({ className, loading }: Props) => {
 		element.current!.style.paddingTop = `${padding}px`;
 	}
 
+	function playHandler(index: number) {
+		// Resume/pause song
+		if (index === state.playingIndex) {
+			play();
+
+			return;
+		}
+
+		play({ playlistId: state.playlistId!, songId: state.list[index].id });
+	}
+
 	function unqueueSongHandler(index: number) {
 		if (state.list.length === 1) {
 			stop();
@@ -148,7 +159,16 @@ const Queue = ({ className, loading }: Props) => {
 				{state.list.map((song, i) => (
 					<li className={classes.Song} key={song.id + i.toString()} ref={i === 0 ? songRef : undefined}>
 						<div className={classes.Info}>
-							<img src={song.image!} alt={song.name} className={classes.Image} />
+							<div
+								className={clsx(classes.Media, { [classes.MediaActive]: state.playingIndex === i })}
+								onClick={() => playHandler(i)}>
+								<img src={song.image!} alt={song.name} className={classes.Image} />
+
+								<Knob
+									icon={state.playing && i === state.playingIndex ? <Pause /> : <Play />}
+									className={classes.Play}
+								/>
+							</div>
 
 							<div className={classes.Meta}>
 								<p className={classes.Title}>{song.name}</p>

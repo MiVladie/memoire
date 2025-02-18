@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useMemo, useState } from 'react';
+import React, { useContext, createContext, useMemo, useState, useEffect } from 'react';
 
 import { Song } from 'interfaces/models';
 
@@ -58,12 +58,20 @@ const QueueContext = createContext<Context>({} as Context);
 
 const subscribers = new Set<(action: QueueActions, state: State) => void>();
 
-function notifySubscribers(action: QueueActions, state: State) {
-	subscribers.forEach((cb) => cb(action, state));
-}
-
 export const QueueProvider = ({ children }: any) => {
 	const [state, setState] = useState<State>(defaultState);
+
+	const [action, setAction] = useState<QueueActions | null>(null);
+
+	useEffect(() => {
+		if (action === null) {
+			return;
+		}
+
+		subscribers.forEach((cb) => cb(action, state));
+
+		setAction(null);
+	}, [action]);
 
 	function subscribe(callback: (action: QueueActions, state: State) => void) {
 		subscribers.add(callback);
@@ -102,7 +110,12 @@ export const QueueProvider = ({ children }: any) => {
 
 	async function play(options?: PlayOptions) {
 		// Resume playing current song
-		if (!options) {
+		if (
+			!options ||
+			(state.playingIndex !== null &&
+				options.playlistId === state.playlistId &&
+				options.songId === state.list[state.playingIndex].id)
+		) {
 			setState((prevState) => ({ ...prevState, playing: !prevState.playing }));
 
 			return;
@@ -112,13 +125,9 @@ export const QueueProvider = ({ children }: any) => {
 		if (options.songId && options.playlistId === state.playlistId) {
 			const songIndex = state.list.findIndex((s) => s.id === options.songId);
 
-			setState((prevState) => {
-				const newState = { ...prevState, playingIndex: songIndex, playing: true };
+			setState((prevState) => ({ ...prevState, playingIndex: songIndex, playing: true }));
 
-				notifySubscribers(QueueActions.PLAY_SONG, newState);
-
-				return newState;
-			});
+			setAction(QueueActions.PLAY_SONG);
 
 			return;
 		}
@@ -129,21 +138,17 @@ export const QueueProvider = ({ children }: any) => {
 
 			const { songs } = await API.User.getPlaylistSongs(options.playlistId, { isPresent: true });
 
-			setState((prevState) => {
-				const newState = {
-					...prevState,
-					playlistId: options.playlistId!,
-					playingIndex: 0,
-					list: songs,
-					playing: true,
-					retrieving: false,
-					allRetrieved: false
-				};
+			setState((prevState) => ({
+				...prevState,
+				playlistId: options.playlistId!,
+				playingIndex: 0,
+				list: songs,
+				playing: true,
+				retrieving: false,
+				allRetrieved: false
+			}));
 
-				notifySubscribers(QueueActions.START_PLAYLIST, newState);
-
-				return newState;
-			});
+			setAction(QueueActions.START_PLAYLIST);
 
 			return;
 		}
@@ -152,41 +157,46 @@ export const QueueProvider = ({ children }: any) => {
 		if (options.playlistId && options.songId) {
 			setState((prevState) => ({ ...prevState, retrieving: true }));
 
-			const { songs } = await API.User.getPlaylistSongs(options.playlistId, {
-				isPresent: true,
-				cursor: options.songId
-			});
+			const list: Song[] = [];
+			let songIndex: number = -1;
+			let cursor = undefined;
 
-			const songIndex: number = 0;
+			do {
+				const { songs } = await API.User.getPlaylistSongs(options.playlistId, {
+					isPresent: true,
+					cursor: cursor
+				});
 
-			setState((prevState) => {
-				const newState = {
-					...prevState,
-					playlistId: options.playlistId!,
-					playingIndex: songIndex,
-					list: songs,
-					playing: true,
-					retrieving: false,
-					allRetrieved: false
-				};
+				if (songs.length === 0) {
+					throw new Error('Oops, something went wrong!');
+				}
 
-				notifySubscribers(QueueActions.START_PLAYLIST, newState);
+				list.push(...songs);
 
-				return newState;
-			});
+				songIndex = list.findIndex((s) => s.id === options.songId);
+				cursor = songs[songs.length - 1].id;
+			} while (songIndex === -1);
+
+			setState((prevState) => ({
+				...prevState,
+				playlistId: options.playlistId!,
+				playingIndex: songIndex,
+				list: list,
+				playing: true,
+				retrieving: false,
+				allRetrieved: false
+			}));
+
+			setAction(QueueActions.START_PLAYLIST);
 
 			return;
 		}
 	}
 
 	function stop() {
-		setState((prevState) => {
-			const newState = { ...prevState, playlistId: null, playing: false };
+		setState((prevState) => ({ ...prevState, playlistId: null, playing: false }));
 
-			notifySubscribers(QueueActions.CLOSE_PLAYLIST, newState);
-
-			return newState;
-		});
+		setAction(QueueActions.CLOSE_PLAYLIST);
 	}
 
 	function previous() {
@@ -194,17 +204,13 @@ export const QueueProvider = ({ children }: any) => {
 			return;
 		}
 
-		setState((prevState) => {
-			const newState = {
-				...prevState,
-				playingIndex: prevState.playingIndex! - 1,
-				playing: true
-			};
+		setState((prevState) => ({
+			...prevState,
+			playingIndex: prevState.playingIndex! - 1,
+			playing: true
+		}));
 
-			notifySubscribers(QueueActions.PREVIOUS_SONG, newState);
-
-			return newState;
-		});
+		setAction(QueueActions.PREVIOUS_SONG);
 	}
 
 	async function next() {
@@ -228,32 +234,24 @@ export const QueueProvider = ({ children }: any) => {
 
 		// Reached the end of the playlist
 		if (state.playingIndex === state.list.length - 1) {
-			setState((prevState) => {
-				const newState = {
-					...prevState,
-					playing: false
-				};
+			setState((prevState) => ({
+				...prevState,
+				playing: false
+			}));
 
-				notifySubscribers(QueueActions.FINISH_PLAYLIST, newState);
-
-				return newState;
-			});
+			setAction(QueueActions.FINISH_PLAYLIST);
 
 			return;
 		}
 
 		// Play the next song in the playlist
-		setState((prevState) => {
-			const newState = {
-				...prevState,
-				playingIndex: prevState.playingIndex! + 1,
-				playing: true
-			};
+		setState((prevState) => ({
+			...prevState,
+			playingIndex: prevState.playingIndex! + 1,
+			playing: true
+		}));
 
-			notifySubscribers(QueueActions.NEXT_SONG, newState);
-
-			return newState;
-		});
+		setAction(QueueActions.NEXT_SONG);
 	}
 
 	async function add(song: Song, options?: AddOptions) {
@@ -270,7 +268,7 @@ export const QueueProvider = ({ children }: any) => {
 
 			setState(newState);
 
-			notifySubscribers(QueueActions.START_PLAYLIST, newState);
+			setAction(QueueActions.START_PLAYLIST);
 
 			return;
 		}
@@ -288,7 +286,7 @@ export const QueueProvider = ({ children }: any) => {
 
 			setState(newState);
 
-			notifySubscribers(QueueActions.START_PLAYLIST, newState);
+			setAction(QueueActions.START_PLAYLIST);
 
 			return;
 		}
@@ -306,7 +304,7 @@ export const QueueProvider = ({ children }: any) => {
 
 			setState(newState);
 
-			notifySubscribers(QueueActions.PLAY_SONG, newState);
+			setAction(QueueActions.PLAY_SONG);
 
 			return;
 		}
@@ -324,13 +322,9 @@ export const QueueProvider = ({ children }: any) => {
 	function remove(songIndex: number) {
 		// Removing last song from queue
 		if (state.list.length === 1) {
-			setState((prevState) => {
-				const newState = { ...prevState, playlistId: null, playing: false };
+			setState((prevState) => ({ ...prevState, playlistId: null, playing: false }));
 
-				notifySubscribers(QueueActions.CLOSE_PLAYLIST, newState);
-
-				return newState;
-			});
+			setAction(QueueActions.CLOSE_PLAYLIST);
 
 			return;
 		}
@@ -357,25 +351,17 @@ export const QueueProvider = ({ children }: any) => {
 		if (songIndex === state.playingIndex) {
 			// Switch to next
 			if (state.list.length - 1 !== songIndex) {
-				setState((prevState) => {
-					const newState = { ...prevState, list: prevState.list.filter((_, i) => i !== songIndex) };
+				setState((prevState) => ({ ...prevState, list: prevState.list.filter((_, i) => i !== songIndex) }));
 
-					notifySubscribers(QueueActions.NEXT_SONG, newState);
-
-					return newState;
-				});
+				setAction(QueueActions.NEXT_SONG);
 
 				return;
 			}
 
 			// Finish playlist
-			setState((prevState) => {
-				const newState = { ...prevState, playing: false };
+			setState((prevState) => ({ ...prevState, playing: false }));
 
-				notifySubscribers(QueueActions.FINISH_PLAYLIST, newState);
-
-				return newState;
-			});
+			setAction(QueueActions.FINISH_PLAYLIST);
 
 			return;
 		}

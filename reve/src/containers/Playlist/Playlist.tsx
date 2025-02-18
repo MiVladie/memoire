@@ -2,9 +2,13 @@ import React, { useEffect, useMemo } from 'react';
 
 import { Playlist, Song } from 'interfaces/models';
 import { convertSecondsToFormat } from 'util/date';
+import { useNavigation } from 'context/useNavigation';
+import { useQueue } from 'context/useQueue';
 import { themePlaylist } from 'util/visuals';
+import { clsx } from 'util/style';
 
 import { ReactComponent as Play } from 'assets/icons/play.svg';
+import { ReactComponent as Pause } from 'assets/icons/pause.svg';
 import { ReactComponent as Stop } from 'assets/icons/stop.svg';
 import { ReactComponent as Note } from 'assets/icons/note.svg';
 import { ReactComponent as Hide } from 'assets/icons/hide.svg';
@@ -23,11 +27,7 @@ const SKELETON_SIZE = 10;
 
 interface Props {
 	data?: Playlist;
-	onPlay?: () => void;
-	onStop?: () => void;
-	onQueueAdd?: (song: Song) => void;
 	onScrollEnd?: () => void;
-	playing: boolean;
 	songs: Song[];
 	endReached?: boolean;
 	loading?: boolean;
@@ -35,19 +35,14 @@ interface Props {
 	className?: string;
 }
 
-const PlaylistContainer = ({
-	data,
-	onPlay,
-	onStop,
-	onQueueAdd,
-	onScrollEnd,
-	playing,
-	songs,
-	endReached,
-	loading,
-	fetching,
-	className
-}: Props) => {
+const PlaylistContainer = ({ data, onScrollEnd, songs, endReached, loading, fetching, className }: Props) => {
+	const {
+		state: { queueActive },
+		activateQueue
+	} = useNavigation();
+
+	const { state, play, stop, add } = useQueue();
+
 	const { element, resetCrossHandler } = useScroll({
 		crossOffset: 300,
 		onCross: onScrollEnd,
@@ -66,11 +61,43 @@ const PlaylistContainer = ({
 		window.open(url, '_blank')!.focus();
 	}
 
+	const { icon, color } = useMemo(() => themePlaylist(data?.type), [data]);
+
+	const playing = useMemo(() => {
+		if (!queueActive || state.playlistId === null || !data) {
+			return false;
+		}
+
+		return state.playlistId === data.id;
+	}, [queueActive, state.playlistId, data]);
+
+	function playHandler(song?: Song) {
+		if (song && !song.isPresent) {
+			return;
+		}
+
+		play({ playlistId: data!.id, songId: song?.id });
+
+		activateQueue(true);
+	}
+
+	function stopHandler() {
+		stop();
+
+		activateQueue(false);
+	}
+
+	async function queueAddHandler(song: Song) {
+		await add(song, { reset: !queueActive });
+
+		activateQueue(true);
+	}
+
 	const stats = (
 		<div className={classes.Meta}>
 			<Knob
 				icon={!playing ? <Play /> : <Stop />}
-				onClick={!playing ? onPlay : onStop}
+				onClick={() => (!playing ? playHandler() : stopHandler())}
 				size={48}
 				className={classes.Play}
 				fill
@@ -102,8 +129,6 @@ const PlaylistContainer = ({
 		</div>
 	);
 
-	const { icon, color } = useMemo(() => themePlaylist(data?.type), [data]);
-
 	if (loading) {
 		return <Skeleton className={className} />;
 	}
@@ -120,7 +145,28 @@ const PlaylistContainer = ({
 				{songs.map((song) => (
 					<li className={classes.Song} key={song.id}>
 						<div className={classes.Wrapper}>
-							<img src={song.image!} alt={song.name} className={classes.Image} />
+							<div
+								className={clsx(classes.Media, {
+									[classes.MediaPresent]: song.isPresent,
+									[classes.MediaActive]:
+										queueActive && state.list[state.playingIndex!]?.id === song.id
+								})}
+								onClick={() => playHandler(song)}>
+								<img src={song.image!} alt={song.name} className={classes.Image} />
+
+								{song.isPresent && (
+									<Knob
+										icon={
+											state.playing && song.id === state.list[state.playingIndex!]?.id ? (
+												<Pause />
+											) : (
+												<Play />
+											)
+										}
+										className={classes.Play}
+									/>
+								)}
+							</div>
 
 							<div className={classes.Info}>
 								<p className={[classes.Title, !song.isPresent && classes.TitleMissing].join(' ')}>
@@ -135,7 +181,7 @@ const PlaylistContainer = ({
 							<div className={classes.Actions}>
 								<Knob
 									icon={<QueueAdd />}
-									onClick={() => onQueueAdd?.(song)}
+									onClick={() => queueAddHandler(song)}
 									className={!song.isPresent ? classes.QueueHidden : ''}
 								/>
 

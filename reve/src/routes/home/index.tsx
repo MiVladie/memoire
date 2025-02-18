@@ -34,11 +34,10 @@ const Home = () => {
 
 	const {
 		state: { menuVisible, queueActive },
-		toggleMenu,
-		activateQueue
+		toggleMenu
 	} = useNavigation();
 
-	const { state, play, stop, add } = useQueue();
+	const { state } = useQueue();
 
 	const { isDesktop } = useScreen();
 
@@ -150,24 +149,6 @@ const Home = () => {
 		}
 	}
 
-	async function onQueueAddHandler(song: Song) {
-		await add(song, { reset: !queueActive });
-
-		activateQueue(true);
-	}
-
-	async function onPlayHandler() {
-		await play({ playlistId: selectedPlaylist });
-
-		activateQueue(true);
-	}
-
-	function onStopHandler() {
-		stop();
-
-		activateQueue(false);
-	}
-
 	return (
 		<div className={clsx(classes.Home, { [classes.HomeMenu]: menuVisible, [classes.HomeQueue]: queueActive })}>
 			<div className={classes.Menu}>
@@ -190,11 +171,7 @@ const Home = () => {
 
 			<Playlist
 				data={playlist}
-				onPlay={onPlayHandler}
-				onStop={onStopHandler}
-				onQueueAdd={onQueueAddHandler}
 				onScrollEnd={onFetchHandler}
-				playing={selectedPlaylist === state.playlistId}
 				songs={songs}
 				endReached={endReached}
 				loading={loadingPlaylists}
