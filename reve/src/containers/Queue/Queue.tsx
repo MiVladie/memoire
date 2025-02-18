@@ -30,16 +30,19 @@ interface Props {
 const Queue = ({ className, loading }: Props) => {
 	const [song, setSong] = useState<Song>();
 
-	const [fetching, setFetching] = useState<boolean>(false);
-
-	const { state, subscribe, play, remove } = useQueue();
+	const { state, subscribe, retrieve, play, remove } = useQueue();
 	const {
 		state: { queueVisible },
 		activateQueue
 	} = useNavigation();
 
 	const { isMobile, isTablet, isDesktop } = useScreen();
-	const { element } = useScroll({ onScroll: resizeHandler, active: !loading && isDesktop });
+	const { element, resetCrossHandler } = useScroll({
+		crossOffset: 300,
+		onCross: fetchData,
+		onScroll: resizeHandler,
+		active: !loading && isDesktop
+	});
 
 	const headerRef = useRef<HTMLDivElement>(null);
 	const infoRef = useRef<HTMLDivElement>(null);
@@ -72,8 +75,10 @@ const Queue = ({ className, loading }: Props) => {
 		return unsubscribe;
 	}, []);
 
-	if (loading) {
-		return <Skeleton className={clsx(classes.Queue, { [classes.QueueVisible]: queueVisible }, className)} />;
+	async function fetchData() {
+		await retrieve();
+
+		resetCrossHandler();
 	}
 
 	function resizeHandler() {
@@ -91,7 +96,7 @@ const Queue = ({ className, loading }: Props) => {
 		element.current!.style.paddingTop = `${padding}px`;
 	}
 
-	function onQueueRemoveHandler(index: number) {
+	function unqueueSongHandler(index: number) {
 		if (state.list.length === 1) {
 			stop();
 
@@ -99,6 +104,10 @@ const Queue = ({ className, loading }: Props) => {
 		}
 
 		remove(index);
+	}
+
+	if (loading) {
+		return <Skeleton className={clsx(classes.Queue, { [classes.QueueVisible]: queueVisible }, className)} />;
 	}
 
 	return (
@@ -151,7 +160,7 @@ const Queue = ({ className, loading }: Props) => {
 						<div className={classes.Actions}>
 							<Knob
 								icon={<QueueRemove />}
-								onClick={() => onQueueRemoveHandler(i)}
+								onClick={() => unqueueSongHandler(i)}
 								className={classes.QueueRemove}
 							/>
 						</div>
@@ -160,7 +169,7 @@ const Queue = ({ className, loading }: Props) => {
 					</li>
 				))}
 
-				{fetching && SKELETON}
+				{state.retrieving && SKELETON}
 			</ul>
 		</div>
 	);
@@ -174,9 +183,9 @@ const SKELETON = new Array(SKELETON_SIZE).fill(null).map((_, i) => (
 			<Skeleton className={classes.Image} light />
 
 			<div className={classes.Meta}>
-				<Skeleton className={classes.Title} light />
+				<Skeleton className={classes.Title} width={100} light />
 
-				<Skeleton className={classes.Author} light />
+				<Skeleton className={classes.Author} width={75} light />
 			</div>
 		</div>
 

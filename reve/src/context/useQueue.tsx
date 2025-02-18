@@ -3,6 +3,7 @@ import React, { useContext, createContext, useMemo, useState } from 'react';
 import { Song } from 'interfaces/models';
 
 import * as API from 'api';
+import { delay } from 'util/date';
 
 export enum QueueActions {
 	START_PLAYLIST,
@@ -28,11 +29,14 @@ interface State {
 	list: Song[];
 	playingIndex: number | null;
 	playing: boolean;
+	retrieving: boolean;
+	allRetrieved: boolean;
 }
 
 interface Context {
 	state: State;
 	subscribe: (callback: (action: QueueActions, state: State) => void) => () => void;
+	retrieve: () => Promise<void>;
 	play: (options?: PlayOptions) => void;
 	stop: () => void;
 	previous: () => void;
@@ -45,7 +49,9 @@ const defaultState: State = {
 	playlistId: null,
 	list: [],
 	playingIndex: null,
-	playing: false
+	playing: false,
+	retrieving: false,
+	allRetrieved: false
 };
 
 const QueueContext = createContext<Context>({} as Context);
@@ -65,6 +71,33 @@ export const QueueProvider = ({ children }: any) => {
 		return () => {
 			subscribers.delete(callback);
 		};
+	}
+
+	async function retrieve() {
+		if (state.playlistId === null || state.allRetrieved) {
+			return;
+		}
+
+		setState((prevState) => ({ ...prevState, retrieving: true }));
+
+		const lastSong = state.list.length > 0 ? state.list[state.list.length - 1] : undefined;
+
+		try {
+			const { songs } = await API.User.getPlaylistSongs(state.playlistId, {
+				cursor: lastSong?.id,
+				isPresent: true
+			});
+
+			setState((prevState) => ({
+				...prevState,
+				list: [...prevState.list, ...songs],
+				allRetrieved: songs.length === 0
+			}));
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setState((prevState) => ({ ...prevState, retrieving: false }));
+		}
 	}
 
 	async function play(options?: PlayOptions) {
@@ -92,6 +125,8 @@ export const QueueProvider = ({ children }: any) => {
 
 		// Play first song from another playlist
 		if (options.playlistId && !options.songId) {
+			setState((prevState) => ({ ...prevState, retrieving: true }));
+
 			const { songs } = await API.User.getPlaylistSongs(options.playlistId, { isPresent: true });
 
 			setState((prevState) => {
@@ -100,7 +135,9 @@ export const QueueProvider = ({ children }: any) => {
 					playlistId: options.playlistId!,
 					playingIndex: 0,
 					list: songs,
-					playing: true
+					playing: true,
+					retrieving: false,
+					allRetrieved: false
 				};
 
 				notifySubscribers(QueueActions.START_PLAYLIST, newState);
@@ -113,6 +150,8 @@ export const QueueProvider = ({ children }: any) => {
 
 		// Play a song from another playlist
 		if (options.playlistId && options.songId) {
+			setState((prevState) => ({ ...prevState, retrieving: true }));
+
 			const { songs } = await API.User.getPlaylistSongs(options.playlistId, {
 				isPresent: true,
 				cursor: options.songId
@@ -126,7 +165,9 @@ export const QueueProvider = ({ children }: any) => {
 					playlistId: options.playlistId!,
 					playingIndex: songIndex,
 					list: songs,
-					playing: true
+					playing: true,
+					retrieving: false,
+					allRetrieved: false
 				};
 
 				notifySubscribers(QueueActions.START_PLAYLIST, newState);
@@ -166,7 +207,26 @@ export const QueueProvider = ({ children }: any) => {
 		});
 	}
 
-	function next() {
+	async function next() {
+		// Retrieve more songs if possible
+		if (state.playlistId !== null && state.playingIndex! + 1 === state.list.length - 1 && !state.allRetrieved) {
+			setState((prevState) => ({ ...prevState, retrieving: true }));
+
+			const { songs } = await API.User.getPlaylistSongs(state.playlistId!, {
+				cursor: state.list[state.playingIndex! + 1].id,
+				isPresent: true
+			});
+
+			// Play the next song in the playlist
+			setState((prevState) => ({
+				...prevState,
+				list: [...prevState.list, ...songs],
+				retrieving: false,
+				allRetrieved: songs.length === 0
+			}));
+		}
+
+		// Reached the end of the playlist
 		if (state.playingIndex === state.list.length - 1) {
 			setState((prevState) => {
 				const newState = {
@@ -182,6 +242,7 @@ export const QueueProvider = ({ children }: any) => {
 			return;
 		}
 
+		// Play the next song in the playlist
 		setState((prevState) => {
 			const newState = {
 				...prevState,
@@ -202,7 +263,9 @@ export const QueueProvider = ({ children }: any) => {
 				playlistId: null,
 				list: [song],
 				playing: true,
-				playingIndex: 0
+				playingIndex: 0,
+				retrieving: false,
+				allRetrieved: false
 			};
 
 			setState(newState);
@@ -215,10 +278,12 @@ export const QueueProvider = ({ children }: any) => {
 		// A song has been added to an empty queue
 		if (state.list.length === 0) {
 			const newState = {
-				playlistId: state.playlistId,
+				playlistId: null,
 				list: [song],
 				playing: true,
-				playingIndex: 0
+				playingIndex: 0,
+				retrieving: false,
+				allRetrieved: false
 			};
 
 			setState(newState);
@@ -231,10 +296,12 @@ export const QueueProvider = ({ children }: any) => {
 		// Added song to a finished playlist
 		if (state.playingIndex === state.list.length - 1 && !state.playing) {
 			const newState = {
-				playlistId: state.playlistId,
+				playlistId: null,
 				list: [...state.list, song],
 				playing: true,
-				playingIndex: state.playingIndex + 1
+				playingIndex: state.playingIndex + 1,
+				retrieving: false,
+				allRetrieved: false
 			};
 
 			setState(newState);
@@ -247,6 +314,7 @@ export const QueueProvider = ({ children }: any) => {
 		// Add a song to the end of the queue
 		const newState = {
 			...state,
+			playlistId: null,
 			list: [...state.list, song]
 		};
 
@@ -313,7 +381,7 @@ export const QueueProvider = ({ children }: any) => {
 		}
 	}
 
-	const value = useMemo(() => ({ state, subscribe, play, stop, previous, next, add, remove }), [state]);
+	const value = useMemo(() => ({ state, subscribe, retrieve, play, stop, previous, next, add, remove }), [state]);
 
 	return <QueueContext.Provider value={value}>{children}</QueueContext.Provider>;
 };
