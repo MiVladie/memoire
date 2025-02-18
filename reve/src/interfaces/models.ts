@@ -9,13 +9,18 @@ export interface User {
 export interface Platform {
 	id: number;
 	name: string;
-	theme: string;
 }
 
 export interface Playlist {
 	id: number;
 	name: string;
+	type: PlaylistType;
+	total_songs: number;
+	removed_songs: number;
+	date_updated: string | Date;
 }
+
+export type PlaylistType = 'REPOSTS' | 'LIKES' | 'CUSTOM';
 
 export interface Song {
 	id: number;

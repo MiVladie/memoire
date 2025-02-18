@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 
-import { IPlaylist, ISong } from 'interfaces/data';
+import { Playlist, Song } from 'interfaces/models';
 import { convertSecondsToFormat } from 'util/date';
 import { themePlaylist } from 'util/visuals';
 
@@ -9,7 +9,7 @@ import { ReactComponent as Stop } from 'assets/icons/stop.svg';
 import { ReactComponent as Note } from 'assets/icons/note.svg';
 import { ReactComponent as Hide } from 'assets/icons/hide.svg';
 import { ReactComponent as Clock } from 'assets/icons/clock.svg';
-import { ReactComponent as Queue } from 'assets/icons/queue.svg';
+import { ReactComponent as QueueAdd } from 'assets/icons/queue_add.svg';
 import { ReactComponent as Url } from 'assets/icons/url.svg';
 
 import Skeleton from 'components/Skeleton/Skeleton';
@@ -22,38 +22,44 @@ import classes from './Playlist.module.scss';
 const SKELETON_SIZE = 10;
 
 interface Props {
-	data?: IPlaylist;
+	data?: Playlist;
 	onPlay?: () => void;
 	onStop?: () => void;
-	onQueue?: (id: number) => void;
+	onQueueAdd?: (song: Song) => void;
 	onScrollEnd?: () => void;
 	playing: boolean;
-	songs: ISong[];
-	className?: string;
+	songs: Song[];
+	endReached?: boolean;
 	loading?: boolean;
 	fetching?: boolean;
+	className?: string;
 }
 
-const Playlist = ({
+const PlaylistContainer = ({
 	data,
 	onPlay,
 	onStop,
-	onQueue,
+	onQueueAdd,
 	onScrollEnd,
 	playing,
 	songs,
-	className,
+	endReached,
 	loading,
-	fetching
+	fetching,
+	className
 }: Props) => {
-	const { element, resetHandler } = useScroll({ offset: 300, onCross: onScrollEnd, active: !loading });
+	const { element, resetCrossHandler } = useScroll({
+		crossOffset: 300,
+		onCross: onScrollEnd,
+		active: !loading && !fetching && !endReached
+	});
 
 	useEffect(() => {
 		if (fetching) {
 			return;
 		}
 
-		resetHandler();
+		resetCrossHandler();
 	}, [fetching]);
 
 	function linkHandler(url: string) {
@@ -74,14 +80,14 @@ const Playlist = ({
 				<li className={classes.Stat}>
 					<Note className={classes.Icon} />
 
-					<p className={classes.Value}>{data?.total}</p>
+					<p className={classes.Value}>{data?.total_songs}</p>
 					<p className={classes.Label}>songs</p>
 				</li>
 
 				<li className={classes.Stat}>
 					<Hide className={classes.Icon} />
 
-					<p className={classes.Value}>{data?.removed}</p>
+					<p className={classes.Value}>{data?.removed_songs}</p>
 					<p className={classes.Label}>removed</p>
 				</li>
 
@@ -89,14 +95,14 @@ const Playlist = ({
 					<Clock className={classes.Icon} />
 
 					<p className={classes.Value}>
-						{new Date(data?.date ?? 0).toLocaleTimeString('default', { timeStyle: 'short' })}
+						{new Date(data?.date_updated ?? 0).toLocaleTimeString('default', { timeStyle: 'short' })}
 					</p>
 				</li>
 			</ul>
 		</div>
 	);
 
-	const { icon, color } = useMemo(() => themePlaylist(data?.type || 0), [data]);
+	const { icon, color } = useMemo(() => themePlaylist(data?.type), [data]);
 
 	if (loading) {
 		return <Skeleton className={className} />;
@@ -117,7 +123,7 @@ const Playlist = ({
 							<img src={song.image!} alt={song.name} className={classes.Image} />
 
 							<div className={classes.Info}>
-								<p className={[classes.Title, !song.is_present && classes.TitleMissing].join(' ')}>
+								<p className={[classes.Title, !song.isPresent && classes.TitleMissing].join(' ')}>
 									{song.name}
 								</p>
 
@@ -128,9 +134,9 @@ const Playlist = ({
 						<div className={classes.Extra}>
 							<div className={classes.Actions}>
 								<Knob
-									icon={<Queue />}
-									onClick={() => onQueue?.(song.id)}
-									className={!song.is_present ? classes.QueueHidden : ''}
+									icon={<QueueAdd />}
+									onClick={() => onQueueAdd?.(song)}
+									className={!song.isPresent ? classes.QueueHidden : ''}
 								/>
 
 								<Knob icon={<Url />} onClick={() => linkHandler(song.url)} className={classes.Url} />
@@ -147,7 +153,7 @@ const Playlist = ({
 	);
 };
 
-export default Playlist;
+export default PlaylistContainer;
 
 const SKELETON = new Array(SKELETON_SIZE).fill(null).map((_, i) => (
 	<li className={classes.Song} key={i}>

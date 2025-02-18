@@ -1,17 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { useQueue } from 'context/useQueue';
+import { QueueActions, useQueue } from 'context/useQueue';
 import { convertSecondsToFormat } from 'util/date';
-import { ISong } from 'interfaces/data';
-
-import useScreen from 'hooks/useScreen';
+import { useNavigation } from 'context/useNavigation';
+import { Song } from 'interfaces/models';
+import { clsx } from 'util/style';
 
 import { ReactComponent as Play } from 'assets/icons/play.svg';
 import { ReactComponent as Pause } from 'assets/icons/pause.svg';
-import { ReactComponent as MusicQueue } from 'assets/icons/queue.svg';
+import { ReactComponent as QueueRemove } from 'assets/icons/queue_remove.svg';
 
 import Skeleton from 'components/Skeleton/Skeleton';
 import Knob from 'components/Knob/Knob';
+import useScreen from 'hooks/useScreen';
+import useScroll from 'hooks/useScroll';
 
 import classes from './Queue.module.scss';
 
@@ -20,102 +22,108 @@ const SKELETON_SIZE = 10;
 const PADDING_SPACE = 16;
 const QUEUE_WIDTH = 350;
 
-const SAMPLE_SONG: ISong = {
-	id: 1,
-	image: null,
-	name: 'Sample Song',
-	author: 'Sample Author',
-	url: '',
-	duration: 0,
-	is_present: true
-};
-
 interface Props {
-	visible?: boolean;
 	className?: string;
 	loading?: boolean;
 }
 
-const Queue = ({ visible, className, loading }: Props) => {
+const Queue = ({ className, loading }: Props) => {
+	const [song, setSong] = useState<Song>();
+
 	const [fetching, setFetching] = useState<boolean>(false);
 
-	const { state, play } = useQueue();
+	const { state, subscribe, play, remove } = useQueue();
+	const {
+		state: { queueVisible },
+		activateQueue
+	} = useNavigation();
 
 	const { isMobile, isTablet, isDesktop } = useScreen();
+	const { element } = useScroll({ onScroll: resizeHandler, active: !loading && isDesktop });
 
 	const headerRef = useRef<HTMLDivElement>(null);
 	const infoRef = useRef<HTMLDivElement>(null);
-	const songsRef = useRef<HTMLUListElement>(null);
 	const songRef = useRef<HTMLLIElement>(null);
 
-	const song = useMemo(
-		() => (state.playingIndex !== null ? state.list[state.playingIndex] : SAMPLE_SONG),
-		[state.list, state.playingIndex]
-	);
-
 	useEffect(() => {
-		if (!visible && !isDesktop) {
-			return;
-		}
+		const unsubscribe = subscribe((action, newState) => {
+			switch (action) {
+				case QueueActions.START_PLAYLIST:
+					setSong(newState.list[newState.playingIndex!]);
+					break;
 
-		function resize() {
-			const scrollTop = songsRef.current!.scrollTop;
-			const infoHeight = infoRef.current!.clientHeight;
+				case QueueActions.PLAY_SONG:
+					setSong(newState.list[newState.playingIndex!]);
+					break;
 
-			const initialHeight =
-				(isMobile ? window.innerWidth : isTablet ? window.innerHeight * 0.4 : QUEUE_WIDTH) - PADDING_SPACE * 2;
-			const minHeight = infoHeight + PADDING_SPACE * 2;
+				case QueueActions.NEXT_SONG:
+					setSong(newState.list[newState.playingIndex!]);
+					break;
 
-			const newHeight = Math.max(initialHeight - scrollTop, minHeight);
-			const padding = Math.min(scrollTop, initialHeight - minHeight);
+				case QueueActions.PREVIOUS_SONG:
+					setSong(newState.list[newState.playingIndex!]);
+					break;
 
-			headerRef.current!.style.height = `${newHeight}px`;
-			songRef.current!.style.paddingTop = `${padding}px`;
-		}
+				default:
+					break;
+			}
+		});
 
-		songsRef.current?.addEventListener('scroll', resize);
-
-		return () => {
-			songsRef.current?.removeEventListener('scroll', resize);
-		};
-	}, [visible, isDesktop, loading]);
-
-	function queueHandler(id: number) {
-		//
-	}
+		return unsubscribe;
+	}, []);
 
 	if (loading) {
-		return <Skeleton className={[classes.Queue, visible ? classes.QueueVisible : '', className].join(' ')} />;
+		return <Skeleton className={clsx(classes.Queue, { [classes.QueueVisible]: queueVisible }, className)} />;
 	}
 
-	const skeleton = new Array(SKELETON_SIZE).fill(null).map((_, i) => (
-		<li className={classes.Song} key={i}>
-			<div className={classes.Info}>
-				<Skeleton className={classes.Image} light />
+	function resizeHandler() {
+		const scrollTop = element.current!.scrollTop;
+		const infoHeight = infoRef.current!.clientHeight;
 
-				<div className={classes.Meta}>
-					<Skeleton className={classes.Title} light />
+		const initialHeight =
+			(isMobile ? window.innerWidth : isTablet ? window.innerHeight * 0.4 : QUEUE_WIDTH) - PADDING_SPACE * 2;
+		const minHeight = infoHeight + PADDING_SPACE * 2;
 
-					<Skeleton className={classes.Author} light />
-				</div>
-			</div>
+		const newHeight = Math.max(initialHeight - scrollTop, minHeight);
+		const padding = Math.min(scrollTop, initialHeight - minHeight);
 
-			<Skeleton className={classes.Duration} light />
-		</li>
-	));
+		headerRef.current!.style.height = `${newHeight}px`;
+		element.current!.style.paddingTop = `${padding}px`;
+	}
+
+	function onQueueRemoveHandler(index: number) {
+		if (state.list.length === 1) {
+			stop();
+
+			activateQueue(false);
+		}
+
+		remove(index);
+	}
 
 	return (
-		<div className={[classes.Queue, visible ? classes.QueueVisible : '', className].join(' ')}>
+		<div className={clsx(classes.Queue, { [classes.QueueVisible]: queueVisible }, className)}>
 			<div className={classes.Header} ref={headerRef}>
-				<img src={song.image!} alt={song.name} className={classes.Background} />
+				{song ? (
+					<img src={song.image!} alt={song.name} className={classes.Background} />
+				) : (
+					<Skeleton className={classes.Background} />
+				)}
 
 				<div className={classes.Gradient} />
 
 				<div className={classes.Current} ref={infoRef}>
-					<div className={classes.Wrapper}>
-						<h2 className={classes.Title}>{song.name}</h2>
-						<h3 className={classes.Author}>{song.author}</h3>
-					</div>
+					{song ? (
+						<div className={classes.Wrapper}>
+							<h2 className={classes.Title}>{song.name}</h2>
+							<h3 className={classes.Author}>{song.author}</h3>
+						</div>
+					) : (
+						<div className={classes.Wrapper}>
+							<Skeleton className={classes.Title} width={100} light />
+							<Skeleton className={classes.Author} width={50} light />
+						</div>
+					)}
 
 					<Knob
 						icon={!state.playing ? <Play /> : <Pause />}
@@ -127,9 +135,9 @@ const Queue = ({ visible, className, loading }: Props) => {
 				</div>
 			</div>
 
-			<ul className={classes.Songs} ref={songsRef}>
+			<ul className={classes.Songs} ref={element}>
 				{state.list.map((song, i) => (
-					<li className={classes.Song} key={song.id} ref={i === 0 ? songRef : undefined}>
+					<li className={classes.Song} key={song.id + i.toString()} ref={i === 0 ? songRef : undefined}>
 						<div className={classes.Info}>
 							<img src={song.image!} alt={song.name} className={classes.Image} />
 
@@ -142,9 +150,9 @@ const Queue = ({ visible, className, loading }: Props) => {
 
 						<div className={classes.Actions}>
 							<Knob
-								icon={<MusicQueue />}
-								onClick={() => queueHandler(song.id)}
-								className={classes.MusicQueue}
+								icon={<QueueRemove />}
+								onClick={() => onQueueRemoveHandler(i)}
+								className={classes.QueueRemove}
 							/>
 						</div>
 
@@ -152,10 +160,26 @@ const Queue = ({ visible, className, loading }: Props) => {
 					</li>
 				))}
 
-				{fetching && skeleton}
+				{fetching && SKELETON}
 			</ul>
 		</div>
 	);
 };
 
 export default Queue;
+
+const SKELETON = new Array(SKELETON_SIZE).fill(null).map((_, i) => (
+	<li className={classes.Song} key={i}>
+		<div className={classes.Info}>
+			<Skeleton className={classes.Image} light />
+
+			<div className={classes.Meta}>
+				<Skeleton className={classes.Title} light />
+
+				<Skeleton className={classes.Author} light />
+			</div>
+		</div>
+
+		<Skeleton className={classes.Duration} light />
+	</li>
+));

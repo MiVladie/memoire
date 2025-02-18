@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { EPlaylistType } from 'interfaces/data';
+import { PlaylistType } from 'interfaces/models';
 
 import { ReactComponent as SoundCloud } from 'assets/icons/soundcloud.svg';
 import { ReactComponent as YouTube } from 'assets/icons/youtube.svg';
@@ -27,12 +27,12 @@ export function themePlatform(id: number): ITheme {
 	}
 }
 
-export function themePlaylist(type: EPlaylistType): ITheme {
+export function themePlaylist(type?: PlaylistType): ITheme {
 	switch (type) {
-		case EPlaylistType.REPOST:
+		case 'REPOSTS':
 			return { icon: <Repeat />, color: '#88E788' };
 
-		case EPlaylistType.LIKE:
+		case 'LIKES':
 			return { icon: <Heart />, color: '#966FD6' };
 
 		default:

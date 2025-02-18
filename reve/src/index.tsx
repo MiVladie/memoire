@@ -83,15 +83,13 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<NavigationProvider>
-			<QueueProvider>
-				<AuthProvider>
-					<RouterProvider router={router} />
-				</AuthProvider>
-			</QueueProvider>
-		</NavigationProvider>
-	</React.StrictMode>
+	<NavigationProvider>
+		<QueueProvider>
+			<AuthProvider>
+				<RouterProvider router={router} />
+			</AuthProvider>
+		</QueueProvider>
+	</NavigationProvider>
 );
 
 axios.interceptors.request.use(async (config) => {

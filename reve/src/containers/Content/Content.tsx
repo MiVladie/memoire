@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
 
-import { hexToRGBA } from 'util/style';
+import { hexToRGBA, clsx } from 'util/style';
 
 import classes from './Content.module.scss';
 
@@ -16,15 +16,15 @@ interface Props {
 }
 
 const Content = ({ title, icon, color, meta, children, className, style, scrollRef }: Props) => (
-	<div className={[classes.Content, className].join(' ')} style={style} ref={scrollRef}>
+	<div className={clsx(classes.Content, className)} style={style} ref={scrollRef}>
 		<div
 			className={classes.Header}
 			style={{
 				backgroundImage: `linear-gradient(
-                rgba(${hexToRGBA(color, 0.4).join(', ')}),
-                rgba(${hexToRGBA(color, 0.15).join(', ')}),
-                #121212
-            )`
+					rgba(${hexToRGBA(color, 0.45).join(', ')}),
+					rgba(${hexToRGBA(color, 0.15).join(', ')}),
+					#121212
+				)`
 			}}>
 			<h1 className={classes.Title}>{title}</h1>
 

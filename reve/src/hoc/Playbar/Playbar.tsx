@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { OnProgressProps } from 'react-player/base';
 import { convertSecondsToFormat } from 'util/date';
 import { useNavigation } from 'context/useNavigation';
-import { ISong } from 'interfaces/data';
-import { useQueue } from 'context/useQueue';
-import { rgbToHEX } from 'util/style';
+import { Song } from 'interfaces/models';
+import { QueueActions, useQueue } from 'context/useQueue';
+import { clsx } from 'util/style';
 
 import { ReactComponent as Previous } from 'assets/icons/previous.svg';
 import { ReactComponent as Next } from 'assets/icons/next.svg';
@@ -19,100 +18,98 @@ import { ReactComponent as VolumeUp } from 'assets/icons/volume_up.svg';
 import { ReactComponent as ArrowDown } from 'assets/icons/arrow_down.svg';
 import { ReactComponent as MusicQueue } from 'assets/icons/queue.svg';
 
-// @ts-ignore
-import ColorThief from 'colorthief';
 import Knob from 'components/Knob/Knob';
 import Slider from 'components/Slider/Slider';
-import ReactPlayer from 'react-player';
 import Queue from 'containers/Queue/Queue';
+import Skeleton from 'components/Skeleton/Skeleton';
+
+import usePlayer from 'hooks/usePlayer';
 import useScreen from 'hooks/useScreen';
+import useColor from 'hooks/useColor';
 
 import * as API from 'api';
 
 import classes from './Playbar.module.scss';
 
-const SAMPLE_SONG: ISong = {
-	id: 1,
-	image: null,
-	name: 'Sample Song',
-	author: 'Sample Author',
-	url: '',
-	duration: 0,
-	is_present: true
-};
-
 const REPEAT_SONG_THRESHOLD = 3;
 
 const Playbar = () => {
+	const [song, setSong] = useState<Song>();
 	const [media, setMedia] = useState<string>();
 
-	const [played, setPlayed] = useState<number>(0);
-	const [volume, setVolume] = useState<number>(1);
-
-	const [repeat, setRepeat] = useState<boolean>(false);
 	const [shuffle, setShuffle] = useState<boolean>(false);
-	const [muted, setMuted] = useState<boolean>(false);
 
-	const [expanded, setExpanded] = useState<boolean>(false);
-	const [color, setColor] = useState<string>();
+	const [loading, setLoading] = useState<boolean>(true);
+
+	const { state, subscribe, play, previous, next } = useQueue();
+
+	const {
+		state: { queueActive, queueVisible, queueExpanded },
+		toggleQueue,
+		expandQueue
+	} = useNavigation();
+
+	const { played, loop, mute, volume, handleSeek, handleLoop, handleVolume, handleMute } = usePlayer({
+		media,
+		playing: state.playing && !loading,
+		onEnd: next
+	});
+
+	const { color } = useColor({ src: song?.image });
 
 	const { isDesktop } = useScreen();
 
-	const { state, play, previous, next } = useQueue();
-	const {
-		state: { queueVisible, queueActive },
-		toggleQueue
-	} = useNavigation();
-
-	const imageRef = useRef<HTMLImageElement>(null);
-	const playerRef = useRef<ReactPlayer>(null);
-
-	const song = useMemo(
-		() => (state.playingIndex !== null ? state.list[state.playingIndex] : SAMPLE_SONG),
-		[state.list, state.playingIndex]
-	);
-
 	useEffect(() => {
-		fetchSong();
-	}, [song]);
+		const unsubscribe = subscribe((action, newState) => {
+			switch (action) {
+				case QueueActions.START_PLAYLIST:
+					fetchSong(newState.list[newState.playingIndex!]);
+					break;
 
-	useEffect(() => {
-		if (state.playlistId) {
-			playerRef.current!.seekTo(0, 'fraction');
+				case QueueActions.PLAY_SONG:
+					fetchSong(newState.list[newState.playingIndex!]);
+					break;
 
-			setPlayed(0);
-		}
-	}, [state.playlistId]);
+				case QueueActions.NEXT_SONG:
+					fetchSong(newState.list[newState.playingIndex!]);
+					break;
 
-	useEffect(() => {
-		if (isDesktop && expanded) {
-			setExpanded(false);
-		}
-	}, [isDesktop]);
+				case QueueActions.PREVIOUS_SONG:
+					fetchSong(newState.list[newState.playingIndex!]);
+					break;
 
-	useEffect(() => {
-		if (isDesktop && queueVisible) {
-			toggleQueue();
-		}
-	}, [queueVisible, isDesktop]);
+				case QueueActions.FINISH_PLAYLIST:
+					handleSeek(0);
+					break;
 
-	async function fetchSong() {
-		playerRef.current?.seekTo(0, 'fraction');
+				default:
+					break;
+			}
+		});
+
+		return unsubscribe;
+	}, []);
+
+	async function fetchSong(song: Song) {
+		setMedia(undefined);
+		setSong(song);
+
+		setLoading(true);
 
 		try {
 			const { media } = await API.Song.getMedia(song.id);
 
 			setMedia(media);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
+		} finally {
+			setLoading(false);
 		}
 	}
 
 	function previousHandler() {
-		if (played * song.duration > REPEAT_SONG_THRESHOLD || state.playingIndex === 0) {
-			playerRef.current!.seekTo(0, 'fraction');
-
-			setPlayed(0);
+		if (played * song!.duration > REPEAT_SONG_THRESHOLD || state.playingIndex === 0) {
+			handleSeek(0);
 
 			return;
 		}
@@ -120,129 +117,75 @@ const Playbar = () => {
 		previous();
 	}
 
-	function seekHandler(value: number) {
-		playerRef.current!.seekTo(value, 'fraction');
-	}
-
-	function volumeHandler(value: number) {
-		if (muted) {
-			setMuted(false);
-		}
-
-		setVolume(value);
-	}
-
-	function repeatHandler() {
-		setRepeat((prevState) => !prevState);
-	}
-
 	function shuffleHandler() {
 		setShuffle((prevState) => !prevState);
-	}
-
-	function muteHandler() {
-		if (volume === 0 && !muted) {
-			setVolume(0.75);
-
-			return;
-		}
-
-		if (muted) {
-			setMuted(false);
-		} else {
-			setMuted(true);
-		}
-	}
-
-	function progressHandler({ played }: OnProgressProps) {
-		setPlayed(played);
-	}
-
-	function endHandler() {
-		//
-	}
-
-	function expandHandler() {
-		if (isDesktop) {
-			return;
-		}
-
-		if (!expanded && !color) {
-			const colorThief = new ColorThief();
-
-			const color = colorThief.getColor(imageRef.current) as [number, number, number];
-
-			setColor(`linear-gradient(${rgbToHEX(...color)}, #121212)`);
-		}
-
-		setExpanded(true);
-	}
-
-	function hideHandler() {
-		setExpanded(false);
 	}
 
 	return (
 		<>
 			<footer
-				className={[
-					classes.Playbar,
-					queueActive ? classes.PlaybarVisible : '',
-					expanded ? classes.PlaybarExpanded : '',
-					queueVisible ? classes.PlaybarView : ''
-				].join(' ')}>
+				className={clsx(classes.Playbar, {
+					[classes.PlaybarVisible]: queueActive,
+					[classes.PlaybarExpanded]: queueExpanded,
+					[classes.PlaybarView]: queueVisible
+				})}>
 				<div className={classes.Menu}>
-					<Knob icon={<ArrowDown />} className={classes.Arrow} onClick={hideHandler} size={48} />
+					<Knob icon={<ArrowDown />} className={classes.Arrow} onClick={expandQueue} size={48} />
 					<Knob icon={<MusicQueue />} onClick={toggleQueue} size={48} />
 				</div>
 
 				<div
 					className={classes.Info}
-					onClick={!expanded ? expandHandler : queueVisible ? () => toggleQueue() : undefined}>
-					<img
-						className={classes.Image}
-						src={song.image!}
-						alt={song.name}
-						ref={imageRef}
-						crossOrigin='anonymous'
-					/>
+					onClick={() => (!queueExpanded ? expandQueue() : queueVisible ? toggleQueue() : undefined)}>
+					{song ? (
+						<img className={classes.Image} src={song.image!} alt={song.name} />
+					) : (
+						<Skeleton className={classes.Image} />
+					)}
 
-					<div className={classes.Meta}>
-						<p className={classes.Title}>{song.name}</p>
-						<p className={classes.Author}>{song.author}</p>
-					</div>
+					{song ? (
+						<div className={classes.Meta}>
+							<p className={classes.Title}>{song.name}</p>
+							<p className={classes.Author}>{song.author}</p>
+						</div>
+					) : (
+						<div className={classes.Meta}>
+							<Skeleton className={classes.Title} width={100} />
+							<Skeleton className={classes.Author} width={50} />
+						</div>
+					)}
 				</div>
 
 				<div className={classes.Actions}>
 					<div className={classes.Buttons}>
-						<Knob icon={<Previous />} onClick={previousHandler} size={expanded ? 48 : undefined} />
+						<Knob icon={<Previous />} onClick={previousHandler} size={queueExpanded ? 48 : undefined} />
 
 						<Knob
 							icon={state.playing ? <Pause /> : <Play />}
 							onClick={play}
 							className={classes.Play}
-							size={expanded ? 48 : undefined}
+							size={queueExpanded ? 48 : undefined}
 							fill
 						/>
 
-						<Knob icon={<Next />} onClick={next} size={expanded ? 48 : undefined} />
+						<Knob icon={<Next />} onClick={next} size={queueExpanded ? 48 : undefined} />
 					</div>
 
 					<div className={classes.Playback}>
-						<p className={classes.Time}>{convertSecondsToFormat(played * song.duration)}</p>
+						<p className={classes.Time}>{convertSecondsToFormat(played * (song?.duration ?? 0))}</p>
 
-						<Slider value={played} onChange={seekHandler} className={classes.Timeline} />
+						<Slider value={played} onChange={handleSeek} className={classes.Timeline} />
 
-						<p className={classes.Time}>{convertSecondsToFormat(song.duration)}</p>
+						<p className={classes.Time}>{convertSecondsToFormat(song?.duration ?? 0)}</p>
 					</div>
 				</div>
 
 				<div className={classes.Controls}>
 					<Knob
 						icon={<Repeat />}
-						active={repeat}
-						onClick={repeatHandler}
-						size={expanded ? 48 : undefined}
+						active={loop}
+						onClick={handleLoop}
+						size={queueExpanded ? 48 : undefined}
 						className={classes.Repeat}
 					/>
 
@@ -250,37 +193,24 @@ const Playbar = () => {
 						icon={<Shuffle />}
 						active={shuffle}
 						onClick={shuffleHandler}
-						size={expanded ? 48 : undefined}
+						size={queueExpanded ? 48 : undefined}
 						className={classes.Shuffle}
 					/>
 
 					<Knob
-						icon={volume === 0 || muted ? <VolumeOff /> : volume < 0.5 ? <VolumeDown /> : <VolumeUp />}
-						active={volume > 0 && !muted}
-						onClick={muteHandler}
+						icon={volume === 0 || mute ? <VolumeOff /> : volume < 0.5 ? <VolumeDown /> : <VolumeUp />}
+						active={volume > 0 && !mute}
+						onClick={handleMute}
 						className={classes.Sound}
 					/>
 
-					<Slider value={!muted ? volume : 0} onChange={volumeHandler} className={classes.Volume} />
+					<Slider value={!mute ? volume : 0} onChange={handleVolume} className={classes.Volume} />
 				</div>
 
-				<div className={classes.Gradient} style={{ backgroundImage: color }} />
-
-				<ReactPlayer
-					ref={playerRef}
-					url={media}
-					playing={state.playing}
-					volume={volume}
-					muted={muted}
-					loop={repeat}
-					progressInterval={50}
-					onProgress={progressHandler}
-					onEnded={endHandler}
-					style={{ display: 'none' }}
-				/>
+				<div className={classes.Gradient} style={{ backgroundImage: `linear-gradient(${color}, #121212)` }} />
 			</footer>
 
-			<Queue visible={queueVisible} className={classes.Queue} />
+			{!isDesktop && <Queue className={classes.Queue} />}
 		</>
 	);
 };

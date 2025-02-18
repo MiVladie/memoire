@@ -27,7 +27,7 @@ export function rgbToHEX(r: number, g: number, b: number): string {
 	);
 }
 
-export function clsx(...classes: (string | Record<string, boolean> | null | false)[]): string {
+export function clsx(...classes: (string | Record<string, boolean> | null | undefined | false)[]): string {
 	return classes
 		.flatMap((cls) =>
 			typeof cls === 'string'
