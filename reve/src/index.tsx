@@ -84,7 +84,7 @@ const router = createBrowserRouter(
 		}
 	],
 	{
-		basename: PROD ? process.env.PUBLIC_URL : undefined
+		basename: process.env.PUBLIC_URL
 	}
 );
 
