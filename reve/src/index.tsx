@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { NavigationProvider } from 'context/useNavigation';
 import { QueueProvider } from 'context/useQueue';
 import { AuthProvider } from 'context/useAuth';
+import { PROD } from 'constants/config';
 
 import Layout from 'hoc/Layout/Layout';
 import Storage from 'config/storage';
@@ -25,62 +26,67 @@ import '@fontsource/holtwood-one-sc';
 import '@fontsource/urbanist';
 import '@fontsource/urbanist/500.css';
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+	[
+		{
+			path: '/',
+			element: (
+				<Layout>
+					<HomeHead />
+					<Home />
+				</Layout>
+			)
+		},
+		{
+			path: '/account',
+			element: (
+				<Layout>
+					<AccountHead />
+					<Account />
+				</Layout>
+			)
+		},
+		{
+			path: '/signin',
+			element: (
+				<Layout>
+					<SignInHead />
+					<SignIn />
+				</Layout>
+			)
+		},
+		{
+			path: '/signup',
+			element: (
+				<Layout>
+					<SignUpHead />
+					<SignUp />
+				</Layout>
+			)
+		},
+		{
+			path: '/recover',
+			element: (
+				<Layout>
+					<RecoverHead />
+					<Recover />
+				</Layout>
+			)
+		},
+		{
+			path: '*',
+			element: (
+				<>
+					<NotFoundHead />
+					<NotFound />
+				</>
+			)
+		}
+	],
 	{
-		path: '/',
-		element: (
-			<Layout>
-				<HomeHead />
-				<Home />
-			</Layout>
-		)
-	},
-	{
-		path: '/account',
-		element: (
-			<Layout>
-				<AccountHead />
-				<Account />
-			</Layout>
-		)
-	},
-	{
-		path: '/signin',
-		element: (
-			<Layout>
-				<SignInHead />
-				<SignIn />
-			</Layout>
-		)
-	},
-	{
-		path: '/signup',
-		element: (
-			<Layout>
-				<SignUpHead />
-				<SignUp />
-			</Layout>
-		)
-	},
-	{
-		path: '/recover',
-		element: (
-			<Layout>
-				<RecoverHead />
-				<Recover />
-			</Layout>
-		)
-	},
-	{
-		path: '*',
-		element: (
-			<>
-				<NotFoundHead />
-				<NotFound />
-			</>
-		)
+		basename: PROD ? process.env.PUBLIC_URL : undefined
 	}
-]);
+);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<NavigationProvider>
