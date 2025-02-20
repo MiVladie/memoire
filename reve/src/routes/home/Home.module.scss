@@ -16,7 +16,8 @@
 	.Queue {
 		height: calc(100vh - #{$navbar-height} - #{$md-space} * 3);
 
-		transition: all $navigation_animation_duration;
+		transition: height $navigation_animation_duration, transform $navigation_animation_duration,
+			width $navigation_animation_duration;
 	}
 
 	.Menu {
@@ -27,8 +28,9 @@
 
 		margin-left: $md-space;
 
+		transform: translateX(calc(-100vw + #{$md-space} * 3));
+
 		position: absolute;
-		left: calc(-100vw + #{$md-space} * 3);
 
 		> * {
 			width: 100%;
@@ -45,7 +47,7 @@
 	}
 
 	.Playlist {
-		width: 100%;
+		width: 100vw;
 
 		margin-left: $md-space;
 		margin-right: $md-space;
@@ -58,7 +60,7 @@
 
 .HomeMenu {
 	.Menu {
-		left: 0;
+		transform: translateX(0);
 	}
 
 	.Playlist {
@@ -79,12 +81,12 @@
 		.Menu {
 			width: $menu_width;
 
-			left: calc(-#{$queue_width} - #{$md-space});
+			transform: translateX(calc(-#{$queue_width} - #{$md-space}));
 		}
 
 		.Queue {
 			position: absolute;
-			right: calc(-#{$queue_width} - #{$md-space});
+			transform: translateX(calc(-#{$queue_width} - #{$md-space}));
 
 			width: $queue_width;
 
@@ -94,7 +96,7 @@
 
 	.HomeMenu {
 		.Menu {
-			left: 0;
+			transform: translateX(0);
 		}
 
 		.Playlist {
@@ -112,11 +114,14 @@
 @media (min-width: 1025px) {
 	.Home {
 		.Playlist {
+			will-change: width;
 			width: calc(100vw - #{$md-space} * 2);
 		}
 
 		.Queue {
 			display: flex;
+
+			transform: translateX(100vw);
 		}
 	}
 
@@ -132,33 +137,30 @@
 		}
 
 		.Queue {
-			right: 0;
+			transform: translateX(calc(100vw - #{$queue_width} - #{$md-space}));
 		}
 	}
 
 	.HomeMenu {
 		.Queue {
-			transform: translateX(calc(#{$queue_width} + #{$md-space}));
+			transform: translateX(calc(100vw));
 		}
 	}
 }
 
 @media (min-width: 1440px) {
 	.Home {
+		.Menu,
+		.Playlist {
+			transform: translateX(0);
+		}
+
 		.Menu {
 			position: relative;
-
-			left: 0;
 		}
 
 		.Playlist {
 			width: calc(100vw - #{$menu_width} - #{$md-space} * 3);
-
-			transform: translateX(0);
-		}
-
-		.Queue {
-			transform: translateX(0);
 		}
 	}
 

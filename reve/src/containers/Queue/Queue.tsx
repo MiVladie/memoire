@@ -72,7 +72,11 @@ const Queue = ({ className, loading }: Props) => {
 			}
 		});
 
-		return unsubscribe;
+		setSong(state.playingIndex !== null ? state.list[state.playingIndex] : undefined);
+
+		return () => {
+			unsubscribe();
+		};
 	}, []);
 
 	async function fetchData() {

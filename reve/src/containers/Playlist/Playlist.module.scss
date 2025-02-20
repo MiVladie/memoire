@@ -178,6 +178,10 @@
 				justify-content: flex-end;
 				align-items: center;
 
+				.QueueHidden {
+					visibility: hidden;
+				}
+
 				.Url {
 					display: none;
 				}
@@ -253,10 +257,6 @@
 						display: flex;
 
 						margin-left: $xs-space;
-					}
-
-					.QueueHidden {
-						visibility: hidden;
 					}
 				}
 			}
