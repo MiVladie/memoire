@@ -136,7 +136,9 @@ const Home = () => {
 
 		setFetching(true);
 
-		toggleMenu();
+		if (!isDesktop) {
+			toggleMenu();
+		}
 
 		try {
 			const { songs } = await API.User.getPlaylistSongs(id);

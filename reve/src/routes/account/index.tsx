@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 
 import { SETTINGS_MENU } from 'config/project';
 import { useNavigation } from 'context/useNavigation';
+import { useQueue } from 'context/useQueue';
 import { useAuth } from 'context/useAuth';
 
 import { ReactComponent as Person } from 'assets/icons/person.svg';
@@ -24,8 +25,11 @@ const Account = () => {
 
 	const {
 		state: { menuVisible, queueActive },
-		toggleMenu
+		toggleMenu,
+		activateQueue
 	} = useNavigation();
+
+	const { stop } = useQueue();
 
 	const { state, clear } = useAuth();
 
@@ -36,7 +40,10 @@ const Account = () => {
 	}
 
 	function logoutHandler() {
-		toggleMenu();
+		toggleMenu(false);
+		activateQueue(false);
+
+		stop();
 
 		clear();
 	}
