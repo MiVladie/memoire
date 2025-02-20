@@ -203,7 +203,7 @@
 	.Info {
 		position: absolute;
 
-		top: 18vh;
+		top: 20vh;
 
 		width: 100%;
 		flex-direction: column;
@@ -212,8 +212,8 @@
 			max-width: 450px;
 			max-height: 450px;
 
-			width: calc(100vw - #{$md-space} * 2);
-			height: calc(100vw - #{$md-space} * 2);
+			width: 80vw;
+			height: 80vw;
 
 			border-radius: 12px;
 
@@ -240,7 +240,7 @@
 
 				line-height: calc(#{$xl-size} + $xs-space);
 
-				margin-bottom: $md-space;
+				margin-bottom: 1.75vh;
 			}
 
 			.Author {
@@ -528,8 +528,6 @@
 		height: $playbar-height-desktop;
 
 		padding: $md-space $xl-space;
-
-		transition: all $navigation_animation_duration;
 
 		.Info {
 			height: $playbar-height-desktop;
