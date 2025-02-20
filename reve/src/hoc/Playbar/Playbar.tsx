@@ -4,6 +4,8 @@ import { convertSecondsToFormat } from 'util/date';
 import { useNavigation } from 'context/useNavigation';
 import { Song } from 'interfaces/models';
 import { QueueActions, useQueue } from 'context/useQueue';
+import { Device } from 'interfaces/common';
+import { isDevice } from 'util/common';
 import { clsx } from 'util/style';
 
 import { ReactComponent as Previous } from 'assets/icons/previous.svg';
@@ -107,18 +109,21 @@ const Playbar = () => {
 			navigator.mediaSession.setActionHandler('nexttrack', next);
 			navigator.mediaSession.setActionHandler('pause', () => play());
 			navigator.mediaSession.setActionHandler('play', () => play());
-			navigator.mediaSession.setActionHandler('seekbackward', (details) =>
-				handleSeek(Math.max(played - (details.seekOffset || 10) / song.duration, 0))
-			);
-			navigator.mediaSession.setActionHandler('seekforward', (details) =>
-				handleSeek(played + (details.seekOffset || 10) / song.duration)
-			);
 			navigator.mediaSession.setActionHandler(
 				'seekto',
 				(e) => e.seekTime && handleSeek(e.seekTime / song.duration)
 			);
+
+			if (!isDevice(Device.iOS)) {
+				navigator.mediaSession.setActionHandler('seekbackward', (details) =>
+					handleSeek(Math.max(played - (details.seekOffset || 10) / song.duration, 0))
+				);
+				navigator.mediaSession.setActionHandler('seekforward', (details) =>
+					handleSeek(played + (details.seekOffset || 10) / song.duration)
+				);
+			}
 		}
-	}, [song]);
+	}, [song, played]);
 
 	async function fetchSong(song: Song) {
 		setMedia(undefined);
