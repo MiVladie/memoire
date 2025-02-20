@@ -30,7 +30,20 @@ const usePlayer = ({ media, playing, onEnd }: Props) => {
 			rootRef.current = ReactDOM.createRoot(containerRef.current);
 		}
 
-		rootRef.current!.render(<ReactPlayer ref={playerRef} progressInterval={50} style={{ display: 'none' }} />);
+		rootRef.current!.render(
+			<ReactPlayer
+				ref={playerRef}
+				progressInterval={50}
+				style={{ display: 'none' }}
+				url={media}
+				playing={playing}
+				volume={volume}
+				muted={mute}
+				loop={loop}
+				onProgress={(progress) => setPlayed(progress.played)}
+				onEnded={onEnd}
+			/>
+		);
 
 		return () => {
 			// Delay cleanup to avoid React strict mode unmount issue
