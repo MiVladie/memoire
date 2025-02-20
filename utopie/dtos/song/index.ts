@@ -1,10 +1,10 @@
 import { Song } from '@/interfaces/models';
-import { CreateSongDTO, SongDTO } from '@/dtos/song/types';
+import { SongDTO } from '@/dtos/song/types';
 import { SoundCloudCollection, SoundCloudTrack } from '@/interfaces/soundcloud';
 import { Platform } from '@/constants';
 
 export function toSongsDTO(songs: Song[]): SongDTO[] {
-	return songs;
+	return songs.map((song) => ({ ...song, image: song.image?.replace('-large', '-t500x500') || null }));
 }
 
 export function fromSoundCloudCollectionDTO(collection: SoundCloudCollection) {
