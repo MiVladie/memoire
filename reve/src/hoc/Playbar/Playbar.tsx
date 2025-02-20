@@ -90,6 +90,36 @@ const Playbar = () => {
 		return unsubscribe;
 	}, []);
 
+	useEffect(() => {
+		if (!song) {
+			return;
+		}
+
+		// Allow play actions for browsers
+		if ('mediaSession' in navigator) {
+			navigator.mediaSession.metadata = new MediaMetadata({
+				title: song.name,
+				artist: song.author,
+				artwork: song.image ? [{ src: song.image }] : undefined
+			});
+
+			navigator.mediaSession.setActionHandler('previoustrack', previousHandler);
+			navigator.mediaSession.setActionHandler('nexttrack', next);
+			navigator.mediaSession.setActionHandler('pause', () => play());
+			navigator.mediaSession.setActionHandler('play', () => play());
+			navigator.mediaSession.setActionHandler('seekbackward', (details) =>
+				handleSeek(Math.max(played - (details.seekOffset || 10) / song.duration, 0))
+			);
+			navigator.mediaSession.setActionHandler('seekforward', (details) =>
+				handleSeek(played + (details.seekOffset || 10) / song.duration)
+			);
+			navigator.mediaSession.setActionHandler(
+				'seekto',
+				(e) => e.seekTime && handleSeek(e.seekTime / song.duration)
+			);
+		}
+	}, [song]);
+
 	async function fetchSong(song: Song) {
 		setMedia(undefined);
 		setSong(song);
