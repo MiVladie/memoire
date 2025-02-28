@@ -7,7 +7,7 @@
 		"rootDir": "./" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
 		"baseUrl": "./",
 		"paths": {
-			"@/*": ["*"]
+			"@/*": ["./*"]
 		},
 		"esModuleInterop": true,
 		"removeComments": true /* Do not emit comments to output. */,

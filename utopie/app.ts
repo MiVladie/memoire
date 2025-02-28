@@ -1,5 +1,9 @@
 require('dotenv').config();
 
+if (process.env.NODE_ENV !== 'development') {
+	require('module-alias/register');
+}
+
 import express from 'express';
 
 import setHeaders from '@/middleware/setHeaders';
