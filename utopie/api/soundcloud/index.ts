@@ -15,7 +15,7 @@ import {
 import { paramify } from '@/util/api';
 import { API } from '@/constants';
 
-import Request from 'shared/Request';
+import Request from '@/shared/Request';
 
 const defaultParams = { client_id: API.SoundCloud.CLIENT_ID };
 
