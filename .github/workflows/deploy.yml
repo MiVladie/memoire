@@ -40,14 +40,50 @@ jobs:
                   target: '~/memoire'
                   strip_components: 1
 
-            # Step 4: Set environment variables on the server
-            - name: Set up environment variables
+            # Step 4: Install dependencies on the server
+            - name: Install Dependencies on the Server
               run: |
                   echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
                   chmod 600 id_rsa
 
                   ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
                     cd ~/memoire
+                    npm ci
+
+                  EOF
+
+            # Step 5: Run Prisma migrations on the server
+            - name: Run Prisma Migrations
+              run: |
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+                  chmod 600 id_rsa
+
+                  ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire
+                    npx prisma migrate deploy
+
+                  EOF
+
+            # Step 6: Build the production app
+            - name: Build the production app
+              run: |
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+                  chmod 600 id_rsa
+
+                  ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire
+                    npx tsc -p tsconfig.json
+
+                  EOF
+
+            # Step 7: Set environment variables on the server
+            - name: Set up environment variables
+              run: |
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+                  chmod 600 id_rsa
+
+                  ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+                    cd ~/memoire/dist
                     
                     echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
                     echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
@@ -66,38 +102,14 @@ jobs:
 
                   EOF
 
-            # Step 5: Install dependencies on the server
-            - name: Install Dependencies on the Server
-              run: |
-                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
-                  chmod 600 id_rsa
-
-                  ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
-                    cd ~/memoire
-                    npm ci
-
-                  EOF
-
-            # Step 6: Run Prisma migrations on the server
-            - name: Run Prisma Migrations
-              run: |
-                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
-                  chmod 600 id_rsa
-
-                  ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
-                    cd ~/memoire
-                    npx prisma migrate deploy
-
-                  EOF
-
-            # Step 7: Restart the app with PM2
+            # Step 8: Restart the app with PM2
             - name: Restart Application with PM2
               run: |
                   echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
                   chmod 600 id_rsa
 
                   ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
-                    cd ~/memoire
+                    cd ~/memoire/dist
                     pm2 restart memoire || pm2 start npm --name "memoire" -- run start
                     
                   EOF
