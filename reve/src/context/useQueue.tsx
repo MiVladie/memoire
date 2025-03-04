@@ -133,7 +133,13 @@ export const QueueProvider = ({ children }: any) => {
 					playing: true
 				}));
 
-				setAction(QueueActions.PLAY_SONG);
+				if (songIndex === state.playingIndex! + 1) {
+					setAction(QueueActions.NEXT_SONG);
+				} else if (songIndex === state.playingIndex! - 1) {
+					setAction(QueueActions.PREVIOUS_SONG);
+				} else {
+					setAction(QueueActions.PLAY_SONG);
+				}
 
 				return;
 			}

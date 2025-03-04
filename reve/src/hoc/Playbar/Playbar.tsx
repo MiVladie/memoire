@@ -33,11 +33,22 @@ import * as API from 'api';
 
 import classes from './Playbar.module.scss';
 
+interface LoadOptions {
+	isNext?: boolean;
+	isPrevious?: boolean;
+
+	nextSong?: Song;
+	previousSong?: Song;
+}
+
 const REPEAT_SONG_THRESHOLD = 3;
 
 const Playbar = () => {
 	const [song, setSong] = useState<Song>();
+
+	const [previousMedia, setPreviousMedia] = useState<string>();
 	const [media, setMedia] = useState<string>();
+	const [nextMedia, setNextMedia] = useState<string>();
 
 	const [shuffle, setShuffle] = useState<boolean>(false);
 
@@ -63,21 +74,27 @@ const Playbar = () => {
 
 	useEffect(() => {
 		const unsubscribe = subscribe((action, newState) => {
+			const previousSong =
+				newState.playingIndex != null && newState.playingIndex > 0
+					? newState.list[newState.playingIndex - 1]
+					: undefined;
+			const nextSong =
+				newState.playingIndex != null && newState.playingIndex + 1 < newState.list.length
+					? newState.list[newState.playingIndex + 1]
+					: undefined;
+
 			switch (action) {
 				case QueueActions.START_PLAYLIST:
-					fetchSong(newState.activeSong!);
-					break;
-
 				case QueueActions.PLAY_SONG:
-					fetchSong(newState.activeSong!);
+					loadHandler(newState.activeSong!, { previousSong, nextSong });
 					break;
 
 				case QueueActions.NEXT_SONG:
-					fetchSong(newState.activeSong!);
+					loadHandler(newState.activeSong!, { isNext: true, nextSong });
 					break;
 
 				case QueueActions.PREVIOUS_SONG:
-					fetchSong(newState.activeSong!);
+					loadHandler(newState.activeSong!, { isPrevious: true, previousSong });
 					break;
 
 				case QueueActions.FINISH_PLAYLIST:
@@ -90,7 +107,7 @@ const Playbar = () => {
 		});
 
 		return unsubscribe;
-	}, []);
+	}, [media]);
 
 	useEffect(() => {
 		if (!song) {
@@ -100,23 +117,46 @@ const Playbar = () => {
 		updateMediaSession(song);
 	}, [song, played]);
 
-	async function fetchSong(song: Song) {
-		handleSeek(0);
-
-		updateMediaSession(song);
-
+	async function loadHandler(song: Song, options: LoadOptions) {
 		setSong(song);
 
-		setLoading(true);
+		updateMediaSession(song);
+		handleSeek(0);
 
 		try {
-			const { media } = await API.Song.getMedia(song.id);
+			if (options.isNext) {
+				setLoading(!nextMedia);
 
-			setMedia(media);
+				setNextMedia(undefined);
+				setPreviousMedia(media);
+
+				setMedia(nextMedia || (await API.Song.getMedia(song.id)).media);
+			} else if (options.isPrevious) {
+				setLoading(!previousMedia);
+
+				setNextMedia(media);
+				setPreviousMedia(undefined);
+
+				setMedia(previousMedia || (await API.Song.getMedia(song.id)).media);
+			} else {
+				setLoading(true);
+
+				setMedia((await API.Song.getMedia(song.id)).media);
+			}
 		} catch (error) {
 			console.error(error);
 		} finally {
 			setLoading(false);
+		}
+
+		// Preload previous song
+		if (options.previousSong) {
+			setPreviousMedia((await API.Song.getMedia(options.previousSong.id)).media);
+		}
+
+		// Preload next song
+		if (options.nextSong) {
+			setNextMedia((await API.Song.getMedia(options.nextSong.id)).media);
 		}
 	}
 
