@@ -39,7 +39,7 @@ const Home = () => {
 
 	const { state } = useQueue();
 
-	const { isDesktop } = useScreen();
+	const { isDesktop, width } = useScreen();
 
 	const menuPlatforms = useMemo(() => {
 		return platforms?.map((platform) => ({ ...platform, ...themePlatform(platform.id) })) || [];
@@ -136,7 +136,7 @@ const Home = () => {
 
 		setFetching(true);
 
-		if (!isDesktop) {
+		if (width < 1440) {
 			toggleMenu();
 		}
 

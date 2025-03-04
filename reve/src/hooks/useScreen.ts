@@ -18,7 +18,8 @@ const useScreen = () => {
 	return {
 		isMobile: width < 720,
 		isTablet: width >= 720 && width < 1025,
-		isDesktop: width >= 1025
+		isDesktop: width >= 1025,
+		width
 	};
 };
 
