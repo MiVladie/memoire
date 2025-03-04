@@ -20,6 +20,7 @@ import Skeleton from 'components/Skeleton/Skeleton';
 import Knob from 'components/Knob/Knob';
 import Content from 'containers/Content/Content';
 import useScroll from 'hooks/useScroll';
+import useScreen from 'hooks/useScreen';
 
 import classes from './Playlist.module.scss';
 
@@ -49,6 +50,8 @@ const PlaylistContainer = ({ data, onScrollEnd, songs, endReached, loading, fetc
 		active: !loading && !fetching && !endReached
 	});
 
+	const { isDesktop } = useScreen();
+
 	useEffect(() => {
 		if (fetching) {
 			return;
@@ -76,7 +79,7 @@ const PlaylistContainer = ({ data, onScrollEnd, songs, endReached, loading, fetc
 			return;
 		}
 
-		play({ playlistId: data!.id, songId: song?.id });
+		play({ playlistId: data!.id, song });
 
 		activateQueue(true);
 	}
@@ -142,56 +145,55 @@ const PlaylistContainer = ({ data, onScrollEnd, songs, endReached, loading, fetc
 			className={className}
 			scrollRef={element}>
 			<ul className={classes.Songs}>
-				{songs.map((song) => (
-					<li className={classes.Song} key={song.id}>
-						<div className={classes.Wrapper}>
-							<div
-								className={clsx(classes.Media, {
-									[classes.MediaPresent]: song.isPresent,
-									[classes.MediaActive]:
-										queueActive && state.list[state.playingIndex!]?.id === song.id
-								})}
-								onClick={() => playHandler(song)}>
-								<img src={song.image!} alt={song.name} className={classes.Image} />
+				{songs.map((song) => {
+					const isPresent = song.isPresent;
+					const isPlaying = state.playing && song.id === state.activeSong?.id;
 
-								{song.isPresent && (
+					return (
+						<li className={classes.Song} key={song.id}>
+							<div className={classes.Wrapper}>
+								<div
+									className={clsx(classes.Media, {
+										[classes.MediaPresent]: song.isPresent,
+										[classes.MediaActive]: queueActive && state.activeSong?.id === song.id
+									})}
+									onClick={() => playHandler(song)}>
+									<img src={song.image!} alt={song.name} className={classes.Image} />
+
+									{(isDesktop || isPlaying) && isPresent && (
+										<Knob icon={isPlaying ? <Pause /> : <Play />} className={classes.Play} />
+									)}
+								</div>
+
+								<div className={classes.Info}>
+									<p className={[classes.Title, !song.isPresent && classes.TitleMissing].join(' ')}>
+										{song.name}
+									</p>
+
+									<p className={classes.Author}>{song.author}</p>
+								</div>
+							</div>
+
+							<div className={classes.Extra}>
+								<div className={classes.Actions}>
 									<Knob
-										icon={
-											state.playing && song.id === state.list[state.playingIndex!]?.id ? (
-												<Pause />
-											) : (
-												<Play />
-											)
-										}
-										className={classes.Play}
+										icon={<QueueAdd />}
+										onClick={() => queueAddHandler(song)}
+										className={!song.isPresent ? classes.QueueHidden : ''}
 									/>
-								)}
+
+									<Knob
+										icon={<Url />}
+										onClick={() => linkHandler(song.url)}
+										className={classes.Url}
+									/>
+								</div>
+
+								<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
 							</div>
-
-							<div className={classes.Info}>
-								<p className={[classes.Title, !song.isPresent && classes.TitleMissing].join(' ')}>
-									{song.name}
-								</p>
-
-								<p className={classes.Author}>{song.author}</p>
-							</div>
-						</div>
-
-						<div className={classes.Extra}>
-							<div className={classes.Actions}>
-								<Knob
-									icon={<QueueAdd />}
-									onClick={() => queueAddHandler(song)}
-									className={!song.isPresent ? classes.QueueHidden : ''}
-								/>
-
-								<Knob icon={<Url />} onClick={() => linkHandler(song.url)} className={classes.Url} />
-							</div>
-
-							<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
-						</div>
-					</li>
-				))}
+						</li>
+					);
+				})}
 
 				{fetching && SKELETON}
 			</ul>

@@ -3,7 +3,6 @@ import React, { useContext, createContext, useMemo, useState, useEffect } from '
 import { Song } from 'interfaces/models';
 
 import * as API from 'api';
-import { delay } from 'util/date';
 
 export enum QueueActions {
 	START_PLAYLIST,
@@ -17,7 +16,7 @@ export enum QueueActions {
 
 interface PlayOptions {
 	playlistId: number;
-	songId?: number;
+	song?: Song;
 }
 
 interface AddOptions {
@@ -28,6 +27,7 @@ interface State {
 	playlistId: number | null;
 	list: Song[];
 	playingIndex: number | null;
+	activeSong: Song | null;
 	playing: boolean;
 	retrieving: boolean;
 	allRetrieved: boolean;
@@ -49,6 +49,7 @@ const defaultState: State = {
 	playlistId: null,
 	list: [],
 	playingIndex: null,
+	activeSong: null,
 	playing: false,
 	retrieving: false,
 	allRetrieved: false
@@ -109,25 +110,28 @@ export const QueueProvider = ({ children }: any) => {
 	}
 
 	async function play(options?: PlayOptions) {
+		const inSamePlaylist = options?.playlistId === state.playlistId;
+		const isSameSong = options?.song?.id === state.activeSong?.id;
+
 		// Scenario 1: Resume playing current song
-		if (
-			!options ||
-			(state.playingIndex !== null &&
-				options.playlistId === state.playlistId &&
-				options.songId === state.list[state.playingIndex].id)
-		) {
+		if (!options || (inSamePlaylist && isSameSong)) {
 			setState((prevState) => ({ ...prevState, playing: !prevState.playing }));
 
 			return;
 		}
 
 		// Scenario 2: Play a song from current playlist
-		if (options.songId && options.playlistId === state.playlistId) {
-			const songIndex = state.list.findIndex((s) => s.id === options.songId);
+		if (options.song && inSamePlaylist) {
+			const songIndex = state.list.findIndex((s) => s.id === options.song!.id);
 
 			// If song not found (was deleted), skip to Scenario 4
 			if (songIndex !== -1) {
-				setState((prevState) => ({ ...prevState, playingIndex: songIndex, playing: true }));
+				setState((prevState) => ({
+					...prevState,
+					playingIndex: songIndex,
+					activeSong: options.song!,
+					playing: true
+				}));
 
 				setAction(QueueActions.PLAY_SONG);
 
@@ -136,7 +140,7 @@ export const QueueProvider = ({ children }: any) => {
 		}
 
 		// Scenario 3: Play first song from another playlist
-		if (options.playlistId && !options.songId) {
+		if (options.playlistId && !options.song) {
 			setState((prevState) => ({ ...prevState, retrieving: true }));
 
 			const { songs } = await API.User.getPlaylistSongs(options.playlistId, { isPresent: true });
@@ -145,6 +149,7 @@ export const QueueProvider = ({ children }: any) => {
 				...prevState,
 				playlistId: options.playlistId!,
 				playingIndex: 0,
+				activeSong: songs[0],
 				list: songs,
 				playing: true,
 				retrieving: false,
@@ -156,9 +161,16 @@ export const QueueProvider = ({ children }: any) => {
 			return;
 		}
 
-		// Scenario 4: Play a song from another playlist
-		if (options.playlistId && options.songId) {
-			setState((prevState) => ({ ...prevState, retrieving: true }));
+		// Scenario 4: Play a song from same/another playlist
+		if (options.playlistId && options.song) {
+			setState((prevState) => ({
+				...prevState,
+				activeSong: options.song!,
+				playingIndex: null,
+				retrieving: true
+			}));
+
+			setTimeout(() => setAction(QueueActions.START_PLAYLIST), 0);
 
 			const list: Song[] = [];
 			let songIndex: number = -1;
@@ -176,7 +188,7 @@ export const QueueProvider = ({ children }: any) => {
 
 				list.push(...songs);
 
-				songIndex = list.findIndex((s) => s.id === options.songId);
+				songIndex = list.findIndex((s) => s.id === options.song!.id);
 				cursor = songs[songs.length - 1].id;
 			} while (songIndex === -1);
 
@@ -190,14 +202,12 @@ export const QueueProvider = ({ children }: any) => {
 				allRetrieved: false
 			}));
 
-			setAction(QueueActions.START_PLAYLIST);
-
 			return;
 		}
 	}
 
 	function stop() {
-		setState((prevState) => ({ ...prevState, playlistId: null, playing: false }));
+		setState((prevState) => ({ ...prevState, playlistId: null, activeSong: null, playing: false }));
 
 		setAction(QueueActions.CLOSE_PLAYLIST);
 	}
@@ -210,6 +220,7 @@ export const QueueProvider = ({ children }: any) => {
 		setState((prevState) => ({
 			...prevState,
 			playingIndex: prevState.playingIndex! - 1,
+			activeSong: prevState.list[prevState.playingIndex! - 1],
 			playing: true
 		}));
 
@@ -217,8 +228,33 @@ export const QueueProvider = ({ children }: any) => {
 	}
 
 	async function next() {
+		const isLast = state.playingIndex === state.list.length - 1;
+		const isPenultimate = state.playingIndex! + 1 === state.list.length - 1;
+
+		// Reached the end of the playlist
+		if (isLast) {
+			setState((prevState) => ({
+				...prevState,
+				playing: false
+			}));
+
+			setAction(QueueActions.FINISH_PLAYLIST);
+
+			return;
+		}
+
+		// Play the next song in the playlist
+		setState((prevState) => ({
+			...prevState,
+			playingIndex: prevState.playingIndex! + 1,
+			activeSong: prevState.list[prevState.playingIndex! + 1],
+			playing: true
+		}));
+
+		setTimeout(() => setAction(QueueActions.NEXT_SONG), 0);
+
 		// Retrieve more songs if possible
-		if (state.playlistId !== null && state.playingIndex! + 1 === state.list.length - 1 && !state.allRetrieved) {
+		if (state.playlistId !== null && isPenultimate && !state.allRetrieved) {
 			setState((prevState) => ({ ...prevState, retrieving: true }));
 
 			const { songs } = await API.User.getPlaylistSongs(state.playlistId!, {
@@ -234,55 +270,19 @@ export const QueueProvider = ({ children }: any) => {
 				allRetrieved: songs.length === 0
 			}));
 		}
-
-		// Reached the end of the playlist
-		if (state.playingIndex === state.list.length - 1) {
-			setState((prevState) => ({
-				...prevState,
-				playing: false
-			}));
-
-			setAction(QueueActions.FINISH_PLAYLIST);
-
-			return;
-		}
-
-		// Play the next song in the playlist
-		setState((prevState) => ({
-			...prevState,
-			playingIndex: prevState.playingIndex! + 1,
-			playing: true
-		}));
-
-		setAction(QueueActions.NEXT_SONG);
 	}
 
 	async function add(song: Song, options?: AddOptions) {
-		// Reset old playlist and start with a new song
-		if (options?.reset) {
+		const isLast = state.playingIndex === state.list.length - 1;
+
+		// Reset old playlist and start with a new song || a song has been added to an empty queue
+		if (options?.reset || state.list.length === 0) {
 			const newState = {
 				playlistId: null,
 				list: [song],
 				playing: true,
 				playingIndex: 0,
-				retrieving: false,
-				allRetrieved: false
-			};
-
-			setState(newState);
-
-			setAction(QueueActions.START_PLAYLIST);
-
-			return;
-		}
-
-		// A song has been added to an empty queue
-		if (state.list.length === 0) {
-			const newState = {
-				playlistId: null,
-				list: [song],
-				playing: true,
-				playingIndex: 0,
+				activeSong: song,
 				retrieving: false,
 				allRetrieved: false
 			};
@@ -295,12 +295,13 @@ export const QueueProvider = ({ children }: any) => {
 		}
 
 		// Added song to a finished playlist
-		if (state.playingIndex === state.list.length - 1 && !state.playing) {
+		if (isLast && !state.playing) {
 			const newState = {
 				playlistId: null,
 				list: [...state.list, song],
 				playing: true,
-				playingIndex: state.playingIndex + 1,
+				playingIndex: state.playingIndex! + 1,
+				activeSong: song,
 				retrieving: false,
 				allRetrieved: false
 			};
@@ -325,7 +326,7 @@ export const QueueProvider = ({ children }: any) => {
 	function remove(songIndex: number) {
 		// Removing last song from queue
 		if (state.list.length === 1) {
-			setState((prevState) => ({ ...prevState, playlistId: null, playing: false }));
+			setState((prevState) => ({ ...prevState, playlistId: null, activeSong: null, playing: false }));
 
 			setAction(QueueActions.CLOSE_PLAYLIST);
 
@@ -354,7 +355,11 @@ export const QueueProvider = ({ children }: any) => {
 		if (songIndex === state.playingIndex) {
 			// Switch to next
 			if (state.list.length - 1 !== songIndex) {
-				setState((prevState) => ({ ...prevState, list: prevState.list.filter((_, i) => i !== songIndex) }));
+				setState((prevState) => ({
+					...prevState,
+					list: prevState.list.filter((_, i) => i !== songIndex),
+					activeSong: prevState.list[prevState.playingIndex! + 1]
+				}));
 
 				setAction(QueueActions.NEXT_SONG);
 

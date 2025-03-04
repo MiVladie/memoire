@@ -53,7 +53,7 @@ const Playbar = () => {
 
 	const { played, loop, mute, volume, handleSeek, handleLoop, handleVolume, handleMute } = usePlayer({
 		media,
-		playing: state.playing && !loading,
+		playing: state.playing,
 		onEnd: next
 	});
 
@@ -65,19 +65,19 @@ const Playbar = () => {
 		const unsubscribe = subscribe((action, newState) => {
 			switch (action) {
 				case QueueActions.START_PLAYLIST:
-					fetchSong(newState.list[newState.playingIndex!]);
+					fetchSong(newState.activeSong!);
 					break;
 
 				case QueueActions.PLAY_SONG:
-					fetchSong(newState.list[newState.playingIndex!]);
+					fetchSong(newState.activeSong!);
 					break;
 
 				case QueueActions.NEXT_SONG:
-					fetchSong(newState.list[newState.playingIndex!]);
+					fetchSong(newState.activeSong!);
 					break;
 
 				case QueueActions.PREVIOUS_SONG:
-					fetchSong(newState.list[newState.playingIndex!]);
+					fetchSong(newState.activeSong!);
 					break;
 
 				case QueueActions.FINISH_PLAYLIST:

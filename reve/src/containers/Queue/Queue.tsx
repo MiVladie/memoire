@@ -52,19 +52,19 @@ const Queue = ({ className, loading }: Props) => {
 		const unsubscribe = subscribe((action, newState) => {
 			switch (action) {
 				case QueueActions.START_PLAYLIST:
-					setSong(newState.list[newState.playingIndex!]);
+					setSong(newState.activeSong!);
 					break;
 
 				case QueueActions.PLAY_SONG:
-					setSong(newState.list[newState.playingIndex!]);
+					setSong(newState.activeSong!);
 					break;
 
 				case QueueActions.NEXT_SONG:
-					setSong(newState.list[newState.playingIndex!]);
+					setSong(newState.activeSong!);
 					break;
 
 				case QueueActions.PREVIOUS_SONG:
-					setSong(newState.list[newState.playingIndex!]);
+					setSong(newState.activeSong!);
 					break;
 
 				default:
@@ -72,7 +72,7 @@ const Queue = ({ className, loading }: Props) => {
 			}
 		});
 
-		setSong(state.playingIndex !== null ? state.list[state.playingIndex] : undefined);
+		setSong(state.activeSong || undefined);
 
 		return () => {
 			unsubscribe();
@@ -108,7 +108,7 @@ const Queue = ({ className, loading }: Props) => {
 			return;
 		}
 
-		play({ playlistId: state.playlistId!, songId: state.list[index].id });
+		play({ playlistId: state.playlistId!, song: state.list[index] });
 	}
 
 	function unqueueSongHandler(index: number) {
@@ -160,38 +160,41 @@ const Queue = ({ className, loading }: Props) => {
 			</div>
 
 			<ul className={classes.Songs} ref={element}>
-				{state.list.map((song, i) => (
-					<li className={classes.Song} key={song.id + i.toString()} ref={i === 0 ? songRef : undefined}>
-						<div className={classes.Info}>
-							<div
-								className={clsx(classes.Media, { [classes.MediaActive]: state.playingIndex === i })}
-								onClick={() => playHandler(i)}>
-								<img src={song.image!} alt={song.name} className={classes.Image} />
+				{state.list.map((song, i) => {
+					const isPlaying = state.playing && i === state.playingIndex;
 
+					return (
+						<li className={classes.Song} key={song.id + i.toString()} ref={i === 0 ? songRef : undefined}>
+							<div className={classes.Info}>
+								<div
+									className={clsx(classes.Media, { [classes.MediaActive]: state.playingIndex === i })}
+									onClick={() => playHandler(i)}>
+									<img src={song.image!} alt={song.name} className={classes.Image} />
+
+									{(isDesktop || isPlaying) && (
+										<Knob icon={isPlaying ? <Pause /> : <Play />} className={classes.Play} />
+									)}
+								</div>
+
+								<div className={classes.Meta}>
+									<p className={classes.Title}>{song.name}</p>
+
+									<p className={classes.Author}>{song.author}</p>
+								</div>
+							</div>
+
+							<div className={classes.Actions}>
 								<Knob
-									icon={state.playing && i === state.playingIndex ? <Pause /> : <Play />}
-									className={classes.Play}
+									icon={<QueueRemove />}
+									onClick={() => unqueueSongHandler(i)}
+									className={classes.QueueRemove}
 								/>
 							</div>
 
-							<div className={classes.Meta}>
-								<p className={classes.Title}>{song.name}</p>
-
-								<p className={classes.Author}>{song.author}</p>
-							</div>
-						</div>
-
-						<div className={classes.Actions}>
-							<Knob
-								icon={<QueueRemove />}
-								onClick={() => unqueueSongHandler(i)}
-								className={classes.QueueRemove}
-							/>
-						</div>
-
-						<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
-					</li>
-				))}
+							<p className={classes.Duration}>{convertSecondsToFormat(song.duration)}</p>
+						</li>
+					);
+				})}
 
 				{state.retrieving && SKELETON}
 			</ul>
