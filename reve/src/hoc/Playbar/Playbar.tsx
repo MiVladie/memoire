@@ -53,7 +53,7 @@ const Playbar = () => {
 
 	const { played, loop, mute, volume, handleSeek, handleLoop, handleVolume, handleMute } = usePlayer({
 		media,
-		playing: state.playing,
+		playing: state.playing && !loading,
 		onEnd: next
 	});
 
@@ -97,36 +97,14 @@ const Playbar = () => {
 			return;
 		}
 
-		// Allow play actions for browsers
-		if ('mediaSession' in navigator) {
-			navigator.mediaSession.metadata = new MediaMetadata({
-				title: song.name,
-				artist: song.author,
-				artwork: song.image ? [{ src: song.image }] : undefined
-			});
-
-			navigator.mediaSession.setActionHandler('previoustrack', previousHandler);
-			navigator.mediaSession.setActionHandler('nexttrack', next);
-			navigator.mediaSession.setActionHandler('pause', () => play());
-			navigator.mediaSession.setActionHandler('play', () => play());
-			navigator.mediaSession.setActionHandler(
-				'seekto',
-				(e) => e.seekTime && handleSeek(e.seekTime / song.duration)
-			);
-
-			if (!isDevice(Device.iOS)) {
-				navigator.mediaSession.setActionHandler('seekbackward', (details) =>
-					handleSeek(Math.max(played - (details.seekOffset || 10) / song.duration, 0))
-				);
-				navigator.mediaSession.setActionHandler('seekforward', (details) =>
-					handleSeek(played + (details.seekOffset || 10) / song.duration)
-				);
-			}
-		}
+		updateMediaSession(song);
 	}, [song, played]);
 
 	async function fetchSong(song: Song) {
-		setMedia(undefined);
+		handleSeek(0);
+
+		updateMediaSession(song);
+
 		setSong(song);
 
 		setLoading(true);
@@ -154,6 +132,34 @@ const Playbar = () => {
 
 	function shuffleHandler() {
 		setShuffle((prevState) => !prevState);
+	}
+
+	function updateMediaSession(song: Song) {
+		// Allow play actions for browsers
+		if (!('mediaSession' in navigator)) {
+			return;
+		}
+
+		navigator.mediaSession.metadata = new MediaMetadata({
+			title: song.name,
+			artist: song.author,
+			artwork: song.image ? [{ src: song.image }] : undefined
+		});
+
+		navigator.mediaSession.setActionHandler('previoustrack', previousHandler);
+		navigator.mediaSession.setActionHandler('nexttrack', next);
+		navigator.mediaSession.setActionHandler('pause', () => play());
+		navigator.mediaSession.setActionHandler('play', () => play());
+		navigator.mediaSession.setActionHandler('seekto', (e) => e.seekTime && handleSeek(e.seekTime / song.duration));
+
+		if (!isDevice(Device.iOS)) {
+			navigator.mediaSession.setActionHandler('seekbackward', (details) =>
+				handleSeek(Math.max(played - (details.seekOffset || 10) / song.duration, 0))
+			);
+			navigator.mediaSession.setActionHandler('seekforward', (details) =>
+				handleSeek(played + (details.seekOffset || 10) / song.duration)
+			);
+		}
 	}
 
 	return (
