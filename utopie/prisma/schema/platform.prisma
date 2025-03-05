@@ -1,9 +1,0 @@
-model Platform {
-    id          Int         @id @default(autoincrement())
-    name        String      @unique
-
-    playlist    Playlist[]
-    song        Song[]
-
-    @@map("platforms")
-}
