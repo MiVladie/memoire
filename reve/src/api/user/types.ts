@@ -11,6 +11,7 @@ export interface GetPlaylistsResponse extends ResponseBody {
 
 export interface GetPlaylistSongsPayload {
 	search?: string;
+	seed?: string;
 	isPresent?: boolean;
 	cursor?: number;
 }

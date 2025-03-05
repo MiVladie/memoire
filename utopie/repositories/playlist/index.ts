@@ -1,4 +1,4 @@
-import { excludeKeys } from '@/util/optimization';
+import { excludeKeys, shuffleArray } from '@/util/optimization';
 import { CreateParams, FindOneParams, FindManyParams, FindSongsParams, UpdateParams, RemoveParams } from './types';
 import { Playlist } from '@/interfaces/models';
 import { Platform } from '@/constants';
@@ -63,6 +63,45 @@ export async function findSongs(where: FindSongsParams, limit?: number, cursor?:
 	});
 
 	return songs.map((data) => data.song);
+}
+
+export async function findSongsBySeed(where: FindSongsParams, seed: string, limit?: number, cursor?: number) {
+	const { songs: allSongs } = await db.playlist.findUniqueOrThrow({
+		where: excludeKeys(where, ['isPresent', 'search']),
+		include: {
+			songs: {
+				where: {
+					song: {
+						isPresent: where.isPresent,
+						OR: where.search
+							? [{ name: { contains: where.search } }, { author: { contains: where.search } }]
+							: undefined
+					}
+				},
+				include: { song: { include: { soundcloudSong: true } } },
+				orderBy: { order: 'desc' }
+			}
+		}
+	});
+
+	const shuffledSongs = shuffleArray(allSongs, seed);
+
+	// Handle cursor-based pagination
+	let startIndex = 0;
+
+	// If a cursor is provided, find the starting index in the shuffled array
+	if (cursor) {
+		const cursorIndex = shuffledSongs.findIndex((s) => s.song.id === cursor);
+
+		if (cursorIndex !== -1) {
+			startIndex = cursorIndex + 1; // Start from the next song after the cursor
+		}
+	}
+
+	// Slice the shuffled array with the given limit
+	const paginatedSongs = shuffledSongs.slice(startIndex, startIndex + (limit ?? shuffledSongs.length));
+
+	return paginatedSongs.map((data) => data.song);
 }
 
 export async function countSongs(where: FindSongsParams) {

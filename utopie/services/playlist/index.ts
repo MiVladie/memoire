@@ -14,7 +14,7 @@ import {
 } from './types';
 import { toPlaylistsDTO } from '@/dtos/playlist';
 import { objectsMatch } from '@/util/validation';
-import { excludeKeys } from '@/util/optimization';
+import { excludeKeys, shuffleArray } from '@/util/optimization';
 import { toSongsDTO } from '@/dtos/song';
 import { Platform } from '@/constants';
 import { PlaylistType, Song } from '@/interfaces/models';
@@ -49,11 +49,18 @@ export async function getSongs(params: GetSongsParams): Promise<GetSongsType> {
 		throw new APIError(Errors.NOT_FOUND, { message: 'Request playlist does not exist!' });
 	}
 
-	const songs = await playlistRepository.findSongs(
-		{ id: params.playlistId, search: params.search, isPresent: params.isPresent },
-		params.limit,
-		params.cursor
-	);
+	const songs = params.seed
+		? await playlistRepository.findSongsBySeed(
+				{ id: params.playlistId, search: params.search, isPresent: params.isPresent },
+				params.seed,
+				params.limit,
+				params.cursor
+		  )
+		: await playlistRepository.findSongs(
+				{ id: params.playlistId, search: params.search, isPresent: params.isPresent },
+				params.limit,
+				params.cursor
+		  );
 
 	return {
 		songs: toSongsDTO(songs)

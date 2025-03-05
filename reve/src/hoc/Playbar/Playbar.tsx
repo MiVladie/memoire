@@ -36,7 +36,9 @@ import classes from './Playbar.module.scss';
 interface LoadOptions {
 	isNext?: boolean;
 	isPrevious?: boolean;
+}
 
+interface PreloadOptions {
 	nextSong?: Song;
 	previousSong?: Song;
 }
@@ -45,16 +47,14 @@ const REPEAT_SONG_THRESHOLD = 3;
 
 const Playbar = () => {
 	const [song, setSong] = useState<Song>();
-	const media = useRef<string>();
 
 	const previousMedia = useRef<string>();
+	const media = useRef<string>();
 	const nextMedia = useRef<string>();
-
-	const [shuffle, setShuffle] = useState<boolean>(false);
 
 	const [loading, setLoading] = useState<boolean>(true);
 
-	const { state, subscribe, play, previous, next } = useQueue();
+	const { state, subscribe, play, previous, next, shuffle } = useQueue();
 
 	const {
 		state: { queueActive, queueVisible, queueExpanded },
@@ -84,17 +84,24 @@ const Playbar = () => {
 					: undefined;
 
 			switch (action) {
+				case QueueActions.SHUFFLE_PLAYLIST:
+					preloadSongs({ previousSong, nextSong });
+					break;
+
 				case QueueActions.START_PLAYLIST:
 				case QueueActions.PLAY_SONG:
-					loadHandler(newState.activeSong!, { previousSong, nextSong });
+					loadHandler(newState.activeSong!);
+					preloadSongs({ previousSong, nextSong });
 					break;
 
 				case QueueActions.NEXT_SONG:
-					loadHandler(newState.activeSong!, { isNext: true, nextSong });
+					loadHandler(newState.activeSong!, { isNext: true });
+					preloadSongs({ nextSong });
 					break;
 
 				case QueueActions.PREVIOUS_SONG:
-					loadHandler(newState.activeSong!, { isPrevious: true, previousSong });
+					loadHandler(newState.activeSong!, { isPrevious: true });
+					preloadSongs({ previousSong });
 					break;
 
 				case QueueActions.FINISH_PLAYLIST:
@@ -117,14 +124,14 @@ const Playbar = () => {
 		updateMediaSession(song);
 	}, [song, played]);
 
-	async function loadHandler(song: Song, options: LoadOptions) {
+	async function loadHandler(song: Song, options?: LoadOptions) {
 		setSong(song);
 
 		updateMediaSession(song);
 		handleSeek(0);
 
 		try {
-			if (options.isNext) {
+			if (options?.isNext) {
 				if (nextMedia.current) {
 					previousMedia.current = media.current;
 
@@ -141,7 +148,7 @@ const Playbar = () => {
 
 					media.current = newMedia;
 				}
-			} else if (options.isPrevious) {
+			} else if (options?.isPrevious) {
 				if (previousMedia.current) {
 					nextMedia.current = media.current;
 
@@ -168,7 +175,9 @@ const Playbar = () => {
 		} finally {
 			setLoading(false);
 		}
+	}
 
+	async function preloadSongs(options: PreloadOptions) {
 		// Preload previous song
 		if (options.previousSong) {
 			previousMedia.current = (await API.Song.getMedia(options.previousSong.id)).media;
@@ -188,10 +197,6 @@ const Playbar = () => {
 		}
 
 		previous();
-	}
-
-	function shuffleHandler() {
-		setShuffle((prevState) => !prevState);
 	}
 
 	function updateMediaSession(song: Song) {
@@ -259,7 +264,12 @@ const Playbar = () => {
 
 				<div className={classes.Actions}>
 					<div className={classes.Buttons}>
-						<Knob icon={<Previous />} onClick={previousHandler} size={queueExpanded ? 48 : undefined} />
+						<Knob
+							icon={<Previous />}
+							onClick={previousHandler}
+							disabled={loading}
+							size={queueExpanded ? 48 : undefined}
+						/>
 
 						<Knob
 							icon={state.playing ? <Pause /> : <Play />}
@@ -269,7 +279,7 @@ const Playbar = () => {
 							fill
 						/>
 
-						<Knob icon={<Next />} onClick={next} size={queueExpanded ? 48 : undefined} />
+						<Knob icon={<Next />} onClick={next} disabled={loading} size={queueExpanded ? 48 : undefined} />
 					</div>
 
 					<div className={classes.Playback}>
@@ -292,8 +302,8 @@ const Playbar = () => {
 
 					<Knob
 						icon={<Shuffle />}
-						active={shuffle}
-						onClick={shuffleHandler}
+						active={state.shuffled}
+						onClick={shuffle}
 						size={queueExpanded ? 48 : undefined}
 						className={classes.Shuffle}
 					/>

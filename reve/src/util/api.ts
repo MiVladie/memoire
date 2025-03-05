@@ -6,7 +6,7 @@ export function paramify(params?: QueryParams): string {
 	return (
 		'?' +
 		Object.keys(params)
-			.filter((paramKey) => params[paramKey] != undefined)
+			.filter((paramKey) => params[paramKey] != undefined && params[paramKey] != null)
 			.map((paramKey) => {
 				let key = encodeURIComponent(paramKey);
 

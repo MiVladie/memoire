@@ -1,11 +1,13 @@
 import React, { useContext, createContext, useMemo, useState, useEffect } from 'react';
 
 import { Song } from 'interfaces/models';
+import { generateRandomString, shuffleArray } from 'util/common';
 
 import * as API from 'api';
 
 export enum QueueActions {
 	START_PLAYLIST,
+	SHUFFLE_PLAYLIST,
 	FINISH_PLAYLIST,
 	CLOSE_PLAYLIST,
 
@@ -25,6 +27,8 @@ interface AddOptions {
 
 interface State {
 	playlistId: number | null;
+	seed: string | null;
+	shuffled: boolean;
 	list: Song[];
 	playingIndex: number | null;
 	activeSong: Song | null;
@@ -43,10 +47,13 @@ interface Context {
 	next: () => void;
 	add: (song: Song, options?: AddOptions) => void;
 	remove: (songIndex: number) => void;
+	shuffle: () => void;
 }
 
 const defaultState: State = {
 	playlistId: null,
+	seed: null,
+	shuffled: false,
 	list: [],
 	playingIndex: null,
 	activeSong: null,
@@ -93,6 +100,7 @@ export const QueueProvider = ({ children }: any) => {
 
 		try {
 			const { songs } = await API.User.getPlaylistSongs(state.playlistId, {
+				seed: state.seed ?? undefined,
 				cursor: lastSong?.id,
 				isPresent: true
 			});
@@ -149,11 +157,15 @@ export const QueueProvider = ({ children }: any) => {
 		if (options.playlistId && !options.song) {
 			setState((prevState) => ({ ...prevState, retrieving: true }));
 
-			const { songs } = await API.User.getPlaylistSongs(options.playlistId, { isPresent: true });
+			const { songs } = await API.User.getPlaylistSongs(options.playlistId, {
+				isPresent: true
+			});
 
 			setState((prevState) => ({
 				...prevState,
 				playlistId: options.playlistId!,
+				seed: null,
+				shuffled: false,
 				playingIndex: 0,
 				activeSong: songs[0],
 				list: songs,
@@ -171,6 +183,8 @@ export const QueueProvider = ({ children }: any) => {
 		if (options.playlistId && options.song) {
 			setState((prevState) => ({
 				...prevState,
+				seed: null,
+				shuffled: false,
 				activeSong: options.song!,
 				playingIndex: null,
 				retrieving: true
@@ -213,7 +227,14 @@ export const QueueProvider = ({ children }: any) => {
 	}
 
 	function stop() {
-		setState((prevState) => ({ ...prevState, playlistId: null, activeSong: null, playing: false }));
+		setState((prevState) => ({
+			...prevState,
+			playlistId: null,
+			seed: null,
+			shuffled: false,
+			activeSong: null,
+			playing: false
+		}));
 
 		setAction(QueueActions.CLOSE_PLAYLIST);
 	}
@@ -264,6 +285,7 @@ export const QueueProvider = ({ children }: any) => {
 			setState((prevState) => ({ ...prevState, retrieving: true }));
 
 			const { songs } = await API.User.getPlaylistSongs(state.playlistId!, {
+				seed: state.seed ?? undefined,
 				cursor: state.list[state.playingIndex! + 1].id,
 				isPresent: true
 			});
@@ -285,6 +307,8 @@ export const QueueProvider = ({ children }: any) => {
 		if (options?.reset || state.list.length === 0) {
 			const newState = {
 				playlistId: null,
+				seed: null,
+				shuffled: false,
 				list: [song],
 				playing: true,
 				playingIndex: 0,
@@ -304,6 +328,8 @@ export const QueueProvider = ({ children }: any) => {
 		if (isLast && !state.playing) {
 			const newState = {
 				playlistId: null,
+				seed: null,
+				shuffled: false,
 				list: [...state.list, song],
 				playing: true,
 				playingIndex: state.playingIndex! + 1,
@@ -323,6 +349,8 @@ export const QueueProvider = ({ children }: any) => {
 		const newState = {
 			...state,
 			playlistId: null,
+			seed: null,
+			shuffled: false,
 			list: [...state.list, song]
 		};
 
@@ -332,7 +360,14 @@ export const QueueProvider = ({ children }: any) => {
 	function remove(songIndex: number) {
 		// Removing last song from queue
 		if (state.list.length === 1) {
-			setState((prevState) => ({ ...prevState, playlistId: null, activeSong: null, playing: false }));
+			setState((prevState) => ({
+				...prevState,
+				playlistId: null,
+				seed: null,
+				shuffled: false,
+				activeSong: null,
+				playing: false
+			}));
 
 			setAction(QueueActions.CLOSE_PLAYLIST);
 
@@ -381,7 +416,100 @@ export const QueueProvider = ({ children }: any) => {
 		}
 	}
 
-	const value = useMemo(() => ({ state, subscribe, retrieve, play, stop, previous, next, add, remove }), [state]);
+	async function shuffle() {
+		if (state.retrieving) {
+			return;
+		}
+
+		// Enabling shuffle
+		if (!state.shuffled) {
+			if (state.playlistId) {
+				setState((prevState) => ({
+					...prevState,
+					list: [prevState.activeSong!],
+					shuffled: true,
+					playingIndex: 0,
+					retrieving: true
+				}));
+
+				const seed = generateRandomString();
+
+				try {
+					const { songs } = await API.User.getPlaylistSongs(state.playlistId, {
+						seed,
+						isPresent: true
+					});
+
+					setState((prevState) => ({
+						...prevState,
+						seed,
+						list: [prevState.activeSong!, ...songs],
+						allRetrieved: false
+					}));
+
+					setAction(QueueActions.SHUFFLE_PLAYLIST);
+				} catch (error) {
+					console.error(error);
+
+					setState((prevState) => ({ ...prevState, seed: null, shuffled: false, retrieving: false }));
+				} finally {
+					setState((prevState) => ({ ...prevState, retrieving: false }));
+				}
+			} else {
+				setState((prevState) => ({
+					...prevState,
+					shuffled: true,
+					list: [
+						prevState.activeSong!,
+						...shuffleArray(prevState.list.filter((_, i) => i !== prevState.playingIndex))
+					],
+					playingIndex: 0
+				}));
+
+				setAction(QueueActions.SHUFFLE_PLAYLIST);
+			}
+		} else {
+			if (state.playlistId) {
+				setState((prevState) => ({
+					...prevState,
+					shuffled: false,
+					list: [prevState.activeSong!],
+					playingIndex: 0,
+					retrieving: true
+				}));
+
+				try {
+					const { songs } = await API.User.getPlaylistSongs(state.playlistId, {
+						cursor: state.activeSong!.id,
+						isPresent: true
+					});
+
+					setState((prevState) => ({
+						...prevState,
+						seed: null,
+						list: [prevState.activeSong!, ...songs],
+						allRetrieved: false
+					}));
+
+					setAction(QueueActions.SHUFFLE_PLAYLIST);
+				} catch (error) {
+					console.error(error);
+				} finally {
+					setState((prevState) => ({ ...prevState, retrieving: false }));
+				}
+			} else {
+				setState((prevState) => ({
+					...prevState,
+					shuffled: false
+				}));
+			}
+		}
+	}
+
+	const value = useMemo(
+		() => ({ state, subscribe, retrieve, play, stop, previous, next, add, remove, shuffle }),
+		[state]
+	);
 
 	return <QueueContext.Provider value={value}>{children}</QueueContext.Provider>;
 };

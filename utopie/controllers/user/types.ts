@@ -27,6 +27,7 @@ export interface GetPlaylistSongsRequestParams {
 export interface GetPlaylistSongsQueryParams {
 	search?: string;
 	isPresent?: string;
+	seed?: string;
 	limit?: string;
 	cursor?: string;
 }
