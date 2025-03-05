@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { convertSecondsToFormat } from 'util/date';
 import { useNavigation } from 'context/useNavigation';
@@ -45,10 +45,10 @@ const REPEAT_SONG_THRESHOLD = 3;
 
 const Playbar = () => {
 	const [song, setSong] = useState<Song>();
+	const media = useRef<string>();
 
-	const [previousMedia, setPreviousMedia] = useState<string>();
-	const [media, setMedia] = useState<string>();
-	const [nextMedia, setNextMedia] = useState<string>();
+	const previousMedia = useRef<string>();
+	const nextMedia = useRef<string>();
 
 	const [shuffle, setShuffle] = useState<boolean>(false);
 
@@ -63,7 +63,7 @@ const Playbar = () => {
 	} = useNavigation();
 
 	const { played, loop, mute, volume, handleSeek, handleLoop, handleVolume, handleMute } = usePlayer({
-		media,
+		media: media.current,
 		playing: state.playing && !loading,
 		onEnd: next
 	});
@@ -107,7 +107,7 @@ const Playbar = () => {
 		});
 
 		return unsubscribe;
-	}, [media]);
+	}, []);
 
 	useEffect(() => {
 		if (!song) {
@@ -125,23 +125,43 @@ const Playbar = () => {
 
 		try {
 			if (options.isNext) {
-				setLoading(!nextMedia);
+				if (nextMedia.current) {
+					previousMedia.current = media.current;
 
-				setNextMedia(undefined);
-				setPreviousMedia(media);
+					media.current = nextMedia.current;
 
-				setMedia(nextMedia || (await API.Song.getMedia(song.id)).media);
+					nextMedia.current = undefined;
+				} else {
+					setLoading(true);
+
+					const { media: newMedia } = await API.Song.getMedia(song.id);
+
+					nextMedia.current = undefined;
+					previousMedia.current = media.current;
+
+					media.current = newMedia;
+				}
 			} else if (options.isPrevious) {
-				setLoading(!previousMedia);
+				if (previousMedia.current) {
+					nextMedia.current = media.current;
 
-				setNextMedia(media);
-				setPreviousMedia(undefined);
+					media.current = previousMedia.current;
 
-				setMedia(previousMedia || (await API.Song.getMedia(song.id)).media);
+					previousMedia.current = undefined;
+				} else {
+					setLoading(true);
+
+					const { media: newMedia } = await API.Song.getMedia(song.id);
+
+					nextMedia.current = media.current;
+					previousMedia.current = undefined;
+
+					media.current = newMedia;
+				}
 			} else {
 				setLoading(true);
 
-				setMedia((await API.Song.getMedia(song.id)).media);
+				media.current = (await API.Song.getMedia(song.id)).media;
 			}
 		} catch (error) {
 			console.error(error);
@@ -151,12 +171,12 @@ const Playbar = () => {
 
 		// Preload previous song
 		if (options.previousSong) {
-			setPreviousMedia((await API.Song.getMedia(options.previousSong.id)).media);
+			previousMedia.current = (await API.Song.getMedia(options.previousSong.id)).media;
 		}
 
 		// Preload next song
 		if (options.nextSong) {
-			setNextMedia((await API.Song.getMedia(options.nextSong.id)).media);
+			nextMedia.current = (await API.Song.getMedia(options.nextSong.id)).media;
 		}
 	}
 
